@@ -18,7 +18,7 @@ Ferramenta web para **estimar e validar a carga horária (CH)** de cursos a dist
 
 ```
 calculadora-ch-cursos-ead/
-├── index.html                  # v1 — calculadora ATUAL (porte fiel do Workload Estimator)
+├── calculadora-workload-estimator.html                  # v1 — calculadora ATUAL (porte fiel do Workload Estimator)
 ├── index-cefor.html             # v2 — calculadora MOOC fiel ao Quadro 2 (blocos fixos) ← VERSÃO ATIVA
 ├── README.md                   # doc da v1
 ├── arquivo/                     # MATERIAL ARQUIVADO (preservado, não em uso)
@@ -118,4 +118,4 @@ Arquivos **untracked / não commitados**. Quando autorizado: commitar `index-cef
 2. A **nova calculadora** é `index-cefor.html` — fiel ao Quadro 2, validada (16/16).
 3. As **diferenças** v1 × proposta estão em `docs/COMPARATIVO_…md`.
 4. **Falta:** validar visualmente no navegador e confirmar as 5 decisões (seção 5.2) com a Aline.
-5. A **v1** (`index.html`) segue intacta para comparação.
+5. A **v1** (`calculadora-workload-estimator.html`) segue intacta para comparação.

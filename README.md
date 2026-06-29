@@ -2,7 +2,7 @@
 
 Ferramenta web que estima **quantas horas por semana** um curso a distância exige do estudante a partir das atividades planejadas, e ajuda a **validar se a carga horária declarada é realista**. Uso interno de design instrucional do CEFOR (Centro de Referência em Formação e em Educação a Distância — IFES).
 
-> **Status:** funcional. Página única autocontida (`index.html`), pronta para abrir no navegador ou hospedar.
+> **Status:** funcional. Página única autocontida (`calculadora-workload-estimator.html`), pronta para abrir no navegador ou hospedar.
 
 ---
 
@@ -18,12 +18,12 @@ Ferramenta web que estima **quantas horas por semana** um curso a distância exi
 
 ## 2. Como usar
 
-1. Abra **`index.html`** em qualquer navegador moderno (duplo clique já funciona).
+1. Abra **`calculadora-workload-estimator.html`** em qualquer navegador moderno (duplo clique já funciona).
 2. Preencha apenas os blocos de atividade que existem no seu curso. Cada bloco **acende** e mostra sua contribuição em `h/semana`.
 3. Leia o resultado: **carga total do curso (h)**, dedicação **por semana**, divisão **Autônomo × Contato** e a **composição** da carga por tipo de atividade.
 4. Informe a **carga declarada** do curso para receber o veredito de calibração (Realista / Subdimensionada / Superdimensionada).
 
-> Para hospedar ou incorporar no Moodle/AVA, basta servir o `index.html` (ver seção 7).
+> Para hospedar ou incorporar no Moodle/AVA, basta servir o `calculadora-workload-estimator.html` (ver seção 7).
 
 ---
 
@@ -94,15 +94,15 @@ O código-fonte original em R/Shiny está preservado em **`source/`** (`server.R
 
 ## 7. Rodar / hospedar
 
-**Local (simples):** abra `index.html` no navegador.
+**Local (simples):** abra `calculadora-workload-estimator.html` no navegador.
 
 **Servidor local (para testar como será servido):**
 ```bash
 python -m http.server 8000
-# acesse http://localhost:8000/index.html
+# acesse http://localhost:8000/calculadora-workload-estimator.html
 ```
 
-**Hospedagem gratuita:** GitHub Pages, Netlify ou similar — basta publicar o `index.html`. Para incorporar no Moodle/AVA, usar um `<iframe>` apontando para a URL hospedada.
+**Hospedagem gratuita:** GitHub Pages, Netlify ou similar — basta publicar o `calculadora-workload-estimator.html`. Para incorporar no Moodle/AVA, usar um `<iframe>` apontando para a URL hospedada.
 
 ---
 
@@ -110,7 +110,7 @@ python -m http.server 8000
 
 ```
 calculadora-ch-cursos-ead/
-├── index.html                      # A calculadora (página única autocontida)
+├── calculadora-workload-estimator.html                      # A calculadora (página única autocontida)
 ├── README.md                       # Este documento
 ├── source/                         # Código-fonte original (R/Shiny) — referência
 │   ├── server.R                    # Lógica e matrizes de pesquisa originais
@@ -121,7 +121,7 @@ calculadora-ch-cursos-ead/
 └── Meeting Transcription (1).txt   # Transcrição de reunião (insumo/contexto)
 ```
 
-> Os arquivos `.png` ficam como **referência da marca**; o `index.html` não depende deles (logo em CSS).
+> Os arquivos `.png` ficam como **referência da marca**; o `calculadora-workload-estimator.html` não depende deles (logo em CSS).
 
 ---
 

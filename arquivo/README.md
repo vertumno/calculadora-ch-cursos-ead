@@ -15,5 +15,5 @@
 - Abrir local: `python -m http.server 8000` na raiz → `http://127.0.0.1:8000/arquivo/index-cefor-v2.html`.
 
 ## Versões ativas (fora do arquivo)
-- `index.html` — v1 (porte do Course Workload Estimator).
+- `calculadora-workload-estimator.html` — v1 (porte do Course Workload Estimator).
 - `index-cefor.html` — calculadora MOOC fiel ao Quadro 2 (blocos fixos por tipo de aprendizagem).

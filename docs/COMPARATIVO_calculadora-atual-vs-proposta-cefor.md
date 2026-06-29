@@ -1,6 +1,6 @@
 # Comparativo — Calculadora atual × Proposta CEFOR/IFES
 
-> Diferenças entre a calculadora **já implementada** (`index.html`, porte fiel do *Course Workload Estimator* de Barre/Brown/Esarey, em `docs/source/`) e a **proposta de calculadora para MOOCs do IFES** (`docs/COMO ESTIMAR A CARGA HORÁRIA…md`, Quadro 2, baseada em Laurillard 2012 + McInnes et al. 2026).
+> Diferenças entre a calculadora **já implementada** (`calculadora-workload-estimator.html`, porte fiel do *Course Workload Estimator* de Barre/Brown/Esarey, em `docs/source/`) e a **proposta de calculadora para MOOCs do IFES** (`docs/COMO ESTIMAR A CARGA HORÁRIA…md`, Quadro 2, baseada em Laurillard 2012 + McInnes et al. 2026).
 >
 > Classificação de cada diferença: **[+] ACRESCENTADA** · **[~] MODIFICADA** · **[–] RETIRADA**.
 
@@ -8,7 +8,7 @@
 
 ## 1. Contexto
 
-| | Calculadora **atual** (`index.html`) | **Proposta** CEFOR/IFES |
+| | Calculadora **atual** (`calculadora-workload-estimator.html`) | **Proposta** CEFOR/IFES |
 |---|---|---|
 | **Base teórica** | *Course Workload Estimator* (Betsy Barre, Allen Brown, Justin Esarey — Wake Forest / Rice), CC BY-NC-SA 4.0 | Conversational Framework de **Laurillard (2012)**; rates de **McInnes et al. (2026)**, Liu & Evans (2020), Beer (2019) |
 | **Público-alvo do modelo** | Ensino superior presencial/híbrido (genérico) | **MOOCs assíncronos sem tutoria** do IFES (com extensão opcional a híbridos) |
@@ -184,7 +184,7 @@ ATUAL  →  7 blocos por MÍDIA          PROPOSTA  →  6 tipos de APRENDIZAGEM 
 
 ## 7. Próximos passos sugeridos
 
-1. **[Recomendado]** Implementar uma **v2 do `index.html`** reorganizada por tipo de aprendizagem (Laurillard), com os novos rates do Quadro 2, mantendo a **calibração declarada × estimada** e um *toggle* MOOC padrão × híbrido.
+1. **[Recomendado]** Implementar uma **v2 do `calculadora-workload-estimator.html`** reorganizada por tipo de aprendizagem (Laurillard), com os novos rates do Quadro 2, mantendo a **calibração declarada × estimada** e um *toggle* MOOC padrão × híbrido.
 2. Antes de codar, **fechar as 5 decisões pendentes** da seção 6 com a Aline/Vanessa (sobretudo agregação semanal × total e o nível "Média").
 3. Manter a **calculadora atual intacta** como referência e criar a nova lado a lado (`index-cefor.html`), para comparação numérica auditável (linha pedida na reunião — 20:00–21:05).
 4. Outra abordagem — diga qual.
@@ -192,6 +192,6 @@ ATUAL  →  7 blocos por MÍDIA          PROPOSTA  →  6 tipos de APRENDIZAGEM 
 ---
 
 ### Arquivos consultados
-- `index.html` (calculadora atual) · `docs/source/server.R` + `ui.R` (base original)
+- `calculadora-workload-estimator.html` (calculadora atual) · `docs/source/server.R` + `ui.R` (base original)
 - `docs/COMO ESTIMAR A CARGA HORÁRIA…PROPOSTA…IFES.md` (Quadro 2 + Laurillard)
 - `docs/transcrição da Reuniao MOOC 29-06-2026….txt` (racional das decisões)
