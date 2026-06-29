@@ -186,7 +186,7 @@ ATUAL  →  7 blocos por MÍDIA          PROPOSTA  →  6 tipos de APRENDIZAGEM 
 
 1. **[Recomendado]** Implementar uma **v2 do `index.html`** reorganizada por tipo de aprendizagem (Laurillard), com os novos rates do Quadro 2, mantendo a **calibração declarada × estimada** e um *toggle* MOOC padrão × híbrido.
 2. Antes de codar, **fechar as 5 decisões pendentes** da seção 6 com a Aline/Vanessa (sobretudo agregação semanal × total e o nível "Média").
-3. Manter a **calculadora atual intacta** como referência e criar a nova lado a lado (`index-mooc.html`), para comparação numérica auditável (linha pedida na reunião — 20:00–21:05).
+3. Manter a **calculadora atual intacta** como referência e criar a nova lado a lado (`index-cefor.html`), para comparação numérica auditável (linha pedida na reunião — 20:00–21:05).
 4. Outra abordagem — diga qual.
 
 ---

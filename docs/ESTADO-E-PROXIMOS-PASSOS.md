@@ -19,7 +19,7 @@ Ferramenta web para **estimar e validar a carga horária (CH)** de cursos a dist
 ```
 calculadora-ch-cursos-ead/
 ├── index.html                  # v1 — calculadora ATUAL (porte fiel do Workload Estimator)
-├── index-mooc.html             # v2 — NOVA calculadora MOOC (proposta CEFOR) ← criada nesta sessão
+├── index-cefor.html             # v2 — NOVA calculadora MOOC (proposta CEFOR) ← criada nesta sessão
 ├── README.md                   # doc da v1
 ├── docs/
 │   ├── COMO ESTIMAR A CARGA HORÁRIA…PROPOSTA…IFES.md   # A PROPOSTA (Quadro 2 + Laurillard)
@@ -37,7 +37,7 @@ calculadora-ch-cursos-ead/
 ### 3.1 Comparativo v1 × proposta
 `docs/COMPARATIVO_calculadora-atual-vs-proposta-cefor.md` — lista **todas** as diferenças classificadas em **[+] acrescentadas (8)**, **[~] modificadas (9)** e **[–] retiradas (8)**, mais implicações de implementação e lacunas a resolver.
 
-### 3.2 `index-mooc.html` — nova calculadora (v2)
+### 3.2 `index-cefor.html` — nova calculadora (v2)
 Página única autocontida (HTML+CSS+JS, sem build/back-end), reaproveitando 100% da identidade visual IFES/CEFOR da v1. **Fiel ao Quadro 2.**
 
 **Modelo de cálculo (tudo em horas, somado na CH total do curso):**
@@ -79,7 +79,7 @@ Página única autocontida (HTML+CSS+JS, sem build/back-end), reaproveitando 100
 | D3 | **Sem nível "Média"** onde o Quadro 2 não tem (vídeo, quiz, interativa, discussão) | Lei "No Invention" — só leitura e escrita têm 3 níveis na fonte |
 | D4 | **Organização por tipo de aprendizagem (Laurillard)** | é o framework da pesquisa; permite o gráfico de equilíbrio |
 | D5 | **Itens dinâmicos** por bloco | reflete "montar o curso" real (≈ mapa de atividades) |
-| D6 | **Manter v1 intacta** e criar v2 separada (`index-mooc.html`) | comparação auditável lado a lado (pedido na reunião) |
+| D6 | **Manter v1 intacta** e criar v2 separada (`index-cefor.html`) | comparação auditável lado a lado (pedido na reunião) |
 | D7 | **Calibração mantida** | é a dor central; não está no Quadro 2, mas é o diferencial da ferramenta |
 
 ---
@@ -87,7 +87,7 @@ Página única autocontida (HTML+CSS+JS, sem build/back-end), reaproveitando 100
 ## 5. Pendências / próximos passos
 
 ### 5.1 Validar visualmente (rápido)
-Abrir `index-mooc.html` no navegador e conferir layout, toggle de contexto, adicionar/remover itens, composição e calibração. *(Não foi possível abrir navegador nesta sessão.)*
+Abrir `index-cefor.html` no navegador e conferir layout, toggle de contexto, adicionar/remover itens, composição e calibração. *(Não foi possível abrir navegador nesta sessão.)*
 
 ### 5.2 Decisões a confirmar com Aline/Vanessa
 1. **CH total × h/semana** — confirmar que o foco é a CH total (D1).
@@ -102,14 +102,14 @@ Abrir `index-mooc.html` no navegador e conferir layout, toggle de contexto, adic
 - Versões derivadas: outros tipos de curso EAD (não-MOOC), calculadora reversa, integração com mapa.
 
 ### 5.4 Git
-Arquivos **untracked / não commitados**. Quando autorizado: commitar `index-mooc.html`, o comparativo e este doc. *(push é exclusivo do @devops.)*
+Arquivos **untracked / não commitados**. Quando autorizado: commitar `index-cefor.html`, o comparativo e este doc. *(push é exclusivo do @devops.)*
 
 ---
 
 ## 6. Como retomar (resumo de 30s)
 
 1. A **proposta** está em `docs/COMO ESTIMAR…IFES.md` (Quadro 2 = fonte da verdade dos valores).
-2. A **nova calculadora** é `index-mooc.html` — fiel ao Quadro 2, validada (16/16).
+2. A **nova calculadora** é `index-cefor.html` — fiel ao Quadro 2, validada (16/16).
 3. As **diferenças** v1 × proposta estão em `docs/COMPARATIVO_…md`.
 4. **Falta:** validar visualmente no navegador e confirmar as 5 decisões (seção 5.2) com a Aline.
 5. A **v1** (`index.html`) segue intacta para comparação.
