@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Carga Horária MOOC — IFES / CEFOR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#3da63d; --green-600:#2e8b30; --green-700:#1f7027; --green-800:#16531d;
+    --green-tint:#eaf4ea; --red:#e2211c; --red-700:#b81812;
+    --amber:#e0a92b; --amber-tint:#fff8e6; --amber-ink:#7a5b00;
+    --ink:#181c19; --muted:#5c6660; --muted-2:#8a948d;
+    --line:#e3eae3; --line-strong:#cdd9cd; --paper:#ffffff; --paper-2:#f6faf6;
+    --radius:10px;
+    --shadow:0 1px 2px rgba(20,50,25,.06), 0 10px 30px rgba(20,50,25,.06);
+    --shadow-lg:0 24px 60px rgba(16,60,25,.22);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;color:var(--ink);font-family:"Hanken Grotesk",system-ui,sans-serif;
+    font-size:15px;line-height:1.5;background-color:var(--paper-2);
+    background-image:
+      linear-gradient(rgba(61,166,61,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,166,61,.045) 1px, transparent 1px);
+    background-size:26px 26px;padding-bottom:84px;-webkit-font-smoothing:antialiased;
+  }
+
+  /* ============ MARCA ============ */
+  .brandbar{background:var(--paper);border-bottom:1px solid var(--line);padding:14px 22px}
+  .brandbar .inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:18px}
+  .brand-lockup{display:flex;align-items:center;gap:15px}
+  .if-mark{--u:14px;--g:3px;display:grid;grid-template-columns:repeat(3,var(--u));grid-auto-rows:var(--u);gap:var(--g);flex:none}
+  .if-mark span{background:var(--green);border-radius:2px;animation:pop .5s cubic-bezier(.2,.9,.3,1.4) backwards}
+  .if-mark span.dot{background:var(--red);border-radius:50%}
+  .if-mark span.empty{background:transparent;animation:none}
+  .if-mark span:nth-child(1){animation-delay:.04s}.if-mark span:nth-child(2){animation-delay:.09s}
+  .if-mark span:nth-child(3){animation-delay:.14s}.if-mark span:nth-child(4){animation-delay:.11s}
+  .if-mark span:nth-child(5){animation-delay:.16s}.if-mark span:nth-child(7){animation-delay:.18s}
+  .if-mark span:nth-child(8){animation-delay:.23s}.if-mark span:nth-child(9){animation-delay:.28s}
+  .if-mark span:nth-child(10){animation-delay:.25s}.if-mark span:nth-child(11){animation-delay:.30s}
+  @keyframes pop{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
+  .lockup{line-height:1.16;animation:rise .6s ease backwards}
+  .lockup .l1{font-family:"Archivo",sans-serif;font-weight:800;font-size:1.18rem;letter-spacing:.005em;color:#111}
+  .lockup .l2{font-weight:600;font-size:.92rem;color:#1c1c1c;margin-top:2px}
+  .lockup .l3{font-size:.74rem;color:var(--muted);margin-top:2px;line-height:1.25;white-space:nowrap}
+  @media(max-width:680px){.if-mark{--u:10px;--g:3px}.lockup .l1{font-size:1rem}.lockup .l3{display:none}}
+  .brandbar .spacer{margin-left:auto}
+  .brandbar .stamp{
+    font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--green-700);border:1px solid var(--line-strong);
+    padding:6px 11px;border-radius:999px;white-space:nowrap;
+  }
+
+  /* ============ HERO ============ */
+  .page{max-width:1180px;margin:0 auto;padding:0 16px}
+  .hero{padding:28px 4px 16px;position:relative}
+  .hero .eyebrow{display:inline-flex;align-items:center;gap:9px;font-family:"JetBrains Mono",monospace;
+    font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--green-700);margin-bottom:10px}
+  .hero .eyebrow::before{content:"";width:9px;height:9px;background:var(--green);display:inline-block}
+  .hero h1{font-family:"Archivo",sans-serif;font-weight:900;letter-spacing:-.022em;
+    font-size:clamp(1.8rem,3.8vw,2.85rem);line-height:1.04;margin:0;color:var(--ink);max-width:22ch}
+  .hero h1 .accent{color:var(--green-600)}
+  .hero p.lede{max-width:66ch;margin:12px 0 0;font-size:1rem;color:var(--muted)}
+  .hero .deco{position:absolute;top:28px;right:6px;display:grid;grid-template-columns:repeat(3,13px);grid-auto-rows:13px;gap:4px}
+  .hero .deco i{background:var(--green);border-radius:1px;opacity:.18}
+  .hero .deco i.r{background:var(--red);opacity:.9;border-radius:50%}
+  @media(max-width:720px){.hero .deco{display:none}}
+
+  /* ============ SETUP / CONTEXTO ============ */
+  .setup{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;background:var(--paper);
+    border:1px solid var(--line);border-left:3px solid var(--ink);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:14px 16px;margin:0 4px 16px}
+  .setup .blk{display:flex;flex-direction:column;gap:6px}
+  .setup .blk .cap{font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--muted-2)}
+  .seg-ctl{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;background:#fff}
+  .seg-ctl button{border:none;background:#fff;color:var(--muted);font-family:inherit;font-size:.82rem;
+    font-weight:600;padding:8px 14px;cursor:pointer;transition:.15s}
+  .seg-ctl button.on{background:var(--green-600);color:#fff}
+  .setup input[type=number]{width:120px;padding:8px 10px;border:1px solid var(--line-strong);border-radius:8px;
+    font-family:"JetBrains Mono",monospace;font-weight:500;font-size:.95rem}
+  .setup input[type=number]:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(61,166,61,.18)}
+  .setup .ctx-note{flex:1 1 240px;font-size:.78rem;color:var(--muted-2);line-height:1.4;min-width:200px}
+
+  /* ============ HELPER ============ */
+  .helper{display:flex;align-items:center;gap:9px;margin:0 4px 14px;font-size:.88rem;color:var(--muted)}
+  .helper::before{content:"";width:10px;height:10px;background:var(--green);border-radius:2px;flex:none;
+    box-shadow:5px 0 0 var(--line-strong)}
+  .helper b{color:var(--green-700)}
+
+  /* ============ MÓDULOS ============ */
+  .modules{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));align-items:start}
+  .module{
+    background:var(--paper);border:1px solid var(--line);border-left:3px solid transparent;
+    border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
+    animation:rise .55s ease backwards;
+    transition:border-color .25s, box-shadow .25s, transform .15s, opacity .25s;
+  }
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .module.is-active{border-left-color:var(--green);box-shadow:0 1px 2px rgba(20,50,25,.06),0 12px 30px rgba(31,112,39,.12)}
+  .module.is-active .m-head{background:var(--green-tint)}
+  .module.is-opt{border-left-color:var(--amber)}
+
+  .m-head{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);
+    background:var(--paper);transition:background .25s;flex-wrap:wrap}
+  .m-ico{--s:6px;display:grid;grid-template-columns:repeat(2,var(--s));grid-auto-rows:var(--s);gap:2px;flex:none}
+  .m-ico i{background:var(--green);border-radius:1px;transition:background .25s}
+  .m-head .num{font-family:"JetBrains Mono",monospace;font-size:.72rem;color:var(--green-700);font-weight:500}
+  .gtag{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;
+    color:#fff;padding:2px 7px;border-radius:999px;font-weight:600}
+  .m-head h2{margin:0;font-family:"Archivo",sans-serif;font-weight:700;font-size:.84rem;
+    text-transform:uppercase;letter-spacing:.04em;color:var(--ink)}
+  .m-sum{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:.72rem;font-weight:600;
+    padding:4px 10px;border-radius:999px;background:var(--paper-2);color:var(--muted-2);
+    border:1px solid var(--line);white-space:nowrap;transition:.25s}
+  .module.is-active .m-sum{background:var(--green);color:#fff;border-color:var(--green)}
+
+  .m-body{padding:14px 16px 16px}
+  .m-body .hint{font-size:.79rem;color:var(--muted-2);margin:-2px 0 12px}
+
+  /* ITENS DINÂMICOS */
+  .list{display:flex;flex-direction:column;gap:9px}
+  .item{position:relative;border:1px solid var(--line);border-radius:9px;background:var(--paper-2);padding:10px 38px 10px 11px}
+  .iname{width:100%;border:none;background:transparent;font-family:inherit;font-weight:600;font-size:.88rem;
+    color:var(--ink);padding:0 0 2px}
+  .iname:focus{outline:none}
+  .iname::placeholder{color:var(--muted-2);font-weight:500}
+  .ifs{display:flex;gap:10px;flex-wrap:wrap;margin-top:7px}
+  .mini{display:flex;flex-direction:column;gap:3px;font-size:.7rem;color:var(--muted);font-weight:600}
+  .mini input,.mini select{padding:7px 9px;border:1px solid var(--line-strong);border-radius:7px;background:#fff;
+    color:var(--ink);font-size:.9rem;font-family:inherit}
+  .mini input[type=number]{font-family:"JetBrains Mono",monospace;font-weight:500;width:108px}
+  .mini select{min-width:150px}
+  .mini input:focus,.mini select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(61,166,61,.16)}
+  .mini.grow{flex:1}
+  .iside{position:absolute;top:9px;right:9px;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+  .iside .t{font-family:"JetBrains Mono",monospace;font-size:.78rem;font-weight:600;color:var(--green-700);white-space:nowrap}
+  .rm{border:none;background:transparent;color:var(--muted-2);cursor:pointer;font-size:1.15rem;line-height:1;padding:0 2px}
+  .rm:hover{color:var(--red)}
+  .empty-line{font-size:.78rem;color:var(--muted-2);padding:4px 0 2px}
+  .addb{margin-top:11px;width:100%;font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.03em;
+    font-weight:500;color:var(--green-700);background:#fff;border:1px dashed var(--line-strong);border-radius:8px;
+    padding:9px;cursor:pointer;transition:.15s}
+  .addb:hover{border-color:var(--green);background:var(--green-tint)}
+  .prof-note{font-size:.72rem;color:var(--amber-ink);background:var(--amber-tint);border:1px solid #f0d488;
+    border-radius:7px;padding:6px 9px;margin-top:8px}
+
+  /* ============ TOOLBAR ============ */
+  .toolbar{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin:18px 0 0}
+  .btn{font-family:"Hanken Grotesk",sans-serif;font-weight:600;font-size:.85rem;cursor:pointer;
+    border:1px solid var(--line-strong);background:#fff;color:var(--ink);border-radius:8px;padding:9px 16px;transition:.15s}
+  .btn:hover{border-color:var(--green);color:var(--green-700)}
+  .btn.primary{background:var(--green-600);border-color:var(--green-600);color:#fff}
+  .btn.primary:hover{background:var(--green-700);color:#fff}
+
+  /* ============ RESULTADO ============ */
+  .readout{margin-top:22px;border-radius:18px;overflow:hidden;color:#eafaf0;
+    background:radial-gradient(120% 140% at 0% 0%, rgba(255,255,255,.10), transparent 50%),
+      linear-gradient(135deg,var(--green-700) 0%,var(--green-800) 100%);box-shadow:var(--shadow-lg)}
+  .readout .r-head{display:flex;align-items:center;gap:12px;padding:16px 22px;border-bottom:1px solid rgba(255,255,255,.14)}
+  .readout .r-head .lbl{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+  .readout .r-head .live{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:.74rem;opacity:.85;font-family:"JetBrains Mono",monospace}
+  .readout .r-head .live i{width:8px;height:8px;border-radius:50%;background:#7ff0b0;animation:blink 1.8s ease-in-out infinite}
+  @keyframes blink{50%{opacity:.25}}
+
+  .r-top{display:grid;grid-template-columns:1.05fr 1fr;gap:1px;background:rgba(255,255,255,.12)}
+  .r-hero,.r-verdict{background:linear-gradient(135deg,var(--green-700),var(--green-800));padding:22px}
+  .r-hero .cap,.r-verdict .cap{font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;opacity:.82}
+  .r-hero .big{font-family:"Archivo",sans-serif;font-weight:900;letter-spacing:-.02em;
+    font-size:clamp(2.8rem,7vw,4.4rem);line-height:1;margin:6px 0 0;color:#fff;font-variant-numeric:tabular-nums}
+  .r-hero .big.is-alert{color:#ffd2cd}
+  .r-hero .big .u{font-family:"Hanken Grotesk",sans-serif;font-weight:600;font-size:1.1rem;opacity:.8;margin-left:8px;letter-spacing:0}
+  .r-hero .sub{margin-top:8px;font-size:.92rem;opacity:.9}
+  .r-hero .sub b{font-family:"JetBrains Mono",monospace;font-weight:500}
+  .r-verdict .cap{margin-bottom:12px}
+  .r-verdict .declared{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .r-verdict .declared label{font-size:.85rem;opacity:.92}
+  .r-verdict .declared input{max-width:130px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);
+    color:#fff;border-radius:8px;padding:8px 10px;font-family:"JetBrains Mono",monospace}
+  .r-verdict .declared input::placeholder{color:rgba(255,255,255,.55)}
+  .r-verdict .declared input:focus{outline:none;border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.18)}
+  .badge{display:inline-flex;align-items:center;gap:8px;margin-top:14px;padding:8px 14px;border-radius:999px;font-weight:700;font-size:.9rem}
+  .badge::before{content:"";width:9px;height:9px;border-radius:2px}
+  .badge.idle{background:rgba(255,255,255,.14);color:#dff7e7}.badge.idle::before{background:rgba(255,255,255,.5);border-radius:50%}
+  .badge.ok{background:#eafaf0;color:var(--green-800)}.badge.ok::before{background:var(--green)}
+  .badge.danger{background:var(--red);color:#fff}.badge.danger::before{background:#fff;border-radius:50%}
+  .badge.warn{background:#fff;color:var(--amber-ink);border:1px solid #e9c86a}.badge.warn::before{background:var(--amber)}
+  .r-verdict .msg{margin-top:12px;font-size:.84rem;line-height:1.45;opacity:.9}
+
+  .gauges{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(255,255,255,.12)}
+  .gauge{background:var(--green-800);padding:17px 16px;text-align:center}
+  .gauge .v{font-family:"Archivo",sans-serif;font-weight:800;font-size:1.7rem;color:#bff5d4;font-variant-numeric:tabular-nums;line-height:1}
+  .gauge .v .u{font-family:"Hanken Grotesk";font-weight:600;font-size:.72rem;opacity:.7;margin-left:4px}
+  .gauge .k{font-family:"JetBrains Mono",monospace;font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;opacity:.8;margin-top:6px}
+  .gauge .d{font-size:.74rem;opacity:.6;margin-top:3px}
+
+  /* composição por tipo de aprendizagem */
+  .breakdown{padding:18px 22px;border-top:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.10)}
+  .bk-head{display:flex;align-items:baseline;gap:10px;font-family:"JetBrains Mono",monospace;font-size:.7rem;
+    letter-spacing:.12em;text-transform:uppercase;opacity:.82;margin-bottom:12px}
+  .bk-head .peak{margin-left:auto;text-transform:none;letter-spacing:0;opacity:.9}
+  .bk-bar{display:flex;height:18px;border-radius:7px;overflow:hidden;background:rgba(255,255,255,.12)}
+  .bk-bar .seg{height:100%;transition:width .45s ease}
+  .bk-empty{font-size:.84rem;opacity:.72}
+  .bk-legend{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:9px 18px;margin-top:15px}
+  .bk-item{display:flex;align-items:center;gap:8px;font-size:.8rem}
+  .bk-item .dot{width:11px;height:11px;border-radius:3px;flex:none}
+  .bk-item .nm{opacity:.92}
+  .bk-item .val{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:.75rem;opacity:.95;white-space:nowrap}
+
+  .colophon{padding:14px 22px;font-size:.74rem;opacity:.8;border-top:1px solid rgba(255,255,255,.14);line-height:1.5}
+  .colophon a{color:#cdebd6}
+
+  @media(max-width:680px){.r-top{grid-template-columns:1fr}.gauges{grid-template-columns:1fr}.brandbar .stamp{display:none}}
+
+  /* ============ FAIXA FIXA ============ */
+  .strip{position:fixed;left:0;right:0;bottom:0;z-index:50;background:rgba(22,83,29,.97);
+    backdrop-filter:blur(6px);color:#eafaf0;border-top:2px solid var(--green)}
+  .strip .inner{max-width:1180px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:22px}
+  .strip .mk{--s:5px;display:grid;grid-template-columns:repeat(3,var(--s));grid-auto-rows:var(--s);gap:2px;flex:none}
+  .strip .mk i{background:#bff5d4;border-radius:1px}.strip .mk i.r{background:#ff8a82;border-radius:50%}
+  .strip .item{display:flex;align-items:baseline;gap:8px;font-family:"JetBrains Mono",monospace}
+  .strip .item .k{font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;opacity:.72}
+  .strip .item .v{font-size:1.05rem;font-weight:700;color:#fff}
+  .strip .sep{width:1px;height:22px;background:rgba(255,255,255,.2)}
+  .strip .right{margin-left:auto;font-size:.72rem;opacity:.7}
+  @media(max-width:680px){.strip .right,.strip .sep{display:none}.strip .inner{gap:16px;justify-content:space-between}}
+
+  footer.pg{padding:26px 4px 8px;color:var(--muted);font-size:.78rem;line-height:1.6}
+  footer.pg a{color:var(--green-700)}
+  footer.pg .note{margin-top:8px;font-size:.73rem;color:var(--muted-2)}
+
+  @media print{body{padding:0;background:#fff}.strip,.toolbar,.hero .deco,.addb,.rm{display:none}.module,.readout{box-shadow:none;break-inside:avoid}}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="brandbar">
+  <div class="inner">
+    <div class="brand-lockup" aria-label="Instituto Federal do Espírito Santo — Centro de Referência em Formação e em Educação a Distância (CEFOR)">
+      <div class="if-mark" aria-hidden="true">
+        <span class="dot"></span><span></span><span></span>
+        <span></span><span></span><span class="empty"></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span class="empty"></span>
+      </div>
+      <div class="lockup">
+        <div class="l1">INSTITUTO FEDERAL</div>
+        <div class="l2">Espírito Santo</div>
+        <div class="l3">Centro de Referência em Formação<br>e em Educação a Distância</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="stamp">MOOC · Design Instrucional · proposta de pesquisa</div>
+  </div>
+</div>
+
+<div class="page">
+
+  <section class="hero">
+    <div class="deco" aria-hidden="true"><i class="r"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <span class="eyebrow">Calculadora de carga horária · MOOC IFES</span>
+    <h1>Quanta carga horária o seu <span class="accent">MOOC</span> realmente tem?</h1>
+    <p class="lede">Estime a carga horária total de um curso a distância somando as <b>atividades de aprendizagem</b> planejadas — organizadas pelos tipos do <em>Conversational Framework</em> de Laurillard (Aquisição, Investigação, Prática, Produção, Discussão) — e verifique se a carga declarada é coerente.</p>
+  </section>
+
+  <!-- ===== CONFIGURAÇÃO / CONTEXTO ===== -->
+  <section class="setup">
+    <div class="blk">
+      <span class="cap">Contexto do curso</span>
+      <div class="seg-ctl" id="ctx" role="group" aria-label="Contexto do curso">
+        <button type="button" data-ctx="padrao" class="on">MOOC padrão (assíncrono)</button>
+        <button type="button" data-ctx="hibrido">Híbrido / pesquisa</button>
+      </div>
+    </div>
+    <div class="blk">
+      <span class="cap">Duração (semanas) — opcional</span>
+      <input type="number" id="weeks" min="1" step="1" inputmode="numeric" placeholder="ex.: 4">
+    </div>
+    <p class="ctx-note" id="ctxNote">MOOCs do IFES são totalmente assíncronos, sem tutoria, sem atividades colaborativas ou síncronas. Mude para <b>Híbrido / pesquisa</b> para habilitar Colaboração e Atividades síncronas/presenciais.</p>
+  </section>
+
+  <p class="helper">Adicione as atividades reais do curso em cada tipo de aprendizagem. Cada bloco <b>acende</b> e mostra sua contribuição; o resultado soma a <b>carga total</b> e revela o equilíbrio entre os tipos.</p>
+
+  <main class="modules" id="modules"></main>
+
+  <div class="toolbar">
+    <button class="btn" id="resetBtn" type="button">Limpar tudo</button>
+    <button class="btn primary" id="printBtn" type="button">Imprimir / Salvar PDF</button>
+  </div>
+
+  <!-- ===================== RESULTADO ===================== -->
+  <section class="readout" id="readout">
+    <div class="r-head">
+      <span class="m-ico" style="--s:7px"><i style="background:#bff5d4"></i><i style="background:#bff5d4"></i><i style="background:#ff8a82;border-radius:50%"></i><i style="background:#bff5d4"></i></span>
+      <span class="lbl">Leitura do instrumento</span>
+      <span class="live"><i></i> cálculo ao vivo</span>
+    </div>
+
+    <div class="r-top">
+      <div class="r-hero">
+        <div class="cap">Carga horária total estimada</div>
+        <div class="big"><span id="rCourse">0</span><span class="u">horas no curso</span></div>
+        <div class="sub" id="rWeekWrap" style="display:none">≈ <b id="rPerWeek">0</b> h por semana (em <b id="rWeeks">0</b> semanas)</div>
+      </div>
+      <div class="r-verdict">
+        <div class="cap">Calibração</div>
+        <div class="declared">
+          <label for="declared">Carga declarada do curso (h):</label>
+          <input type="number" id="declared" value="" min="0" step="1" inputmode="numeric" placeholder="ex.: 40">
+        </div>
+        <span class="badge idle" id="cmpBadge">informe para comparar</span>
+        <div class="msg" id="cmpMsg"></div>
+      </div>
+    </div>
+
+    <div class="gauges">
+      <div class="gauge"><div class="v"><span id="rInd">0</span><span class="u">h</span></div><div class="k">Aprendizagem individual</div><div class="d">Aquisição · Investigação · Prática · Produção</div></div>
+      <div class="gauge"><div class="v"><span id="rSoc">0</span><span class="u">h</span></div><div class="k">Aprendizagem social</div><div class="d">Discussão · Colaboração</div></div>
+      <div class="gauge"><div class="v"><span id="rSyn">0</span><span class="u">h</span></div><div class="k">Síncrono / presencial</div><div class="d">Encontros ao vivo</div></div>
+    </div>
+
+    <div class="breakdown">
+      <div class="bk-head"><span>Equilíbrio por tipo de aprendizagem</span><span class="peak" id="bkTypes"></span></div>
+      <div class="bk-bar" id="bkBar"></div>
+      <div class="bk-legend" id="bkLegend"></div>
+    </div>
+
+    <div class="colophon">
+      Valores conforme o <strong>Quadro 2 — Calculadora de carga horária para cursos MOOC</strong> (Aline Pinto Amorim, Vanessa Battestin, Marize Lyra Silva Passos — IFES/CEFOR), com base em <strong>McInnes et al. (2026)</strong>, Liu &amp; Evans (2020) e Beer (2019); tipos de aprendizagem segundo o <em>Conversational Framework</em> de <strong>Laurillard (2012)</strong>.
+    </div>
+  </section>
+
+  <footer class="pg">
+    <p>IFES · Centro de Referência em Formação e em Educação a Distância (CEFOR) — proposta de calculadora para MOOCs (pesquisa de doutorado de Aline Amorim). Uso interno de design instrucional.</p>
+    <p class="note">A carga horária é uma estimativa. A literatura (McInnes et al., 2026) reconhece que o tempo real varia entre estudantes; o objetivo é reduzir a discrepância entre a carga declarada e a planejada, não cravar um valor exato.</p>
+  </footer>
+</div>
+
+<div class="strip">
+  <div class="inner">
+    <span class="mk"><i class="r"></i><i></i><i></i><i></i><i></i><i></i></span>
+    <div class="item"><span class="k">Carga total</span><span class="v"><span id="sCourse">0</span> h</span></div>
+    <div class="sep"></div>
+    <div class="item"><span class="k">Tipos explorados</span><span class="v"><span id="sTypes">0</span>/7</span></div>
+    <div class="right">IFES · CEFOR — Calculadora de Carga Horária MOOC</div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   MOTOR DE CÁLCULO — fiel ao Quadro 2 (proposta CEFOR/IFES)
+   Toda a carga é calculada em HORAS por atividade e somada no total do curso.
+   ===================================================================== */
+
+/* Taxas do Quadro 2 */
+const READ_PPM   = { low:300, medium:130, high:70 };   // Leitura: palavras por minuto
+const VIDEO_MULT = { low:2,   high:3 };                // Vídeo/Áudio: múltiplo da duração
+const QUIZ_MIN   = { low:2,   high:5 };                // Questionário: minutos por questão
+const INTER_MIN  = { low:15,  high:30 };               // Atividade interativa: minutos
+const WRITE_PPH  = { low:250, medium:125, high:60 };   // Escrita: palavras por hora
+const DISC_H     = { low:0.5, high:1.5 };              // Discussão: horas por participação
+
+/* Tipos de aprendizagem (Laurillard) — usados na composição/gráfico */
+const GROUPS = [
+  { key:'aquisicao',   label:'Aquisição',            color:'#7ed9a6' },
+  { key:'investigacao',label:'Investigação',         color:'#54c79a' },
+  { key:'pratica',     label:'Prática',              color:'#3db877' },
+  { key:'producao',    label:'Produção',             color:'#2f9e68' },
+  { key:'discussao',   label:'Discussão',            color:'#1f7a52' },
+  { key:'colaboracao', label:'Colaboração',          color:'#8a6bd9' },
+  { key:'sincrono',    label:'Síncrono/Presencial',  color:'#c9912b' }
+];
+const GROUP = Object.fromEntries(GROUPS.map(g => [g.key, g]));
+
+/* Categorias de atividade (cada uma vira um bloco/módulo) */
+const CATS = [
+  { key:'reading', group:'aquisicao', num:'§01', title:'Leitura',
+    hint:'Aquisição — textos, apostilas, artigos, páginas do AVA. Conta-se por palavras.',
+    add:'+ adicionar leitura',
+    comp:['low','medium','high'],
+    compLabel:{ low:'Baixa · ideias principais (300 palavras/min)', medium:'Média · conceitos (130 palavras/min)', high:'Alta · análise crítica (70 palavras/min)' },
+    fields:[ { id:'words', label:'Palavras', def:0, min:0, step:50 } ],
+    calc: it => it.words > 0 ? it.words / READ_PPM[it.comp] / 60 : 0 },
+
+  { key:'video', group:'aquisicao', num:'§02', title:'Vídeo / Áudio',
+    hint:'Aquisição — videoaulas, podcasts, áudios. Conta o tempo de processamento do aluno.',
+    add:'+ adicionar vídeo/áudio',
+    comp:['low','high'],
+    compLabel:{ low:'Baixa · 2× a duração da mídia', high:'Alta · 3× a duração da mídia' },
+    fields:[ { id:'min', label:'Duração da mídia (min)', def:0, min:0, step:1 } ],
+    calc: it => it.min > 0 ? it.min * VIDEO_MULT[it.comp] / 60 : 0 },
+
+  { key:'investigation', group:'investigacao', num:'§03', title:'Investigação',
+    hint:'Investigação/exploração de um tema, busca e avaliação de informações.',
+    add:'+ adicionar investigação',
+    prof:'Tempo definido pelo professor conforme a complexidade da tarefa.',
+    fields:[ { id:'hours', label:'Horas estimadas', def:0, min:0, step:0.25 } ],
+    calc: it => it.hours > 0 ? it.hours : 0 },
+
+  { key:'quiz', group:'pratica', num:'§04', title:'Questionário',
+    hint:'Prática — questões de múltipla escolha ou resposta curta.',
+    add:'+ adicionar questionário',
+    comp:['low','high'],
+    compLabel:{ low:'Baixa · múltipla escolha (2 min/questão)', high:'Alta · resposta curta (5 min/questão)' },
+    fields:[ { id:'q', label:'Nº de questões', def:0, min:0, step:1 } ],
+    calc: it => it.q > 0 ? it.q * QUIZ_MIN[it.comp] / 60 : 0 },
+
+  { key:'interactive', group:'pratica', num:'§05', title:'Atividade interativa',
+    hint:'Prática — objetos H5P, jogos, simulações.',
+    add:'+ adicionar atividade interativa',
+    comp:['low','high'],
+    compLabel:{ low:'Baixa · H5P/jogo (15 min)', high:'Alta · H5P/jogo (30 min)' },
+    fields:[ { id:'count', label:'Quantidade', def:0, min:0, step:1 } ],
+    calc: it => it.count > 0 ? it.count * INTER_MIN[it.comp] / 60 : 0 },
+
+  { key:'writing', group:'producao', num:'§06', title:'Produção escrita',
+    hint:'Produção — redações, ensaios, respostas. Conta-se pelas palavras esperadas.',
+    add:'+ adicionar produção escrita',
+    comp:['low','medium','high'],
+    compLabel:{ low:'Baixa · escrita livre/reflexiva (250 palavras/h)', medium:'Média · argumentativa (125 palavras/h)', high:'Alta · baseada em pesquisa (60 palavras/h)' },
+    fields:[ { id:'words', label:'Palavras esperadas', def:0, min:0, step:50 } ],
+    calc: it => it.words > 0 ? it.words / WRITE_PPH[it.comp] : 0 },
+
+  { key:'artifact', group:'producao', num:'§07', title:'Artefatos',
+    hint:'Produção — mídias, apresentações, planos de aula, projetos.',
+    add:'+ adicionar artefato',
+    prof:'Tempo definido pelo professor conforme a complexidade da tarefa.',
+    fields:[ { id:'hours', label:'Horas estimadas', def:0, min:0, step:0.25 } ],
+    calc: it => it.hours > 0 ? it.hours : 0 },
+
+  { key:'discussion', group:'discussao', num:'§08', title:'Discussão',
+    hint:'Aprendizagem social — fóruns e debates entre colegas.',
+    add:'+ adicionar discussão',
+    comp:['low','high'],
+    compLabel:{ low:'Baixa · discussão simples/livre (30 min)', high:'Alta · discussão profunda ≥250 palavras (1,5 h)' },
+    fields:[ { id:'count', label:'Nº de participações', def:0, min:0, step:1 } ],
+    calc: it => it.count > 0 ? it.count * DISC_H[it.comp] : 0 },
+
+  { key:'collaboration', group:'colaboracao', num:'§09', title:'Colaboração', optional:true,
+    hint:'Aprendizagem social — atividades em grupo, avaliação por pares.',
+    add:'+ adicionar colaboração',
+    prof:'Sempre alta complexidade: conta o DOBRO (×2) do tempo de uma produção individual equivalente.',
+    fields:[ { id:'base', label:'Horas de produção individual equiv.', def:0, min:0, step:0.25 } ],
+    calc: it => it.base > 0 ? it.base * 2 : 0 },
+
+  { key:'synchronous', group:'sincrono', num:'§10', title:'Síncrono / Presencial', optional:true,
+    hint:'Aulas, encontros, mentorias, palestras — síncronas ou presenciais.',
+    add:'+ adicionar encontro',
+    fields:[ { id:'sessions', label:'Nº de encontros', def:0, min:0, step:1 },
+             { id:'dur', label:'Duração de cada (h)', def:0, min:0, step:0.25 } ],
+    calc: it => Math.max(0, it.sessions) * Math.max(0, it.dur) }
+];
+const CAT = Object.fromEntries(CATS.map(c => [c.key, c]));
+
+/* ===== ESTADO ===== */
+const state = {};
+CATS.forEach(c => state[c.key] = []);
+let uid = 1;
+let ctx = 'padrao';
+
+/* ===== HELPERS ===== */
+const $ = id => document.getElementById(id);
+const numv = v => { const x = parseFloat(v); return isFinite(x) ? x : 0; };
+const fmt = x => (Math.round(x*100)/100).toLocaleString('pt-BR',{maximumFractionDigits:2});
+const fmtTime = h => h <= 0 ? '—' : (h < 1 ? Math.round(h*60) + ' min' : fmt(h) + ' h');
+function findItem(id){
+  id = parseInt(id,10);
+  for (const k in state){ const it = state[k].find(x => x.id === id); if (it) return it; }
+  return null;
+}
+
+/* ===== CONSTRUÇÃO DOS MÓDULOS ===== */
+function buildModules(){
+  const wrap = $('modules');
+  wrap.innerHTML = CATS.map(c => `
+    <section class="module${c.optional ? ' is-opt' : ''}" id="mod-${c.key}" data-opt="${c.optional ? 1 : 0}">
+      <div class="m-head">
+        <span class="m-ico"><i></i><i></i><i></i><i></i></span>
+        <span class="num">${c.num}</span>
+        <span class="gtag" style="background:${GROUP[c.group].color}">${GROUP[c.group].label}</span>
+        <h2>${c.title}${c.optional ? ' *' : ''}</h2>
+        <span class="m-sum" id="sum-${c.key}">—</span>
+      </div>
+      <div class="m-body">
+        <p class="hint">${c.hint}</p>
+        ${c.prof ? `<div class="prof-note">${c.prof}</div>` : ''}
+        <div class="list" id="list-${c.key}"><div class="empty-line" id="empty-${c.key}">Nenhuma atividade adicionada.</div></div>
+        <button class="addb" type="button" data-add="${c.key}">${c.add}</button>
+      </div>
+    </section>`).join('');
+}
+
+/* ===== ITENS ===== */
+function itemHTML(c, it){
+  const fields = c.fields.map(f => `
+    <label class="mini">${f.label}
+      <input type="number" data-id="${it.id}" data-f="${f.id}" value="${it[f.id]}" min="${f.min}" step="${f.step}" inputmode="decimal">
+    </label>`).join('');
+  const comp = c.comp ? `
+    <label class="mini grow">Complexidade
+      <select data-id="${it.id}" data-f="comp">
+        ${c.comp.map(k => `<option value="${k}"${k===it.comp?' selected':''}>${c.compLabel[k]}</option>`).join('')}
+      </select>
+    </label>` : '';
+  return `
+    <div class="item" data-item="${it.id}">
+      <input class="iname" data-id="${it.id}" data-f="name" data-txt placeholder="nome da atividade (opcional)" value="${it.name||''}">
+      <div class="ifs">${fields}${comp}</div>
+      <div class="iside"><span class="t" id="t-${it.id}">—</span><button class="rm" type="button" data-rm="${it.id}" aria-label="remover atividade">&times;</button></div>
+    </div>`;
+}
+function addItem(catKey, focus){
+  const c = CAT[catKey];
+  const it = { id: uid++, name:'' };
+  c.fields.forEach(f => it[f.id] = f.def);
+  if (c.comp) it.comp = c.comp[0];
+  state[catKey].push(it);
+  const empty = $('empty-'+catKey); if (empty) empty.remove();
+  $('list-'+catKey).insertAdjacentHTML('beforeend', itemHTML(c, it));
+  if (focus){ const el = document.querySelector(`#list-${catKey} [data-item="${it.id}"] .iname`); if (el) el.focus(); }
+  recalc();
+}
+function removeItem(id){
+  id = parseInt(id,10);
+  for (const k in state){
+    const i = state[k].findIndex(x => x.id === id);
+    if (i > -1){
+      state[k].splice(i,1);
+      const node = document.querySelector(`[data-item="${id}"]`); if (node) node.remove();
+      if (state[k].length === 0){
+        $('list-'+k).insertAdjacentHTML('beforeend', `<div class="empty-line" id="empty-${k}">Nenhuma atividade adicionada.</div>`);
+      }
+      break;
+    }
+  }
+  recalc();
+}
+
+/* ===== CÁLCULO ===== */
+function isExcluded(c){ return ctx === 'padrao' && c.optional; }
+
+function recalc(){
+  let total = 0;
+  const gt = {}; GROUPS.forEach(g => gt[g.key] = 0);
+
+  CATS.forEach(c => {
+    let sub = 0;
+    state[c.key].forEach(it => {
+      const h = Math.max(0, c.calc(it) || 0);
+      const lbl = $('t-'+it.id); if (lbl) lbl.textContent = fmtTime(h);
+      sub += h;
+    });
+    const excl = isExcluded(c);
+    if (!excl){ gt[c.group] += sub; total += sub; }
+    const mod = $('mod-'+c.key); const pill = $('sum-'+c.key);
+    if (mod) mod.classList.toggle('is-active', sub > 0 && !excl);
+    if (pill) pill.textContent = sub > 0 ? fmt(sub) + ' h' : '—';
+  });
+
+  /* macro: individual / social / síncrono */
+  const individual = gt.aquisicao + gt.investigacao + gt.pratica + gt.producao;
+  const social = gt.discussao + gt.colaboracao;
+  const sinc = gt.sincrono;
+
+  $('rCourse').textContent = fmt(total);
+  $('rInd').textContent = fmt(individual);
+  $('rSoc').textContent = fmt(social);
+  $('rSyn').textContent = fmt(sinc);
+  $('sCourse').textContent = fmt(total);
+
+  /* equivalente semanal (opcional) */
+  const weeks = numv($('weeks').value);
+  if (weeks > 0 && total > 0){
+    $('rWeekWrap').style.display = '';
+    $('rPerWeek').textContent = fmt(total / weeks);
+    $('rWeeks').textContent = fmt(weeks);
+  } else { $('rWeekWrap').style.display = 'none'; }
+
+  renderComposition(gt, total);
+  updateCalibration(total);
+}
+
+/* ===== COMPOSIÇÃO POR TIPO DE APRENDIZAGEM ===== */
+function renderComposition(gt, total){
+  const bar = $('bkBar'), leg = $('bkLegend'), types = $('bkTypes');
+  const explored = GROUPS.filter(g => (gt[g.key]||0) > 0).length;
+  $('sTypes').textContent = explored;
+
+  if (total <= 0){
+    bar.innerHTML = '';
+    leg.innerHTML = '<div class="bk-empty">Adicione atividades para ver o equilíbrio entre os tipos de aprendizagem.</div>';
+    types.textContent = '';
+    return;
+  }
+  bar.innerHTML = GROUPS.map(g => {
+    const v = gt[g.key] || 0, pct = v/total*100;
+    return pct > 0 ? `<div class="seg" style="width:${pct}%;background:${g.color}" title="${g.label}: ${fmt(v)} h (${Math.round(pct)}%)"></div>` : '';
+  }).join('');
+  const ranked = GROUPS.map(g => ({...g, v: gt[g.key]||0})).filter(g => g.v > 0).sort((a,b) => b.v - a.v);
+  leg.innerHTML = ranked.map(g => {
+    const pct = Math.round(g.v/total*100);
+    return `<div class="bk-item"><span class="dot" style="background:${g.color}"></span><span class="nm">${g.label}</span><span class="val">${fmt(g.v)} h · ${pct}%</span></div>`;
+  }).join('');
+  types.textContent = `${explored} de 7 tipos de aprendizagem explorados`;
+}
+
+/* ===== CALIBRAÇÃO estimado × declarado ===== */
+function updateCalibration(total){
+  const badge = $('cmpBadge'), msg = $('cmpMsg'), hero = $('rCourse'), raw = $('declared').value;
+  hero.classList.remove('is-alert');
+  if (raw === '' || !isFinite(parseFloat(raw)) || parseFloat(raw) <= 0){
+    badge.className = 'badge idle'; badge.textContent = 'informe para comparar'; msg.textContent = ''; return;
+  }
+  const declared = parseFloat(raw), diffPct = ((total - declared)/declared)*100;
+  if (Math.abs(diffPct) <= 15){
+    badge.className = 'badge ok'; badge.textContent = 'Realista (±15%)';
+    msg.textContent = `Estimativa de ${fmt(total)} h vs. ${fmt(declared)} h declaradas — diferença de ${fmt(diffPct)}%. Coerente.`;
+  } else if (diffPct > 15){
+    badge.className = 'badge danger'; badge.textContent = 'Subdimensionada'; hero.classList.add('is-alert');
+    msg.textContent = `O curso parece exigir ${fmt(total)} h, mas declara ${fmt(declared)} h (${fmt(diffPct)}% acima). A carga real pode estar subestimada para o estudante.`;
+  } else {
+    badge.className = 'badge warn'; badge.textContent = 'Superdimensionada';
+    msg.textContent = `O curso declara ${fmt(declared)} h, mas as atividades somam só ${fmt(total)} h (${fmt(diffPct)}%). Há margem para incluir mais atividades ou revisar a carga declarada.`;
+  }
+}
+
+/* ===== CONTEXTO (MOOC padrão × híbrido) ===== */
+function applyContext(){
+  CATS.forEach(c => { if (c.optional){ const m = $('mod-'+c.key); if (m) m.style.display = (ctx === 'padrao') ? 'none' : ''; } });
+}
+
+/* ===== EVENTOS ===== */
+function applyTarget(t){
+  if (!t.dataset || t.dataset.id === undefined) return;
+  const it = findItem(t.dataset.id); if (!it) return;
+  const f = t.dataset.f;
+  const asText = (f === 'comp' || t.dataset.txt !== undefined);   // nome e complexidade são texto
+  it[f] = asText ? t.value : numv(t.value);
+}
+document.addEventListener('input',  e => { applyTarget(e.target); recalc(); });
+document.addEventListener('change', e => { applyTarget(e.target); recalc(); });
+document.addEventListener('click', e => {
+  const add = e.target.closest('[data-add]');
+  if (add){ addItem(add.dataset.add, true); return; }
+  const rm = e.target.closest('[data-rm]');
+  if (rm){ removeItem(rm.dataset.rm); return; }
+  const cx = e.target.closest('[data-ctx]');
+  if (cx){
+    ctx = cx.dataset.ctx;
+    document.querySelectorAll('#ctx button').forEach(b => b.classList.toggle('on', b === cx));
+    applyContext(); recalc(); return;
+  }
+});
+$('resetBtn').addEventListener('click', () => {
+  CATS.forEach(c => { state[c.key] = []; const list = $('list-'+c.key);
+    list.innerHTML = `<div class="empty-line" id="empty-${c.key}">Nenhuma atividade adicionada.</div>`; });
+  $('weeks').value = ''; $('declared').value = '';
+  ctx = 'padrao';
+  document.querySelectorAll('#ctx button').forEach(b => b.classList.toggle('on', b.dataset.ctx === 'padrao'));
+  applyContext(); recalc();
+});
+$('printBtn').addEventListener('click', () => window.print());
+
+/* ===== INICIALIZAÇÃO ===== */
+buildModules();
+applyContext();
+addItem('reading');   // semeia uma leitura para guiar o uso
+recalc();
+</script>
+</body>
+</html>
