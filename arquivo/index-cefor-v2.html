@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Carga Horária para cursos EaD — IFES / CEFOR</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#3da63d; --green-600:#2e8b30; --green-700:#1f7027; --green-800:#16531d;
+    --green-tint:#eaf4ea; --red:#e2211c; --red-700:#b81812;
+    --amber:#e0a92b; --amber-tint:#fff8e6; --amber-ink:#7a5b00;
+    --purple:#6b4fc0; --purple-tint:#efeafb;
+    --ink:#181c19; --muted:#5c6660; --muted-2:#8a948d;
+    --line:#e3eae3; --line-strong:#cdd9cd; --paper:#ffffff; --paper-2:#f6faf6;
+    --radius:12px;
+    --shadow:0 1px 2px rgba(20,50,25,.06), 0 10px 30px rgba(20,50,25,.06);
+    --shadow-lg:0 24px 60px rgba(16,60,25,.22);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;color:var(--ink);font-family:"Hanken Grotesk",system-ui,sans-serif;
+    font-size:15px;line-height:1.5;background-color:var(--paper-2);
+    background-image:
+      linear-gradient(rgba(61,166,61,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(61,166,61,.045) 1px, transparent 1px);
+    background-size:26px 26px;padding-bottom:74px;-webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit}
+
+  /* ============ MARCA ============ */
+  .brandbar{background:var(--paper);border-bottom:1px solid var(--line);padding:13px 22px;position:sticky;top:0;z-index:30}
+  .brandbar .inner{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:18px}
+  .brand-lockup{display:flex;align-items:center;gap:14px}
+  .if-mark{--u:13px;--g:3px;display:grid;grid-template-columns:repeat(3,var(--u));grid-auto-rows:var(--u);gap:var(--g);flex:none}
+  .if-mark span{background:var(--green);border-radius:2px;animation:pop .5s cubic-bezier(.2,.9,.3,1.4) backwards}
+  .if-mark span.dot{background:var(--red);border-radius:50%}
+  .if-mark span.empty{background:transparent;animation:none}
+  .if-mark span:nth-child(1){animation-delay:.04s}.if-mark span:nth-child(2){animation-delay:.09s}
+  .if-mark span:nth-child(3){animation-delay:.14s}.if-mark span:nth-child(4){animation-delay:.11s}
+  .if-mark span:nth-child(5){animation-delay:.16s}.if-mark span:nth-child(7){animation-delay:.18s}
+  .if-mark span:nth-child(8){animation-delay:.23s}.if-mark span:nth-child(9){animation-delay:.28s}
+  .if-mark span:nth-child(10){animation-delay:.25s}.if-mark span:nth-child(11){animation-delay:.30s}
+  @keyframes pop{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}
+  .lockup{line-height:1.14}
+  .lockup .l1{font-family:"Archivo",sans-serif;font-weight:800;font-size:1.05rem;color:#111}
+  .lockup .l2{font-weight:600;font-size:.82rem;color:#1c1c1c;margin-top:1px}
+  .lockup .l3{font-size:.7rem;color:var(--muted);margin-top:1px;line-height:1.2}
+  @media(max-width:680px){.lockup .l3{display:none}}
+  .brandbar .spacer{margin-left:auto}
+  .brandbar .stamp{font-family:"JetBrains Mono",monospace;font-size:.64rem;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--green-700);border:1px solid var(--line-strong);
+    padding:6px 11px;border-radius:999px;white-space:nowrap}
+  @media(max-width:560px){.brandbar .stamp{display:none}}
+
+  /* ============ SHELL 2 COLUNAS ============ */
+  .shell{max-width:1240px;margin:0 auto;padding:20px 16px 0;display:grid;
+    grid-template-columns:minmax(0,1fr) 384px;gap:22px;align-items:start}
+  @media(max-width:1000px){.shell{grid-template-columns:1fr;gap:18px}}
+
+  /* ============ CABEÇALHO DO CURSO ============ */
+  .course-head{margin-bottom:14px}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:"JetBrains Mono",monospace;
+    font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--green-700);margin-bottom:9px}
+  .eyebrow::before{content:"";width:8px;height:8px;background:var(--green)}
+  .tool-label{display:inline-flex;align-items:center;gap:9px;font-family:"Archivo",sans-serif;
+    font-weight:700;font-size:.88rem;letter-spacing:.005em;color:var(--green-700);margin-bottom:8px}
+  .tool-label::before{content:"";width:9px;height:9px;background:var(--green);border-radius:2px;flex:none}
+  .course-name{width:100%;border:none;background:transparent;font-family:"Archivo",sans-serif;font-weight:900;
+    letter-spacing:-.02em;font-size:clamp(1.5rem,3.2vw,2.1rem);line-height:1.08;color:var(--ink);padding:2px 0}
+  .course-name:focus{outline:none}
+  .course-name::placeholder{color:var(--line-strong)}
+
+  /* etapas + contexto */
+  .meta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .steps{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .step{display:flex;align-items:center;gap:7px;font-size:.78rem;color:var(--muted-2);
+    background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:5px 12px 5px 8px;transition:.25s}
+  .step .b{width:18px;height:18px;border-radius:50%;background:var(--paper-2);border:1px solid var(--line-strong);
+    display:grid;place-items:center;font-size:.64rem;font-weight:700;color:var(--muted-2);font-family:"JetBrains Mono",monospace}
+  .step.done{color:var(--green-800);border-color:#cfe8cf;background:var(--green-tint)}
+  .step.done .b{background:var(--green);border-color:var(--green);color:#fff}
+  .seg-ctl{display:inline-flex;border:1px solid var(--line-strong);border-radius:999px;overflow:hidden;background:#fff;margin-left:auto}
+  .seg-ctl button{border:none;background:#fff;color:var(--muted);font-size:.76rem;font-weight:600;padding:7px 13px;cursor:pointer;transition:.15s}
+  .seg-ctl button.on{background:var(--ink);color:#fff}
+  @media(max-width:1000px){.seg-ctl{margin-left:0}}
+
+  /* ============ ONBOARDING ============ */
+  .onb{background:linear-gradient(135deg,var(--green-700),var(--green-800));color:#eafaf0;border-radius:var(--radius);
+    padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .onb::after{content:"";position:absolute;right:-20px;top:-20px;width:120px;height:120px;
+    background:radial-gradient(circle,rgba(255,255,255,.12),transparent 70%)}
+  .onb h3{margin:0 0 8px;font-family:"Archivo",sans-serif;font-weight:800;font-size:1rem}
+  .onb ol{margin:0;padding-left:18px;font-size:.86rem;opacity:.94;line-height:1.6}
+  .onb .acts{display:flex;gap:9px;margin-top:13px;flex-wrap:wrap}
+  .onb .x{position:absolute;top:10px;right:12px;background:transparent;border:none;color:#eafaf0;opacity:.7;cursor:pointer;font-size:1.1rem;line-height:1}
+  .onb .x:hover{opacity:1}
+
+  /* ============ BOTÃO ADICIONAR ============ */
+  .add-main{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+    background:var(--green-600);color:#fff;border:none;border-radius:var(--radius);padding:15px;
+    font-weight:700;font-size:.98rem;cursor:pointer;box-shadow:0 8px 22px rgba(31,112,39,.22);transition:.18s;margin-bottom:16px}
+  .add-main:hover{background:var(--green-700);transform:translateY(-1px)}
+  .add-main svg{width:20px;height:20px;stroke:#fff;stroke-width:2.4;fill:none}
+
+  /* ============ TIMELINE / CARDS ============ */
+  .tl-head{display:flex;align-items:baseline;gap:9px;margin:0 2px 11px;font-family:"JetBrains Mono",monospace;
+    font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2)}
+  .tl-head .ct{margin-left:auto;color:var(--green-700);font-weight:600}
+  .timeline{display:flex;flex-direction:column;gap:11px}
+
+  .empty{border:1.5px dashed var(--line-strong);border-radius:var(--radius);padding:34px 22px;text-align:center;background:var(--paper)}
+  .empty .ico{width:46px;height:46px;margin:0 auto 12px;border-radius:12px;background:var(--green-tint);
+    display:grid;place-items:center}
+  .empty .ico svg{width:24px;height:24px;stroke:var(--green-700);stroke-width:1.8;fill:none}
+  .empty h4{margin:0 0 5px;font-family:"Archivo",sans-serif;font-weight:700;font-size:1rem;color:var(--ink)}
+  .empty p{margin:0;font-size:.86rem;color:var(--muted)}
+
+  .card{background:var(--paper);border:1px solid var(--line);border-left:3px solid var(--gc,var(--green));
+    border-radius:var(--radius);box-shadow:var(--shadow);padding:13px 14px;animation:slidein .4s cubic-bezier(.2,.8,.3,1) backwards}
+  @keyframes slidein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .card-top{display:flex;align-items:center;gap:11px}
+  .card-ico{width:34px;height:34px;border-radius:9px;background:var(--gtint,#eaf4ea);display:grid;place-items:center;flex:none}
+  .card-ico svg{width:19px;height:19px;stroke:var(--gc,var(--green-700));stroke-width:1.8;fill:none}
+  .card-id{min-width:0;flex:1}
+  .card-name{width:100%;border:none;background:transparent;font-family:inherit;font-weight:700;font-size:.95rem;color:var(--ink);padding:0}
+  .card-name:focus{outline:none}
+  .card-name::placeholder{color:var(--muted-2);font-weight:600}
+  .card-tag{display:inline-block;font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.06em;
+    text-transform:uppercase;color:#fff;background:var(--gc,var(--green));padding:2px 7px;border-radius:999px;margin-top:3px}
+  .card-time{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:.95rem;color:var(--green-700);white-space:nowrap;text-align:right}
+  .card-time .u{display:block;font-size:.6rem;font-weight:500;color:var(--muted-2);letter-spacing:.05em;text-transform:uppercase}
+  .card-rm{border:none;background:transparent;color:var(--muted-2);cursor:pointer;font-size:1.15rem;line-height:1;padding:0 2px;flex:none}
+  .card-rm:hover{color:var(--red)}
+  .card-fields{display:flex;gap:10px;flex-wrap:wrap;margin-top:11px;padding-top:11px;border-top:1px dashed var(--line)}
+  .fld{display:flex;flex-direction:column;gap:4px;font-size:.68rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+  .fld input,.fld select{padding:7px 9px;border:1px solid var(--line-strong);border-radius:7px;background:#fff;
+    color:var(--ink);font-size:.9rem;font-family:inherit;font-weight:400;text-transform:none;letter-spacing:0}
+  .fld input{font-family:"JetBrains Mono",monospace;font-weight:500;width:96px}
+  .fld select{min-width:140px}
+  .fld.grow{flex:1;min-width:150px}
+  .fld input:focus,.fld select:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(61,166,61,.16)}
+  .card-note{font-size:.72rem;color:var(--muted-2);margin-top:9px;display:flex;align-items:center;gap:6px}
+  .card-note b{color:var(--green-700);font-family:"JetBrains Mono",monospace;font-weight:500}
+
+  /* ============ PAINEL RESUMO ============ */
+  .panel{position:sticky;top:78px;display:flex;flex-direction:column;gap:13px}
+  @media(max-width:1000px){.panel{position:static;top:auto}}
+  .pcard{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+  .pcard .ph{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted-2);padding:12px 16px 0}
+
+  /* total */
+  .total{background:radial-gradient(120% 140% at 0% 0%,rgba(255,255,255,.10),transparent 50%),
+    linear-gradient(135deg,var(--green-700),var(--green-800));color:#eafaf0}
+  .total .ph{color:rgba(255,255,255,.8)}
+  .total .big{font-family:"Archivo",sans-serif;font-weight:900;letter-spacing:-.02em;font-size:3.4rem;line-height:1;
+    margin:4px 0 0;padding:0 16px;color:#fff;font-variant-numeric:tabular-nums}
+  .total .big.alert{color:#ffd2cd}
+  .total .big .u{font-family:"Hanken Grotesk";font-weight:600;font-size:1rem;opacity:.8;margin-left:7px;letter-spacing:0}
+  .total .sub{font-size:.82rem;opacity:.9;padding:6px 16px 14px}
+  .total .sub b{font-family:"JetBrains Mono",monospace;font-weight:500}
+
+  /* calibração */
+  .calib{padding-bottom:14px}
+  .calib .row{display:flex;align-items:center;gap:9px;padding:9px 16px 0;flex-wrap:wrap}
+  .calib label{font-size:.82rem;color:var(--muted)}
+  .calib input{max-width:110px;padding:8px 10px;border:1px solid var(--line-strong);border-radius:8px;
+    font-family:"JetBrains Mono",monospace;font-weight:500;font-size:.95rem}
+  .calib input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(61,166,61,.16)}
+  .badge{display:inline-flex;align-items:center;gap:8px;margin:11px 16px 0;padding:7px 13px;border-radius:999px;font-weight:700;font-size:.85rem}
+  .badge::before{content:"";width:8px;height:8px;border-radius:2px}
+  .badge.idle{background:var(--paper-2);color:var(--muted-2);border:1px solid var(--line)}.badge.idle::before{background:var(--muted-2);border-radius:50%}
+  .badge.ok{background:var(--green-tint);color:var(--green-800)}.badge.ok::before{background:var(--green)}
+  .badge.danger{background:#fdeceb;color:var(--red-700)}.badge.danger::before{background:var(--red);border-radius:50%}
+  .badge.warn{background:var(--amber-tint);color:var(--amber-ink);border:1px solid #f0d488}.badge.warn::before{background:var(--amber)}
+  .calib .msg{font-size:.78rem;color:var(--muted);line-height:1.45;padding:9px 16px 0}
+
+  /* equilíbrio */
+  .bal{padding-bottom:15px}
+  .bal .bar{display:flex;height:14px;border-radius:6px;overflow:hidden;background:var(--paper-2);margin:9px 16px 0;border:1px solid var(--line)}
+  .bal .bar .seg{height:100%;transition:width .45s ease}
+  .bal .types{font-size:.74rem;color:var(--muted-2);padding:8px 16px 0;font-family:"JetBrains Mono",monospace}
+  .bal .types b{color:var(--green-700)}
+  .bal .leg{display:flex;flex-direction:column;gap:6px;padding:11px 16px 0}
+  .bal .li{display:flex;align-items:center;gap:8px;font-size:.79rem;color:var(--ink)}
+  .bal .li .dot{width:10px;height:10px;border-radius:3px;flex:none}
+  .bal .li .v{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--muted)}
+  .bal .empty-b{font-size:.78rem;color:var(--muted-2);padding:9px 16px 2px}
+
+  /* distribuição macro */
+  .macro{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line)}
+  .macro .m{background:var(--paper);padding:13px 8px;text-align:center}
+  .macro .m .v{font-family:"Archivo",sans-serif;font-weight:800;font-size:1.2rem;color:var(--ink);font-variant-numeric:tabular-nums}
+  .macro .m .v .u{font-size:.6rem;font-weight:600;color:var(--muted-2);margin-left:2px}
+  .macro .m .k{font-size:.66rem;color:var(--muted-2);margin-top:3px;line-height:1.2}
+  .macro .m .sw{width:18px;height:3px;border-radius:2px;margin:5px auto 0}
+
+  /* próximo passo */
+  .next{display:flex;gap:11px;align-items:flex-start;padding:13px 16px}
+  .next .ni{width:30px;height:30px;border-radius:8px;background:var(--amber-tint);border:1px solid #f0d488;
+    display:grid;place-items:center;flex:none}
+  .next .ni svg{width:16px;height:16px;stroke:var(--amber-ink);stroke-width:2;fill:none}
+  .next.is-done .ni{background:var(--green-tint);border-color:#cfe8cf}
+  .next.is-done .ni svg{stroke:var(--green-700)}
+  .next .nt{font-size:.84rem;color:var(--ink);line-height:1.4}
+  .next .nt .lbl{display:block;font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-bottom:2px}
+
+  .pacts{display:flex;gap:8px;padding:0 16px 14px}
+  .btn{flex:1;font-weight:600;font-size:.82rem;cursor:pointer;border:1px solid var(--line-strong);
+    background:#fff;color:var(--ink);border-radius:8px;padding:9px;transition:.15s}
+  .btn:hover{border-color:var(--green);color:var(--green-700)}
+  .btn.ghost:hover{border-color:var(--red);color:var(--red-700)}
+
+  /* ============ CATÁLOGO (MODAL) ============ */
+  .overlay{position:fixed;inset:0;background:rgba(16,40,20,.42);backdrop-filter:blur(3px);z-index:60;
+    display:none;align-items:flex-start;justify-content:center;padding:40px 16px;overflow:auto}
+  .overlay.show{display:flex;animation:fade .2s ease}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+  .catalog{background:var(--paper);border-radius:16px;box-shadow:var(--shadow-lg);max-width:760px;width:100%;overflow:hidden;animation:rise .28s cubic-bezier(.2,.8,.3,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .cat-head{display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line)}
+  .cat-head h3{margin:0;font-family:"Archivo",sans-serif;font-weight:800;font-size:1.1rem}
+  .cat-head p{margin:2px 0 0;font-size:.8rem;color:var(--muted)}
+  .cat-head .x{margin-left:auto;background:var(--paper-2);border:1px solid var(--line);border-radius:8px;
+    width:32px;height:32px;cursor:pointer;font-size:1.1rem;color:var(--muted);line-height:1}
+  .cat-head .x:hover{border-color:var(--red);color:var(--red)}
+  .cat-body{padding:14px 20px 20px;max-height:64vh;overflow:auto}
+  .cat-group{margin-top:14px}
+  .cat-group:first-child{margin-top:0}
+  .cat-group .gl{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--muted-2);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+  .cat-group .gl::before{content:"";width:9px;height:9px;border-radius:3px;background:var(--gc)}
+  .cat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+  @media(max-width:560px){.cat-grid{grid-template-columns:1fr}}
+  .type-btn{display:flex;align-items:center;gap:11px;text-align:left;background:var(--paper);border:1px solid var(--line);
+    border-radius:10px;padding:11px 12px;cursor:pointer;transition:.15s}
+  .type-btn:hover{border-color:var(--gc);background:var(--gtint);transform:translateY(-1px)}
+  .type-btn .ti{width:34px;height:34px;border-radius:9px;background:var(--gtint);display:grid;place-items:center;flex:none}
+  .type-btn .ti svg{width:19px;height:19px;stroke:var(--gc);stroke-width:1.8;fill:none}
+  .type-btn .tn{font-weight:700;font-size:.9rem;color:var(--ink)}
+  .type-btn .td{font-size:.74rem;color:var(--muted-2);margin-top:1px;line-height:1.3}
+
+  /* ============ FAIXA FIXA (MOBILE) ============ */
+  .mobilebar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(22,83,29,.97);
+    backdrop-filter:blur(6px);color:#eafaf0;border-top:2px solid var(--green);display:none}
+  .mobilebar .inner{max-width:1240px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:18px}
+  .mobilebar .mk{--s:5px;display:grid;grid-template-columns:repeat(3,var(--s));grid-auto-rows:var(--s);gap:2px;flex:none}
+  .mobilebar .mk i{background:#bff5d4;border-radius:1px}.mobilebar .mk i.r{background:#ff8a82;border-radius:50%}
+  .mobilebar .it{display:flex;align-items:baseline;gap:7px;font-family:"JetBrains Mono",monospace}
+  .mobilebar .it .k{font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;opacity:.72}
+  .mobilebar .it .v{font-size:1.05rem;font-weight:700;color:#fff}
+  .mobilebar .up{margin-left:auto;background:#fff;color:var(--green-800);border:none;border-radius:8px;padding:7px 13px;font-weight:700;font-size:.78rem;cursor:pointer}
+  @media(max-width:1000px){.mobilebar{display:block}body{padding-bottom:64px}}
+
+  footer.pg{max-width:1240px;margin:24px auto 0;padding:18px 16px 8px;color:var(--muted);font-size:.76rem;line-height:1.6}
+  footer.pg .note{margin-top:6px;font-size:.71rem;color:var(--muted-2)}
+  footer.pg a{color:var(--green-700)}
+
+  @media print{
+    .brandbar{position:static}.add-main,.card-rm,.mobilebar,.onb,.pacts,.seg-ctl,.next{display:none}
+    .shell{display:block}.panel{position:static}.pcard,.card{box-shadow:none;break-inside:avoid}
+    body{padding:0;background:#fff}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="brandbar">
+  <div class="inner">
+    <div class="brand-lockup" aria-label="IFES — CEFOR">
+      <div class="if-mark" aria-hidden="true">
+        <span class="dot"></span><span></span><span></span>
+        <span></span><span></span><span class="empty"></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span class="empty"></span>
+      </div>
+      <div class="lockup">
+        <div class="l1">INSTITUTO FEDERAL</div>
+        <div class="l2">Espírito Santo</div>
+        <div class="l3">Centro de Referência em Formação e em Educação a Distância</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="stamp">Ferramenta interna · CEFOR</div>
+  </div>
+</div>
+
+<div class="shell">
+
+  <!-- ====================== CONSTRUTOR (esquerda) ====================== -->
+  <section class="builder">
+    <div class="course-head">
+      <span class="tool-label">Calculadora de Carga Horária para cursos EaD</span>
+      <input class="course-name" id="courseName" placeholder="Nome do seu curso EaD…" aria-label="Nome do curso">
+      <div class="meta-row">
+        <div class="steps" id="steps">
+          <div class="step" data-step="1"><span class="b">1</span> Configurar</div>
+          <div class="step" data-step="2"><span class="b">2</span> Atividades</div>
+          <div class="step" data-step="3"><span class="b">3</span> Calibrar</div>
+        </div>
+        <div class="seg-ctl" id="ctx" role="group" aria-label="Contexto do curso">
+          <button type="button" data-ctx="padrao" class="on">MOOC padrão</button>
+          <button type="button" data-ctx="hibrido">Híbrido / pesquisa</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="onb" id="onb">
+      <button class="x" id="onbClose" aria-label="Fechar dica">&times;</button>
+      <h3>Monte seu curso em 3 passos</h3>
+      <ol>
+        <li>Dê um nome ao curso e escolha o contexto.</li>
+        <li>Clique em <b>“+ Adicionar atividade”</b> e preencha cada atividade planejada.</li>
+        <li>Informe a <b>carga declarada</b> no painel para ver se ela é realista.</li>
+      </ol>
+      <div class="acts">
+        <button class="btn" id="loadSample" style="flex:none;background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">Carregar curso de exemplo</button>
+      </div>
+    </div>
+
+    <button class="add-main" id="addMain">
+      <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+      Adicionar atividade
+    </button>
+
+    <div class="tl-head"><span>Atividades do curso</span><span class="ct" id="tlCount">0 atividades</span></div>
+    <div class="timeline" id="timeline"></div>
+  </section>
+
+  <!-- ====================== PAINEL RESUMO (direita) ====================== -->
+  <aside class="panel" id="panel">
+
+    <div class="pcard total">
+      <div class="ph">Carga horária total estimada</div>
+      <div class="big"><span id="rTotal">0</span><span class="u">h</span></div>
+      <div class="sub" id="rWeekWrap" style="display:none">≈ <b id="rWeek">0</b> h por semana</div>
+      <div class="sub" id="rWeekHint">Some atividades para ver a carga total do curso.</div>
+    </div>
+
+    <div class="pcard calib">
+      <div class="ph">Calibração — declarada × estimada</div>
+      <div class="row">
+        <label for="declared">Carga declarada (h):</label>
+        <input type="number" id="declared" min="0" step="1" inputmode="numeric" placeholder="ex.: 40">
+      </div>
+      <span class="badge idle" id="cmpBadge">informe para comparar</span>
+      <div class="msg" id="cmpMsg"></div>
+    </div>
+
+    <div class="pcard bal">
+      <div class="ph">Equilíbrio por tipo de aprendizagem</div>
+      <div class="types" id="balTypes"></div>
+      <div class="bar" id="balBar"></div>
+      <div class="leg" id="balLeg"><div class="empty-b">Sem atividades ainda.</div></div>
+    </div>
+
+    <div class="pcard">
+      <div class="ph">Distribuição</div>
+      <div class="macro">
+        <div class="m"><div class="v"><span id="mInd">0</span><span class="u">h</span></div><div class="k">Individual</div><div class="sw" style="background:var(--green)"></div></div>
+        <div class="m"><div class="v"><span id="mSoc">0</span><span class="u">h</span></div><div class="k">Social</div><div class="sw" style="background:var(--purple)"></div></div>
+        <div class="m"><div class="v"><span id="mSyn">0</span><span class="u">h</span></div><div class="k">Síncrono</div><div class="sw" style="background:var(--amber)"></div></div>
+      </div>
+    </div>
+
+    <div class="pcard">
+      <div class="next" id="next">
+        <div class="ni"><svg viewBox="0 0 24 24" id="nextIco"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
+        <div class="nt"><span class="lbl">Próximo passo</span><span id="nextTxt">Dê um nome ao seu curso.</span></div>
+      </div>
+      <div class="pacts">
+        <button class="btn" id="printBtn">Imprimir / PDF</button>
+        <button class="btn ghost" id="resetBtn">Limpar tudo</button>
+      </div>
+    </div>
+
+  </aside>
+</div>
+
+<footer class="pg">
+  <p>Valores conforme o <strong>Quadro 2</strong> da proposta de calculadora para cursos MOOC do IFES (Aline Pinto Amorim, Vanessa Battestin, Marize Lyra Silva Passos), com base em McInnes et al. (2026), Liu &amp; Evans (2020) e Beer (2019); tipos de aprendizagem segundo Laurillard (2012). Uso interno — CEFOR/IFES.</p>
+  <p class="note">A carga horária é uma estimativa: o tempo real varia entre estudantes. O objetivo é reduzir a discrepância entre a carga declarada e a planejada. Seu plano é salvo automaticamente neste navegador.</p>
+</footer>
+
+<!-- faixa mobile -->
+<div class="mobilebar">
+  <div class="inner">
+    <span class="mk"><i class="r"></i><i></i><i></i><i></i><i></i><i></i></span>
+    <div class="it"><span class="k">Carga total</span><span class="v"><span id="mbTotal">0</span> h</span></div>
+    <button class="up" id="mbUp">Ver resumo ↑</button>
+  </div>
+</div>
+
+<!-- catálogo de tipos -->
+<div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Adicionar atividade">
+  <div class="catalog">
+    <div class="cat-head">
+      <div>
+        <h3>Adicionar atividade</h3>
+        <p>Escolha o tipo de atividade. O tipo de aprendizagem (Laurillard) é definido automaticamente.</p>
+      </div>
+      <button class="x" id="catClose" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="cat-body" id="catBody"></div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   CALCULADORA DE CARGA HORÁRIA EaD — v2 (UX guiada)
+   Motor fiel ao Quadro 2 (idêntico ao index-cefor.html, validado 16/16).
+   ===================================================================== */
+
+/* Taxas do Quadro 2 */
+const READ_PPM={low:300,medium:130,high:70}, VIDEO_MULT={low:2,high:3}, QUIZ_MIN={low:2,high:5},
+      INTER_MIN={low:15,high:30}, WRITE_PPH={low:250,medium:125,high:60}, DISC_H={low:0.5,high:1.5};
+
+/* Ícones (SVG line) */
+const I = {
+  book:'<path d="M4 5a2 2 0 012-2h6v16H6a2 2 0 00-2 2z"/><path d="M20 5a2 2 0 00-2-2h-6v16h6a2 2 0 012 2z"/>',
+  play:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9.5l5 2.5-5 2.5z"/>',
+  search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-3.6-3.6"/>',
+  check:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M8.5 12l2.2 2.2L16 9"/>',
+  blocks:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="9" y="14" width="6" height="6" rx="1"/>',
+  pen:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/>',
+  layers:'<path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/>',
+  chat:'<path d="M21 12a8 8 0 01-11.5 7.2L3 21l1.8-6.5A8 8 0 1121 12z"/>',
+  users:'<circle cx="9" cy="8" r="3"/><path d="M3.5 20a5.5 5.5 0 0111 0"/><path d="M16 5.5a3 3 0 010 5.5"/><path d="M20.5 20a5.5 5.5 0 00-4-5.3"/>',
+  cam:'<rect x="3" y="6" width="13" height="12" rx="2"/><path d="M21 8.5l-5 3.5 5 3.5z"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>', arrow:'<path d="M5 12h14M13 6l6 6-6 6"/>', spark:'<path d="M12 3v6M12 15v6M3 12h6M15 12h6"/>'
+};
+
+/* Tipos de aprendizagem (macro + cor) */
+const GROUPS = {
+  aquisicao:   {label:'Aquisição',           macro:'ind', color:'#2e8b30'},
+  investigacao:{label:'Investigação',        macro:'ind', color:'#3da63d'},
+  pratica:     {label:'Prática',             macro:'ind', color:'#5cb85c'},
+  producao:    {label:'Produção',            macro:'ind', color:'#82c25a'},
+  discussao:   {label:'Discussão',           macro:'soc', color:'#8a6bd9'},
+  colaboracao: {label:'Colaboração',         macro:'soc', color:'#6b4fc0'},
+  sincrono:    {label:'Síncrono/Presencial', macro:'syn', color:'#d09a2b'}
+};
+const GORDER = ['aquisicao','investigacao','pratica','producao','discussao','colaboracao','sincrono'];
+
+/* Catálogo de atividades */
+const TYPES = {
+  reading:{group:'aquisicao', label:'Leitura', icon:'book', desc:'Textos, apostilas, artigos (por palavras)',
+    comp:['low','medium','high'],
+    compLabel:{low:'Baixa · ideias gerais (300 palavras/min)', medium:'Média · compreender conceitos (130 palavras/min)', high:'Alta · análise crítica (70 palavras/min)'},
+    fields:[{id:'words',label:'Palavras',def:1000,min:0,step:50}],
+    note:a=>`Ritmo: <b>${{low:300,medium:130,high:70}[a.comp]} palavras/min</b>`,
+    calc:a=> a.words>0 ? a.words/READ_PPM[a.comp]/60 : 0 },
+
+  video:{group:'aquisicao', label:'Vídeo / Áudio', icon:'play', desc:'Videoaula, podcast, áudio',
+    comp:['low','high'],
+    compLabel:{low:'Baixa · 2× a duração', high:'Alta · 3× a duração'},
+    fields:[{id:'min',label:'Duração (min)',def:10,min:0,step:1}],
+    note:a=>`Conta <b>${VIDEO_MULT[a.comp]}×</b> a duração (processamento do aluno)`,
+    calc:a=> a.min>0 ? a.min*VIDEO_MULT[a.comp]/60 : 0 },
+
+  investigation:{group:'investigacao', label:'Investigação', icon:'search', desc:'Explorar tema, buscar e avaliar informações',
+    prof:true, fields:[{id:'hours',label:'Horas estimadas',def:1,min:0,step:0.25}],
+    note:()=>'Tempo definido por você (professor)',
+    calc:a=> a.hours>0 ? a.hours : 0 },
+
+  quiz:{group:'pratica', label:'Questionário', icon:'check', desc:'Múltipla escolha ou resposta curta',
+    comp:['low','high'],
+    compLabel:{low:'Baixa · múltipla escolha (2 min/questão)', high:'Alta · resposta curta (5 min/questão)'},
+    fields:[{id:'q',label:'Nº de questões',def:10,min:0,step:1}],
+    note:a=>`<b>${QUIZ_MIN[a.comp]} min</b> por questão`,
+    calc:a=> a.q>0 ? a.q*QUIZ_MIN[a.comp]/60 : 0 },
+
+  interactive:{group:'pratica', label:'Atividade interativa', icon:'blocks', desc:'H5P, jogo, simulação',
+    comp:['low','high'],
+    compLabel:{low:'Baixa · H5P/jogo (15 min)', high:'Alta · H5P/jogo (30 min)'},
+    fields:[{id:'count',label:'Quantidade',def:1,min:0,step:1}],
+    note:a=>`<b>${INTER_MIN[a.comp]} min</b> por atividade`,
+    calc:a=> a.count>0 ? a.count*INTER_MIN[a.comp]/60 : 0 },
+
+  writing:{group:'producao', label:'Produção escrita', icon:'pen', desc:'Redação, ensaio, resposta (por palavras)',
+    comp:['low','medium','high'],
+    compLabel:{low:'Baixa · escrita livre (250 palavras/h)', medium:'Média · argumentativa (125 palavras/h)', high:'Alta · baseada em pesquisa (60 palavras/h)'},
+    fields:[{id:'words',label:'Palavras esperadas',def:500,min:0,step:50}],
+    note:a=>`Ritmo: <b>${WRITE_PPH[a.comp]} palavras/h</b>`,
+    calc:a=> a.words>0 ? a.words/WRITE_PPH[a.comp] : 0 },
+
+  artifact:{group:'producao', label:'Artefatos', icon:'layers', desc:'Mídias, apresentações, planos, projetos',
+    prof:true, fields:[{id:'hours',label:'Horas estimadas',def:2,min:0,step:0.25}],
+    note:()=>'Tempo definido por você (professor)',
+    calc:a=> a.hours>0 ? a.hours : 0 },
+
+  discussion:{group:'discussao', label:'Discussão', icon:'chat', desc:'Fóruns e debates entre colegas',
+    comp:['low','high'],
+    compLabel:{low:'Baixa · discussão simples (30 min)', high:'Alta · discussão profunda ≥250 palavras (1,5 h)'},
+    fields:[{id:'count',label:'Nº de participações',def:1,min:0,step:1}],
+    note:a=>`<b>${a.comp==='low'?'30 min':'1,5 h'}</b> por participação`,
+    calc:a=> a.count>0 ? a.count*DISC_H[a.comp] : 0 },
+
+  collaboration:{group:'colaboracao', label:'Colaboração', icon:'users', desc:'Grupo, avaliação por pares (contexto híbrido)',
+    optional:true, prof:true, fields:[{id:'base',label:'Horas de produção equiv.',def:2,min:0,step:0.25}],
+    note:()=>'Conta o <b>dobro (×2)</b> — sempre alta complexidade',
+    calc:a=> a.base>0 ? a.base*2 : 0 },
+
+  synchronous:{group:'sincrono', label:'Síncrono / Presencial', icon:'cam', desc:'Aulas, encontros, mentorias (contexto híbrido)',
+    optional:true, fields:[{id:'sessions',label:'Nº de encontros',def:1,min:0,step:1},{id:'dur',label:'Duração de cada (h)',def:1,min:0,step:0.25}],
+    note:()=>'Conta a duração do evento',
+    calc:a=> Math.max(0,a.sessions)*Math.max(0,a.dur) }
+};
+
+/* ===== ESTADO ===== */
+let S = { name:'', ctx:'padrao', declared:'', weeks:'', acts:[], uid:1, onb:true };
+const $ = id => document.getElementById(id);
+const numv = v => { const x=parseFloat(v); return isFinite(x)?x:0; };
+const fmt = x => (Math.round(x*100)/100).toLocaleString('pt-BR',{maximumFractionDigits:2});
+const fmtTime = h => h<=0 ? '—' : (h<1 ? Math.round(h*60)+' min' : fmt(h)+' h');
+const svg = k => `<svg viewBox="0 0 24 24">${I[k]}</svg>`;
+
+/* ===== PERSISTÊNCIA ===== */
+const KEY='cefor-ch-v2';
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function load(){ try{ const r=localStorage.getItem(KEY); if(r){ S=Object.assign(S, JSON.parse(r)); } }catch(e){} }
+
+/* ===== CATÁLOGO (MODAL) ===== */
+function buildCatalog(){
+  const groups = {};
+  Object.entries(TYPES).forEach(([k,t]) => { (groups[t.group]=groups[t.group]||[]).push([k,t]); });
+  $('catBody').innerHTML = GORDER.filter(g=>groups[g]).map(g => {
+    const G = GROUPS[g];
+    return `<div class="cat-group" style="--gc:${G.color}">
+      <div class="gl">${G.label}</div>
+      <div class="cat-grid">${groups[g].map(([k,t]) => `
+        <button class="type-btn" data-type="${k}" style="--gc:${G.color};--gtint:${G.color}1f">
+          <span class="ti">${svg(t.icon)}</span>
+          <span><span class="tn">${t.label}${t.optional?' *':''}</span><span class="td">${t.desc}</span></span>
+        </button>`).join('')}</div>
+    </div>`;
+  }).join('');
+}
+function openCatalog(){ $('overlay').classList.add('show'); const f=$('catBody').querySelector('.type-btn'); if(f) f.focus(); }
+function closeCatalog(){ $('overlay').classList.remove('show'); }
+
+/* ===== ATIVIDADES ===== */
+function addActivity(typeKey){
+  const t = TYPES[typeKey];
+  const a = { id:S.uid++, type:typeKey, name:t.label };
+  t.fields.forEach(f => a[f.id]=f.def);
+  if (t.comp) a.comp = t.comp[0];
+  S.acts.push(a);
+  closeCatalog();
+  renderTimeline();
+  recalc(); save();
+  const node = document.querySelector(`[data-act="${a.id}"]`);
+  if (node){ node.scrollIntoView({behavior:'smooth',block:'center'}); const nm=node.querySelector('.card-name'); if(nm) nm.focus(); }
+}
+function removeActivity(id){
+  S.acts = S.acts.filter(a => a.id !== parseInt(id,10));
+  renderTimeline(); recalc(); save();
+}
+
+function actCardHTML(a){
+  const t = TYPES[a.type], G = GROUPS[t.group];
+  const fields = t.fields.map(f => `
+    <label class="fld">${f.label}
+      <input type="number" data-id="${a.id}" data-f="${f.id}" value="${a[f.id]}" min="${f.min}" step="${f.step}" inputmode="decimal">
+    </label>`).join('');
+  const comp = t.comp ? `
+    <label class="fld grow">Complexidade
+      <select data-id="${a.id}" data-f="comp">
+        ${t.comp.map(k => `<option value="${k}"${k===a.comp?' selected':''}>${t.compLabel[k]}</option>`).join('')}
+      </select>
+    </label>` : '';
+  return `<div class="card" data-act="${a.id}" style="--gc:${G.color};--gtint:${G.color}1f">
+    <div class="card-top">
+      <span class="card-ico">${svg(t.icon)}</span>
+      <span class="card-id">
+        <input class="card-name" data-id="${a.id}" data-f="name" data-txt value="${(a.name||'').replace(/"/g,'&quot;')}" placeholder="${t.label}">
+        <span class="card-tag">${G.label}</span>
+      </span>
+      <span class="card-time"><span id="ct-${a.id}">—</span><span class="u">tempo</span></span>
+      <button class="card-rm" data-rm="${a.id}" aria-label="remover">&times;</button>
+    </div>
+    <div class="card-fields">${fields}${comp}</div>
+    <div class="card-note" id="cn-${a.id}"></div>
+  </div>`;
+}
+function renderTimeline(){
+  const tl = $('timeline');
+  const visible = S.acts.filter(a => !(S.ctx==='padrao' && TYPES[a.type].optional));
+  if (S.acts.length === 0){
+    tl.innerHTML = `<div class="empty">
+      <div class="ico">${svg('spark')}</div>
+      <h4>Comece adicionando uma atividade</h4>
+      <p>Leitura, vídeo, questionário, produção escrita… cada uma vira carga horária aqui.</p></div>`;
+    return;
+  }
+  tl.innerHTML = S.acts.map(a => actCardHTML(a)).join('');
+  // marca cards ocultos pelo contexto
+  if (visible.length !== S.acts.length){
+    S.acts.forEach(a => { if (S.ctx==='padrao' && TYPES[a.type].optional){ const n=document.querySelector(`[data-act="${a.id}"]`); if(n) n.style.opacity=.45; }});
+  }
+}
+
+/* ===== CÁLCULO + PAINEL ===== */
+function recalc(){
+  let total=0; const gt={}; GORDER.forEach(g=>gt[g]=0);
+
+  S.acts.forEach(a => {
+    const t = TYPES[a.type], h = Math.max(0, t.calc(a)||0);
+    const lbl = $('ct-'+a.id); if (lbl) lbl.textContent = fmtTime(h);
+    const note = $('cn-'+a.id); if (note) note.innerHTML = t.note(a);
+    if (!(S.ctx==='padrao' && t.optional)){ gt[t.group]+=h; total+=h; }
+  });
+
+  /* total + semanas */
+  $('rTotal').textContent = fmt(total);
+  $('mbTotal').textContent = fmt(total);
+  const weeks = numv(S.weeks);
+  if (weeks>0 && total>0){ $('rWeekWrap').style.display=''; $('rWeek').textContent=fmt(total/weeks); $('rWeekHint').style.display='none'; }
+  else { $('rWeekWrap').style.display='none'; $('rWeekHint').style.display = total>0?'none':''; }
+
+  /* macro */
+  let ind=0,soc=0,syn=0;
+  GORDER.forEach(g=>{ const m=GROUPS[g].macro; if(m==='ind')ind+=gt[g]; else if(m==='soc')soc+=gt[g]; else syn+=gt[g]; });
+  $('mInd').textContent=fmt(ind); $('mSoc').textContent=fmt(soc); $('mSyn').textContent=fmt(syn);
+
+  renderBalance(gt, total);
+  updateCalibration(total);
+  updateSteps(total);
+  updateNext(total);
+}
+
+function renderBalance(gt, total){
+  const bar=$('balBar'), leg=$('balLeg'), types=$('balTypes');
+  const explored = GORDER.filter(g=>gt[g]>0).length;
+  if (total<=0){
+    bar.innerHTML=''; leg.innerHTML='<div class="empty-b">Sem atividades ainda.</div>';
+    types.innerHTML=''; return;
+  }
+  bar.innerHTML = GORDER.map(g=>{ const v=gt[g]||0,p=v/total*100; return p>0?`<div class="seg" style="width:${p}%;background:${GROUPS[g].color}" title="${GROUPS[g].label}: ${fmt(v)} h"></div>`:''; }).join('');
+  const ranked = GORDER.map(g=>({g,v:gt[g]||0})).filter(x=>x.v>0).sort((a,b)=>b.v-a.v);
+  leg.innerHTML = ranked.map(x=>{ const p=Math.round(x.v/total*100); return `<div class="li"><span class="dot" style="background:${GROUPS[x.g].color}"></span><span>${GROUPS[x.g].label}</span><span class="v">${fmt(x.v)} h · ${p}%</span></div>`; }).join('');
+  types.innerHTML = `<b>${explored}</b> de 7 tipos de aprendizagem explorados`;
+}
+
+function updateCalibration(total){
+  const badge=$('cmpBadge'), msg=$('cmpMsg'), hero=$('rTotal'), raw=String(S.declared);
+  hero.classList.remove('alert');
+  if (raw==='' || !isFinite(parseFloat(raw)) || parseFloat(raw)<=0){
+    badge.className='badge idle'; badge.textContent='informe para comparar'; msg.textContent=''; return;
+  }
+  const d=parseFloat(raw), diff=((total-d)/d)*100;
+  if (Math.abs(diff)<=15){ badge.className='badge ok'; badge.textContent='Realista (±15%)';
+    msg.textContent=`Estimado ${fmt(total)} h vs. ${fmt(d)} h declaradas (${fmt(diff)}%). Coerente.`; }
+  else if (diff>15){ badge.className='badge danger'; badge.textContent='Subdimensionada'; hero.classList.add('alert');
+    msg.textContent=`O curso exige ~${fmt(total)} h, mas declara ${fmt(d)} h (${fmt(diff)}% acima). Carga real subestimada.`; }
+  else { badge.className='badge warn'; badge.textContent='Superdimensionada';
+    msg.textContent=`Declara ${fmt(d)} h, mas as atividades somam ${fmt(total)} h (${fmt(diff)}%). Há margem para incluir mais atividades.`; }
+}
+
+function updateSteps(total){
+  const done = [ !!S.name.trim(), S.acts.length>0, (String(S.declared)!=='' && parseFloat(S.declared)>0) ];
+  document.querySelectorAll('.step').forEach((el,i)=> el.classList.toggle('done', done[i]));
+}
+
+function updateNext(total){
+  const box=$('next'), txt=$('nextTxt');
+  let m, doneState=false;
+  if (!S.name.trim()) m='Dê um nome ao seu curso.';
+  else if (S.acts.length===0) m='Adicione a primeira atividade do curso.';
+  else if (String(S.declared)==='' || parseFloat(S.declared)<=0) m='Informe a carga declarada para calibrar.';
+  else {
+    const gt={}; GORDER.forEach(g=>gt[g]=0);
+    S.acts.forEach(a=>{ const t=TYPES[a.type]; if(!(S.ctx==='padrao'&&t.optional)) gt[t.group]+=Math.max(0,t.calc(a)||0); });
+    const d=parseFloat(S.declared), diff=((total-d)/d)*100;
+    if (diff>15) m='Reduza atividades ou aumente a carga declarada — está subdimensionada.';
+    else if (diff<-15) m='Inclua mais atividades ou reduza a carga declarada — está superdimensionada.';
+    else {
+      const missing = ['aquisicao','pratica','producao','discussao'].filter(g=>gt[g]<=0).map(g=>GROUPS[g].label);
+      if (missing.length){ m='Carga coerente. Para variar a aprendizagem, considere: '+missing.join(', ')+'.'; }
+      else { m='Tudo certo — curso equilibrado e carga coerente. Revise e exporte.'; doneState=true; }
+    }
+  }
+  txt.textContent=m;
+  box.classList.toggle('is-done', doneState);
+  $('nextIco').innerHTML = doneState ? I.check : I.arrow;
+}
+
+/* ===== CONTEXTO ===== */
+function applyCtx(){
+  document.querySelectorAll('#ctx button').forEach(b=>b.classList.toggle('on', b.dataset.ctx===S.ctx));
+  renderTimeline(); recalc();
+}
+
+/* ===== EXEMPLO ===== */
+function loadSample(){
+  S.name = 'Curso de Introdução à Educação a Distância';
+  S.ctx='padrao'; S.declared='20'; S.weeks='4';
+  S.acts = [
+    {id:S.uid++, type:'reading', name:'E-book do módulo 1', comp:'medium', words:4000},
+    {id:S.uid++, type:'video', name:'Videoaula de boas-vindas', comp:'low', min:25},
+    {id:S.uid++, type:'quiz', name:'Quiz de verificação', comp:'low', q:12},
+    {id:S.uid++, type:'interactive', name:'Atividade H5P interativa', comp:'high', count:2},
+    {id:S.uid++, type:'writing', name:'Reflexão final', comp:'low', words:600},
+    {id:S.uid++, type:'discussion', name:'Fórum de apresentação', comp:'low', count:2}
+  ];
+  S.onb=false; $('onb').style.display='none';
+  $('courseName').value=S.name; $('declared').value=S.declared;
+  applyCtx(); renderTimeline(); recalc(); save();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ===== EVENTOS ===== */
+function applyTarget(t){
+  if (!t.dataset || t.dataset.id===undefined) return;
+  const a = S.acts.find(x=>x.id===parseInt(t.dataset.id,10)); if(!a) return;
+  const f=t.dataset.f;
+  a[f] = (f==='comp' || t.dataset.txt!==undefined) ? t.value : numv(t.value);
+}
+document.addEventListener('input', e=>{
+  const t=e.target;
+  if (t.id==='courseName'){ S.name=t.value; }
+  else if (t.id==='declared'){ S.declared=t.value; }
+  else applyTarget(t);
+  recalc(); save();
+});
+document.addEventListener('change', e=>{ applyTarget(e.target); recalc(); save(); });
+document.addEventListener('click', e=>{
+  const add=e.target.closest('#addMain'); if(add){ openCatalog(); return; }
+  const tb=e.target.closest('[data-type]'); if(tb){ addActivity(tb.dataset.type); return; }
+  const rm=e.target.closest('[data-rm]'); if(rm){ removeActivity(rm.dataset.rm); return; }
+  const cx=e.target.closest('[data-ctx]'); if(cx){ S.ctx=cx.dataset.ctx; applyCtx(); save(); return; }
+  if (e.target.closest('#catClose') || e.target.id==='overlay'){ closeCatalog(); return; }
+  if (e.target.closest('#onbClose')){ S.onb=false; $('onb').style.display='none'; save(); return; }
+  if (e.target.closest('#loadSample')){ loadSample(); return; }
+  if (e.target.closest('#mbUp')){ $('panel').scrollIntoView({behavior:'smooth'}); return; }
+});
+document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCatalog(); });
+$('printBtn').addEventListener('click', ()=>window.print());
+$('resetBtn').addEventListener('click', ()=>{
+  if(!confirm('Limpar todo o curso? Esta ação não pode ser desfeita.')) return;
+  S={ name:'', ctx:'padrao', declared:'', weeks:'', acts:[], uid:1, onb:true };
+  $('courseName').value=''; $('declared').value=''; $('onb').style.display='';
+  applyCtx(); renderTimeline(); recalc(); save();
+});
+
+/* ===== INICIALIZAÇÃO ===== */
+load();
+buildCatalog();
+$('courseName').value = S.name || '';
+$('declared').value = S.declared || '';
+if (S.onb===false) $('onb').style.display='none';
+applyCtx();
+renderTimeline();
+recalc();
+</script>
+</body>
+</html>
