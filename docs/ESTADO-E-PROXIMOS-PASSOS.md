@@ -19,16 +19,22 @@ Ferramenta web para **estimar e validar a carga horária (CH)** de cursos a dist
 ```
 calculadora-ch-cursos-ead/
 ├── index.html                  # v1 — calculadora ATUAL (porte fiel do Workload Estimator)
-├── index-cefor.html             # v2 — NOVA calculadora MOOC (proposta CEFOR) ← criada nesta sessão
+├── index-cefor.html             # v2 — calculadora MOOC fiel ao Quadro 2 (blocos fixos) ← VERSÃO ATIVA
 ├── README.md                   # doc da v1
+├── arquivo/                     # MATERIAL ARQUIVADO (preservado, não em uso)
+│   ├── README.md               # explica o que há aqui e como retomar
+│   ├── index-cefor-v2.html     # redesign UX guiado (arquivado em 2026-06-29)
+│   └── ANALISE-UX-UI.md        # análise UX/UI que fundamentou o redesign
 ├── docs/
 │   ├── COMO ESTIMAR A CARGA HORÁRIA…PROPOSTA…IFES.md   # A PROPOSTA (Quadro 2 + Laurillard)
-│   ├── COMPARATIVO_calculadora-atual-vs-proposta-cefor.md  # comparativo v1 × proposta ← criado nesta sessão
+│   ├── COMPARATIVO_calculadora-atual-vs-proposta-cefor.md  # comparativo v1 × proposta
 │   ├── ESTADO-E-PROXIMOS-PASSOS.md                      # ESTE arquivo
 │   ├── transcrição da Reuniao MOOC 29-06-2026….txt     # racional das decisões
 │   └── source/                 # código original R/Shiny (server.R, ui.R) — referência
 └── assets/                     # logos de referência (não usados; logo é CSS)
 ```
+
+> **Nota de versões:** o **mesmo motor de cálculo (Quadro 2)** roda em todas. A **versão ativa** é `index-cefor.html` (blocos fixos por tipo de aprendizagem). O **redesign UX guiado** (`index-cefor-v2.html`) e sua **análise** (`ANALISE-UX-UI.md`) foram **arquivados em `arquivo/`** em 2026-06-29 (decisão: salvar, mas não usar agora). Para retomar, ver `arquivo/README.md`.
 
 ---
 
