@@ -214,6 +214,7 @@
 
   .colophon{padding:14px 22px;font-size:.74rem;opacity:.8;border-top:1px solid rgba(255,255,255,.14);line-height:1.5}
   .colophon a{color:#cdebd6}
+  .colophon .saibamais{display:block;margin-top:6px;opacity:.72;font-style:italic}
 
   @media(max-width:680px){.r-top{grid-template-columns:1fr}.gauges{grid-template-columns:1fr}.brandbar .stamp{display:none}}
 
@@ -265,8 +266,8 @@
   <section class="hero">
     <div class="deco" aria-hidden="true"><i class="r"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <span class="eyebrow">Calculadora de carga horária · MOOC IFES</span>
-    <h1>Quanta carga horária o seu Curso <span class="accent">EaD</span> realmente tem?</h1>
-    <p class="lede">Estime a carga horária total de um curso a distância somando as <b>atividades de aprendizagem</b> planejadas — organizadas pelos tipos do <em>Conversational Framework</em> de Laurillard (Aquisição, Investigação, Prática, Produção, Discussão) — e verifique se a carga declarada é coerente.</p>
+    <h1>Quanta carga horária o seu <span class="accent">MOOC</span> realmente tem?</h1>
+    <p class="lede">Estime as <b>horas por tópico</b> que um curso a distância demanda do estudante a partir das atividades planejadas — organizadas pelos tipos do <em>Conversational Framework</em> de Laurillard (Aquisição, Investigação, Prática, Produção, Discussão) — e calibre a carga horária declarada a partir do que o desenho do curso projeta.</p>
   </section>
 
   <!-- ===== CONFIGURAÇÃO / CONTEXTO ===== -->
@@ -279,13 +280,13 @@
       </div>
     </div>
     <div class="blk">
-      <span class="cap">Duração (semanas) — opcional</span>
-      <input type="number" id="weeks" min="1" step="1" inputmode="numeric" placeholder="ex.: 4">
+      <span class="cap">Duração do curso (tópicos) — opcional</span>
+      <input type="number" id="topics" min="1" step="1" inputmode="numeric" placeholder="ex.: 4">
     </div>
     <p class="ctx-note" id="ctxNote">MOOCs do IFES são totalmente assíncronos, sem tutoria, sem atividades colaborativas ou síncronas. Mude para <b>Híbrido / pesquisa</b> para habilitar Colaboração e Atividades síncronas/presenciais.</p>
   </section>
 
-  <p class="helper">Adicione as atividades reais do curso em cada tipo de aprendizagem. Cada bloco <b>acende</b> e mostra sua contribuição; o resultado soma a <b>carga total</b> e revela o equilíbrio entre os tipos.</p>
+  <p class="helper">Preencha só os blocos que existem no seu curso — cada um <b>acende</b> e mostra quanto contribui para a carga; o resultado soma a <b>carga total</b> e revela o equilíbrio entre os tipos.</p>
 
   <main class="modules" id="modules"></main>
 
@@ -306,7 +307,7 @@
       <div class="r-hero">
         <div class="cap">Carga horária total estimada</div>
         <div class="big"><span id="rCourse">0</span><span class="u">horas no curso</span></div>
-        <div class="sub" id="rWeekWrap" style="display:none">≈ <b id="rPerWeek">0</b> h por semana (em <b id="rWeeks">0</b> semanas)</div>
+        <div class="sub" id="rTopicWrap" style="display:none">≈ <b id="rPerTopic">0</b> h por tópico (em <b id="rTopics">0</b> tópicos)</div>
       </div>
       <div class="r-verdict">
         <div class="cap">Calibração</div>
@@ -332,7 +333,9 @@
     </div>
 
     <div class="colophon">
-      Valores conforme o <strong>Quadro 2 — Calculadora de carga horária para cursos MOOC</strong> (Aline Pinto Amorim, Vanessa Battestin, Marize Lyra Silva Passos — IFES/CEFOR), com base em <strong>McInnes et al. (2026)</strong>, Liu &amp; Evans (2020) e Beer (2019); tipos de aprendizagem segundo o <em>Conversational Framework</em> de <strong>Laurillard (2012)</strong>.
+      Valores conforme o <strong>Quadro 2 — Calculadora de carga horária para cursos MOOC</strong>. <strong>Pesquisa e design:</strong> elaborado por Aline Amorim, Vanessa Battestin, Marize Passos, Elton Silva e Marcos Accioly, com base em <strong>McInnes et al. (2026)</strong>, Liu e Evans (2020) e Beer (2019); tipos de aprendizagem segundo o <em>Conversational Framework</em> de <strong>Laurillard (2012)</strong>.
+      <!-- TODO: quando o artigo for publicado, transformar "Saiba mais" em hiperlink para a leitura completa -->
+      <span class="saibamais">Saiba mais — leitura completa disponível após a publicação do artigo.</span>
     </div>
   </section>
 
@@ -574,13 +577,13 @@ function recalc(){
   $('rSyn').textContent = fmt(sinc);
   $('sCourse').textContent = fmt(total);
 
-  /* equivalente semanal (opcional) */
-  const weeks = numv($('weeks').value);
-  if (weeks > 0 && total > 0){
-    $('rWeekWrap').style.display = '';
-    $('rPerWeek').textContent = fmt(total / weeks);
-    $('rWeeks').textContent = fmt(weeks);
-  } else { $('rWeekWrap').style.display = 'none'; }
+  /* equivalente por tópico (opcional) */
+  const topics = numv($('topics').value);
+  if (topics > 0 && total > 0){
+    $('rTopicWrap').style.display = '';
+    $('rPerTopic').textContent = fmt(total / topics);
+    $('rTopics').textContent = fmt(topics);
+  } else { $('rTopicWrap').style.display = 'none'; }
 
   renderComposition(gt, total);
   updateCalibration(total);
@@ -660,7 +663,7 @@ document.addEventListener('click', e => {
 $('resetBtn').addEventListener('click', () => {
   CATS.forEach(c => { state[c.key] = []; const list = $('list-'+c.key);
     list.innerHTML = `<div class="empty-line" id="empty-${c.key}">Nenhuma atividade adicionada.</div>`; });
-  $('weeks').value = ''; $('declared').value = '';
+  $('topics').value = ''; $('declared').value = '';
   ctx = 'padrao';
   document.querySelectorAll('#ctx button').forEach(b => b.classList.toggle('on', b.dataset.ctx === 'padrao'));
   applyContext(); recalc();
