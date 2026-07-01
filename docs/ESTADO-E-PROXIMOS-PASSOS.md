@@ -1,6 +1,6 @@
 # Estado do projeto e próximos passos — Calculadora de CH MOOC (CEFOR/IFES)
 
-> Documento de retomada. Resume **o que existe**, **o que foi feito**, **as decisões tomadas** e **o que falta**. Última atualização: **2026-06-29**.
+> Documento de retomada. Resume **o que existe**, **o que foi feito**, **as decisões tomadas** e **o que falta**. Última atualização: **2026-06-30**.
 
 ---
 
@@ -18,11 +18,12 @@ Ferramenta web para **estimar e validar a carga horária (CH)** de cursos a dist
 
 ```
 calculadora-ch-cursos-ead/
-├── calculadora-workload-estimator.html                  # v1 — calculadora ATUAL (porte fiel do Workload Estimator)
-├── index-cefor.html             # v2 — calculadora MOOC fiel ao Quadro 2 (blocos fixos) ← VERSÃO ATIVA
-├── README.md                   # doc da v1
+├── index-cefor.html             # calculadora MOOC fiel ao Quadro 2 (blocos fixos) ← ÚNICA VERSÃO ATIVA
+├── calculadora-workload-estimator.html   # STUB de redirect → arquivo/ (preserva a URL pública antiga)
+├── README.md                   # doc da v1 (porte do Workload Estimator)
 ├── arquivo/                     # MATERIAL ARQUIVADO (preservado, não em uso)
 │   ├── README.md               # explica o que há aqui e como retomar
+│   ├── calculadora-workload-estimator.html  # v1 — porte do Workload Estimator (arquivada 2026-06-30)
 │   ├── index-cefor-v2.html     # redesign UX guiado (arquivado em 2026-06-29)
 │   └── ANALISE-UX-UI.md        # análise UX/UI que fundamentou o redesign
 ├── docs/
@@ -34,7 +35,7 @@ calculadora-ch-cursos-ead/
 └── assets/                     # logos de referência (não usados; logo é CSS)
 ```
 
-> **Nota de versões:** o **mesmo motor de cálculo (Quadro 2)** roda em todas. A **versão ativa** é `index-cefor.html` (blocos fixos por tipo de aprendizagem). O **redesign UX guiado** (`index-cefor-v2.html`) e sua **análise** (`ANALISE-UX-UI.md`) foram **arquivados em `arquivo/`** em 2026-06-29 (decisão: salvar, mas não usar agora). Para retomar, ver `arquivo/README.md`.
+> **Nota de versões:** a **única versão ativa** é `index-cefor.html` (fiel ao Quadro 2, blocos fixos por tipo de aprendizagem). Tudo o mais está em `arquivo/`: a **v1** (`calculadora-workload-estimator.html`, porte do Workload Estimator) foi **arquivada em 2026-06-30** — decisão do Elton: não será mais usada, fica só como referência; a URL pública antiga na raiz virou um **stub de redirect**. O **redesign UX guiado** (`index-cefor-v2.html`) e sua **análise** (`ANALISE-UX-UI.md`) foram arquivados em 2026-06-29 (salvar, mas não usar agora). Para retomar, ver `arquivo/README.md`.
 
 ---
 
@@ -66,8 +67,18 @@ Página única autocontida (HTML+CSS+JS, sem build/back-end), reaproveitando 100
 - **Toggle de contexto:** *MOOC padrão (assíncrono)* esconde/exclui Colaboração e Síncrono (`*`); *Híbrido/pesquisa* os habilita.
 - **Saídas:** CH total do curso; macro **Individual × Social × Síncrono**; **equilíbrio por tipo de aprendizagem** (barra + legenda + "N/7 tipos explorados") — atende ao objetivo da pesquisa de mostrar o balanço de Laurillard.
 - **Calibração declarada × estimada** mantida (±15% → Realista / Subdimensionada / Superdimensionada).
-- **Duração em semanas opcional** (só para mostrar equivalente semanal; o foco é a CH total).
+- **Duração em tópicos opcional** (só para mostrar equivalente por tópico; o foco é a CH total). *Ver §3.4 — antes era "semanas".*
 - Limpar tudo / Imprimir-PDF; acessível (`prefers-reduced-motion`); responsivo.
+
+### 3.4 Ajustes da Aline aplicados (revisão 2026-06-30)
+Feedback formal da Aline (arquivo `Revisão e ajustes da calculadora de carga horária.md`) confirmou que o **motor já estava fiel ao Quadro 2** (as métricas que ela mandou usar já estavam implementadas). Os ajustes pedidos eram pontuais e foram aplicados em `index-cefor.html`:
+
+1. **Semana → tópico/módulo** *(mudança conceitual — revisa D2):* MOOC usa lógica de tópico/módulo, não semanal. Campo "Duração (semanas)" → "Duração do curso (tópicos)"; saída "h por semana" → "h por tópico"; IDs `weeks/rWeekWrap/rPerWeek/rWeeks` → `topics/rTopicWrap/rPerTopic/rTopics`.
+2. **Texto do hero (lede):** "Estime as horas por tópico que um curso a distância demanda do estudante a partir das atividades planejadas — e calibre a carga horária declarada a partir do que o desenho do curso projeta."
+3. **Helper:** "Preencha só os blocos que existem no seu curso — cada um acende e mostra quanto contribui para a carga…".
+4. **Autoria/fonte (colophon):** "Pesquisa e design: elaborado por Aline Amorim, Vanessa Battestin, Marize Passos, **Elton Silva e Marcos Accioly**, com base em McInnes et al. (2026), Liu e Evans (2020) e Beer (2019)." + placeholder **"Saiba mais"** (vira hiperlink quando o artigo for publicado).
+
+> **Pendência aberta:** no item do helper a Aline escreveu "carga **semanal**", o que contradiz a própria virada para tópico — tratado como lapso e implementado como "por tópico". **Confirmar com ela.**
 
 ### 3.3 Verificações executadas (tudo passou)
 - **Sintaxe JS:** validada via `vm.Script` (Node) — OK.
@@ -81,7 +92,7 @@ Página única autocontida (HTML+CSS+JS, sem build/back-end), reaproveitando 100
 | # | Decisão | Justificativa |
 |---|---|---|
 | D1 | **CH total** como saída principal (não "h/semana") | MOOC é autoinstrucional/assíncrono; o que se valida é a CH declarada para certificação |
-| D2 | **Semanas = campo opcional** | só serve para mostrar equivalente semanal; não é o eixo do modelo |
+| D2 | ~~**Semanas = campo opcional**~~ → **Tópicos = campo opcional** *(revisado 2026-06-30, §3.4)* | MOOC usa lógica de tópico/módulo, não semanal (feedback da Aline); só mostra equivalente por tópico, não é o eixo do modelo |
 | D3 | **Sem nível "Média"** onde o Quadro 2 não tem (vídeo, quiz, interativa, discussão) | Lei "No Invention" — só leitura e escrita têm 3 níveis na fonte |
 | D4 | **Organização por tipo de aprendizagem (Laurillard)** | é o framework da pesquisa; permite o gráfico de equilíbrio |
 | D5 | **Itens dinâmicos** por bloco | reflete "montar o curso" real (≈ mapa de atividades) |
@@ -96,7 +107,7 @@ Página única autocontida (HTML+CSS+JS, sem build/back-end), reaproveitando 100
 Abrir `index-cefor.html` no navegador e conferir layout, toggle de contexto, adicionar/remover itens, composição e calibração. *(Não foi possível abrir navegador nesta sessão.)*
 
 ### 5.2 Decisões a confirmar com Aline/Vanessa
-1. **CH total × h/semana** — confirmar que o foco é a CH total (D1).
+1. **CH total × h/tópico** — confirmar que o foco é a CH total (D1); o equivalente por tópico é só apoio (§3.4).
 2. **Nível "Média" ausente** em vídeo/quiz/interativa/discussão — confirmar que é intencional (D3).
 3. **Conversão palavra ↔ página** — oferecer ajuda para quem ainda pensa em páginas?
 4. **Contagem de palavras/duração** hoje é manual — automatizar no futuro (mapa de atividades / sala do MOOC).
@@ -118,4 +129,4 @@ Arquivos **untracked / não commitados**. Quando autorizado: commitar `index-cef
 2. A **nova calculadora** é `index-cefor.html` — fiel ao Quadro 2, validada (16/16).
 3. As **diferenças** v1 × proposta estão em `docs/COMPARATIVO_…md`.
 4. **Falta:** validar visualmente no navegador e confirmar as 5 decisões (seção 5.2) com a Aline.
-5. A **v1** (`calculadora-workload-estimator.html`) segue intacta para comparação.
+5. A **v1** foi **arquivada** em `arquivo/calculadora-workload-estimator.html` (2026-06-30); a URL pública antiga segue viva via **stub de redirect** na raiz.
