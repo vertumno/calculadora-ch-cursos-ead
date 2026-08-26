@@ -216,8 +216,6 @@
   .next .ni{width:30px;height:30px;border-radius:8px;background:var(--amber-tint);border:1px solid #f0d488;
     display:grid;place-items:center;flex:none}
   .next .ni svg{width:16px;height:16px;stroke:var(--amber-ink);stroke-width:2;fill:none}
-  .next.is-done .ni{background:var(--green-tint);border-color:#cfe8cf}
-  .next.is-done .ni svg{stroke:var(--green-700)}
   .next .nt{font-size:.84rem;color:var(--ink);line-height:1.4}
   .next .nt .lbl{display:block;font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-bottom:2px}
 
@@ -408,7 +406,7 @@
 </div>
 
 <footer class="pg">
-  <p>Valores conforme o <strong>Quadro 2</strong> da proposta de calculadora para cursos MOOC do IFES (Aline Pinto Amorim, Vanessa Battestin, Marize Lyra Silva Passos), com base em McInnes et al. (2026), Liu &amp; Evans (2020) e Beer (2019); tipos de aprendizagem segundo Laurillard (2012). <a href="https://docs.google.com/document/d/1ViAMjrAfjyjWvYBa8hL8yW91ot-4sRiotCTge_UJd9M/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Leia a proposta de pesquisa completa</a>. Uso interno — CEFOR/IFES.</p>
+  <p>Valores conforme o <strong>Quadro 2</strong> da proposta de calculadora para cursos MOOC do IFES (Aline Pinto Amorim, Vanessa Battestin, Marize Lyra Silva Passos), com base em McInnes et al. (2026), Liu &amp; Evans (2020) e Beer (2019); tipos de aprendizagem segundo Laurillard (2012). <a href="https://docs.google.com/document/d/1ViAMjrAfjyjWvYBa8hL8yW91ot-4sRiotCTge_UJd9M/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Leia a proposta de pesquisa completa</a>.</p>
   <p class="note">A carga horária é uma estimativa: o tempo real varia entre estudantes. O objetivo é reduzir a discrepância entre a carga que você pretende oferecer e a estimada pelas atividades planejadas. Seu plano é salvo automaticamente neste navegador, e pode ser exportado como backup em JSON.</p>
 </footer>
 
@@ -726,8 +724,8 @@ function updateSteps(total){
 }
 
 function updateNext(total){
-  const box=$('next'), txt=$('nextTxt');
-  let m, doneState=false;
+  const txt=$('nextTxt');
+  let m;
   if (!S.name.trim()) m='Dê um nome ao seu curso.';
   else if (S.acts.length===0) m='Adicione a primeira atividade do curso.';
   else if (String(S.declared)==='' || parseFloat(S.declared)<=0) m='Informe a carga que pretende oferecer para calibrar.';
@@ -740,12 +738,10 @@ function updateNext(total){
     else {
       const missing = ['aquisicao','pratica','producao','discussao'].filter(g=>gt[g]<=0).map(g=>GROUPS[g].label);
       if (missing.length){ m='Carga coerente. Para variar a aprendizagem, considere: '+missing.join(', ')+'.'; }
-      else { m='Tudo certo — curso equilibrado e carga coerente. Revise e exporte.'; doneState=true; }
+      else { m='Tudo certo — curso equilibrado e carga coerente. Revise e exporte.'; }
     }
   }
   txt.textContent=m;
-  box.classList.toggle('is-done', doneState);
-  $('nextIco').innerHTML = doneState ? I.check : I.arrow;
 }
 
 /* ===== CONTEXTO ===== */
