@@ -1,7 +1,7 @@
 # Calculadora de Carga Horária de Cursos EAD — IFES / CEFOR
 
 > ⚠️ **Este README documenta a v1 (porte do *Course Workload Estimator*), arquivada em 2026-06-30.**
-> A **versão ativa** do projeto é a **`index-cefor.html`** — calculadora MOOC fiel ao Quadro 2 da pesquisa (lógica por **tópico**, não semanal). A v1 ficou só como **referência** em `arquivo/calculadora-workload-estimator.html`; o `calculadora-workload-estimator.html` na raiz é apenas um **stub de redirect**. Para o estado atual, ver `docs/ESTADO-E-PROXIMOS-PASSOS.md`.
+> A **versão ativa** do projeto é a **`index-cefor-v2.html`** — construtor de atividades guiado, fiel ao Quadro 2 da pesquisa (lógica por **tópico**, não semanal). A v1 ficou só como **referência** em `arquivo/calculadora-workload-estimator.html`; o `calculadora-workload-estimator.html` na raiz é apenas um **stub de redirect**. A antiga `index-cefor.html` (blocos fixos) foi arquivada em 2026-08-26 e está em `arquivo/index-cefor.html`. Para o estado atual, ver `docs/ESTADO-E-PROXIMOS-PASSOS.md`.
 
 Ferramenta web que estima **quantas horas por semana** um curso a distância exige do estudante a partir das atividades planejadas, e ajuda a **validar se a carga horária declarada é realista**. Uso interno de design instrucional do CEFOR (Centro de Referência em Formação e em Educação a Distância — IFES).
 

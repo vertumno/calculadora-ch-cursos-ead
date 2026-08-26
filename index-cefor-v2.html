@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Carga Horária para cursos EaD — IFES / CEFOR</title>
+<title>Estimador de Carga Horária para cursos EaD — IFES / CEFOR</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -241,8 +241,8 @@
   .type-btn:hover{border-color:var(--gc);background:var(--gtint);transform:translateY(-1px)}
   .type-btn .ti{width:34px;height:34px;border-radius:9px;background:var(--gtint);display:grid;place-items:center;flex:none}
   .type-btn .ti svg{width:19px;height:19px;stroke:var(--gc);stroke-width:1.8;fill:none}
-  .type-btn .tn{font-weight:700;font-size:.9rem;color:var(--ink)}
-  .type-btn .td{font-size:.74rem;color:var(--muted-2);margin-top:1px;line-height:1.3}
+  .type-btn .tn{display:block;font-weight:700;font-size:.9rem;color:var(--ink)}
+  .type-btn .td{display:block;font-size:.74rem;color:var(--muted-2);margin-top:2px;line-height:1.3}
 
   /* ============ FAIXA FIXA (MOBILE) ============ */
   .mobilebar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(22,83,29,.97);
@@ -295,7 +295,7 @@
   <!-- ====================== CONSTRUTOR (esquerda) ====================== -->
   <section class="builder">
     <div class="course-head">
-      <span class="tool-label">Calculadora de Carga Horária para cursos EaD</span>
+      <span class="tool-label">Estimador de Carga Horária para cursos EaD</span>
       <input class="course-name" id="courseName" placeholder="Nome do seu curso EaD…" aria-label="Nome do curso">
       <div class="meta-row">
         <div class="steps" id="steps">
@@ -316,7 +316,7 @@
       <ol>
         <li>Dê um nome ao curso e escolha o contexto.</li>
         <li>Clique em <b>“+ Adicionar atividade”</b> e preencha cada atividade planejada.</li>
-        <li>Informe a <b>carga declarada</b> no painel para ver se ela é realista.</li>
+        <li>No painel, informe quantas horas <b>você pretende oferecer</b> para ver se é realista.</li>
       </ol>
       <div class="acts">
         <button class="btn" id="loadSample" style="flex:none;background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.3);color:#fff">Carregar curso de exemplo</button>
@@ -343,9 +343,10 @@
     </div>
 
     <div class="pcard calib">
-      <div class="ph">Calibração — declarada × estimada</div>
+      <div class="ph">Calibração — pretendida × estimada</div>
+      <p style="font-size:.72rem;color:var(--muted-2);line-height:1.4;padding:9px 16px 0;margin:0">Ainda não tem uma carga horária definida para o curso? Digite um valor-alvo abaixo para testar se ele é realista diante das atividades já planejadas.</p>
       <div class="row">
-        <label for="declared">Carga declarada (h):</label>
+        <label for="declared">Carga horária que pretende oferecer (h):</label>
         <input type="number" id="declared" min="0" step="1" inputmode="numeric" placeholder="ex.: 40">
       </div>
       <span class="badge idle" id="cmpBadge">informe para comparar</span>
@@ -374,17 +375,23 @@
         <div class="nt"><span class="lbl">Próximo passo</span><span id="nextTxt">Dê um nome ao seu curso.</span></div>
       </div>
       <div class="pacts">
+        <button class="btn" id="downloadBtn">Salvar</button>
+        <button class="btn" id="uploadBtn">Restaurar</button>
+      </div>
+      <p style="font-size:.72rem;color:var(--muted-2);line-height:1.4;padding:0 16px 14px;margin:0">Salve um arquivo <b>.json</b> para guardar ou compartilhar este curso, e restaure-o depois para continuar de onde parou (além do salvamento automático neste navegador).</p>
+      <div class="pacts">
         <button class="btn" id="printBtn">Imprimir / PDF</button>
         <button class="btn ghost" id="resetBtn">Limpar tudo</button>
       </div>
+      <input type="file" id="uploadInput" accept="application/json,.json" hidden>
     </div>
 
   </aside>
 </div>
 
 <footer class="pg">
-  <p>Valores conforme o <strong>Quadro 2</strong> da proposta de calculadora para cursos MOOC do IFES (Aline Pinto Amorim, Vanessa Battestin, Marize Lyra Silva Passos), com base em McInnes et al. (2026), Liu &amp; Evans (2020) e Beer (2019); tipos de aprendizagem segundo Laurillard (2012). Uso interno — CEFOR/IFES.</p>
-  <p class="note">A carga horária é uma estimativa: o tempo real varia entre estudantes. O objetivo é reduzir a discrepância entre a carga declarada e a planejada. Seu plano é salvo automaticamente neste navegador.</p>
+  <p>Valores conforme o <strong>Quadro 2</strong> da proposta de calculadora para cursos MOOC do IFES (Aline Pinto Amorim, Vanessa Battestin, Marize Lyra Silva Passos), com base em McInnes et al. (2026), Liu &amp; Evans (2020) e Beer (2019); tipos de aprendizagem segundo Laurillard (2012). <a href="https://docs.google.com/document/d/1ViAMjrAfjyjWvYBa8hL8yW91ot-4sRiotCTge_UJd9M/edit?usp=sharing" target="_blank" rel="noopener noreferrer">Leia a proposta de pesquisa completa</a>. Uso interno — CEFOR/IFES.</p>
+  <p class="note">A carga horária é uma estimativa: o tempo real varia entre estudantes. O objetivo é reduzir a discrepância entre a carga que você pretende oferecer e a estimada pelas atividades planejadas. Seu plano é salvo automaticamente neste navegador, e pode ser exportado como backup em JSON.</p>
 </footer>
 
 <!-- faixa mobile -->
@@ -525,6 +532,38 @@ const KEY='cefor-ch-v2';
 function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
 function load(){ try{ const r=localStorage.getItem(KEY); if(r){ S=Object.assign(S, JSON.parse(r)); } }catch(e){} }
 
+/* ===== EXPORTAR / IMPORTAR JSON ===== */
+function slugify(s){
+  return (s||'').trim().toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g,'')
+    .replace(/[^a-z0-9]+/g,'-').replace(/(^-|-$)/g,'');
+}
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(S, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `carga-horaria-${slugify(S.name) || 'curso'}.json`;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+function importJSON(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    let data;
+    try { data = JSON.parse(reader.result); }
+    catch(e){ alert('Arquivo inválido: não é um JSON legível.'); return; }
+    if (!data || !Array.isArray(data.acts)){ alert('Este arquivo não parece ser um JSON exportado por este estimador.'); return; }
+    S = Object.assign({ name:'', ctx:'padrao', declared:'', weeks:'', acts:[], uid:1, onb:true }, data);
+    S.uid = Math.max(S.uid||1, S.acts.reduce((m,a)=>Math.max(m, a.id||0), 0) + 1);
+    $('courseName').value = S.name || '';
+    $('declared').value = S.declared || '';
+    $('onb').style.display = S.onb===false ? 'none' : '';
+    applyCtx(); renderTimeline(); recalc(); save();
+  };
+  reader.readAsText(file);
+}
+
 /* ===== CATÁLOGO (MODAL) ===== */
 function buildCatalog(){
   const groups = {};
@@ -591,6 +630,7 @@ function actCardHTML(a){
 function renderTimeline(){
   const tl = $('timeline');
   const visible = S.acts.filter(a => !(S.ctx==='padrao' && TYPES[a.type].optional));
+  $('tlCount').textContent = `${S.acts.length} atividade${S.acts.length===1?'':'s'}`;
   if (S.acts.length === 0){
     tl.innerHTML = `<div class="empty">
       <div class="ico">${svg('spark')}</div>
@@ -655,11 +695,11 @@ function updateCalibration(total){
   }
   const d=parseFloat(raw), diff=((total-d)/d)*100;
   if (Math.abs(diff)<=15){ badge.className='badge ok'; badge.textContent='Realista (±15%)';
-    msg.textContent=`Estimado ${fmt(total)} h vs. ${fmt(d)} h declaradas (${fmt(diff)}%). Coerente.`; }
+    msg.textContent=`Estimado ${fmt(total)} h vs. ${fmt(d)} h que você pretende oferecer (${fmt(diff)}%). Coerente.`; }
   else if (diff>15){ badge.className='badge danger'; badge.textContent='Subdimensionada'; hero.classList.add('alert');
-    msg.textContent=`O curso exige ~${fmt(total)} h, mas declara ${fmt(d)} h (${fmt(diff)}% acima). Carga real subestimada.`; }
+    msg.textContent=`O curso exige ~${fmt(total)} h, mas você pretende oferecer ${fmt(d)} h (${fmt(diff)}% acima). A carga pretendida pode estar subestimada.`; }
   else { badge.className='badge warn'; badge.textContent='Superdimensionada';
-    msg.textContent=`Declara ${fmt(d)} h, mas as atividades somam ${fmt(total)} h (${fmt(diff)}%). Há margem para incluir mais atividades.`; }
+    msg.textContent=`Você pretende oferecer ${fmt(d)} h, mas as atividades somam ${fmt(total)} h (${fmt(diff)}%). Há margem para incluir mais atividades.`; }
 }
 
 function updateSteps(total){
@@ -672,13 +712,13 @@ function updateNext(total){
   let m, doneState=false;
   if (!S.name.trim()) m='Dê um nome ao seu curso.';
   else if (S.acts.length===0) m='Adicione a primeira atividade do curso.';
-  else if (String(S.declared)==='' || parseFloat(S.declared)<=0) m='Informe a carga declarada para calibrar.';
+  else if (String(S.declared)==='' || parseFloat(S.declared)<=0) m='Informe a carga que pretende oferecer para calibrar.';
   else {
     const gt={}; GORDER.forEach(g=>gt[g]=0);
     S.acts.forEach(a=>{ const t=TYPES[a.type]; if(!(S.ctx==='padrao'&&t.optional)) gt[t.group]+=Math.max(0,t.calc(a)||0); });
     const d=parseFloat(S.declared), diff=((total-d)/d)*100;
-    if (diff>15) m='Reduza atividades ou aumente a carga declarada — está subdimensionada.';
-    else if (diff<-15) m='Inclua mais atividades ou reduza a carga declarada — está superdimensionada.';
+    if (diff>15) m='Reduza atividades ou aumente a carga pretendida — está subdimensionada.';
+    else if (diff<-15) m='Inclua mais atividades ou reduza a carga pretendida — está superdimensionada.';
     else {
       const missing = ['aquisicao','pratica','producao','discussao'].filter(g=>gt[g]<=0).map(g=>GROUPS[g].label);
       if (missing.length){ m='Carga coerente. Para variar a aprendizagem, considere: '+missing.join(', ')+'.'; }
@@ -738,8 +778,15 @@ document.addEventListener('click', e=>{
   if (e.target.closest('#onbClose')){ S.onb=false; $('onb').style.display='none'; save(); return; }
   if (e.target.closest('#loadSample')){ loadSample(); return; }
   if (e.target.closest('#mbUp')){ $('panel').scrollIntoView({behavior:'smooth'}); return; }
+  if (e.target.closest('#downloadBtn')){ exportJSON(); return; }
+  if (e.target.closest('#uploadBtn')){ $('uploadInput').click(); return; }
 });
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCatalog(); });
+$('uploadInput').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if (file) importJSON(file);
+  e.target.value = '';
+});
 $('printBtn').addEventListener('click', ()=>window.print());
 $('resetBtn').addEventListener('click', ()=>{
   if(!confirm('Limpar todo o curso? Esta ação não pode ser desfeita.')) return;
