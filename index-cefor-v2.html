@@ -211,14 +211,6 @@
   .macro .m .k{font-size:.66rem;color:var(--muted-2);margin-top:3px;line-height:1.2}
   .macro .m .sw{width:18px;height:3px;border-radius:2px;margin:5px auto 0}
 
-  /* próximo passo */
-  .next{display:flex;gap:11px;align-items:flex-start;padding:13px 16px}
-  .next .ni{width:30px;height:30px;border-radius:8px;background:var(--amber-tint);border:1px solid #f0d488;
-    display:grid;place-items:center;flex:none}
-  .next .ni svg{width:16px;height:16px;stroke:var(--amber-ink);stroke-width:2;fill:none}
-  .next .nt{font-size:.84rem;color:var(--ink);line-height:1.4}
-  .next .nt .lbl{display:block;font-family:"JetBrains Mono",monospace;font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-bottom:2px}
-
   .btn{flex:1;font-weight:600;font-size:.82rem;cursor:pointer;border:1px solid var(--line-strong);
     background:#fff;color:var(--ink);border-radius:8px;padding:9px;transition:.15s}
   .btn:hover{border-color:var(--green);color:var(--green-700)}
@@ -392,14 +384,6 @@
         <div class="m"><div class="v"><span id="mSoc">0</span><span class="u">h</span></div><div class="k">Social</div><div class="sw" style="background:var(--purple)"></div></div>
         <div class="m"><div class="v"><span id="mSyn">0</span><span class="u">h</span></div><div class="k">Síncrono</div><div class="sw" style="background:var(--amber)"></div></div>
       </div>
-    </div>
-
-    <div class="pcard">
-      <div class="next" id="next">
-        <div class="ni"><svg viewBox="0 0 24 24" id="nextIco"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div>
-        <div class="nt"><span class="lbl">Próximo passo</span><span id="nextTxt">Dê um nome ao seu curso.</span></div>
-      </div>
-      <p style="font-size:.72rem;color:var(--muted-2);line-height:1.4;padding:0 16px 14px;margin:0">Use <b>Salvar</b> (topo da página) para guardar um arquivo <b>.json</b> deste curso e <b>Restaurar</b> para continuar de onde parou (além do salvamento automático neste navegador).</p>
     </div>
 
   </aside>
@@ -687,7 +671,6 @@ function recalc(){
   renderBalance(gt, total);
   updateCalibration(total);
   updateSteps(total);
-  updateNext(total);
 }
 
 function renderBalance(gt, total){
@@ -721,27 +704,6 @@ function updateCalibration(total){
 function updateSteps(total){
   const done = [ !!S.name.trim(), S.acts.length>0, (String(S.declared)!=='' && parseFloat(S.declared)>0) ];
   document.querySelectorAll('.step').forEach((el,i)=> el.classList.toggle('done', done[i]));
-}
-
-function updateNext(total){
-  const txt=$('nextTxt');
-  let m;
-  if (!S.name.trim()) m='Dê um nome ao seu curso.';
-  else if (S.acts.length===0) m='Adicione a primeira atividade do curso.';
-  else if (String(S.declared)==='' || parseFloat(S.declared)<=0) m='Informe a carga que pretende oferecer para calibrar.';
-  else {
-    const gt={}; GORDER.forEach(g=>gt[g]=0);
-    S.acts.forEach(a=>{ const t=TYPES[a.type]; if(!(S.ctx==='padrao'&&t.optional)) gt[t.group]+=Math.max(0,t.calc(a)||0); });
-    const d=parseFloat(S.declared), diff=((total-d)/d)*100;
-    if (diff>15) m='Reduza atividades ou aumente a carga pretendida — está subdimensionada.';
-    else if (diff<-15) m='Inclua mais atividades ou reduza a carga pretendida — está superdimensionada.';
-    else {
-      const missing = ['aquisicao','pratica','producao','discussao'].filter(g=>gt[g]<=0).map(g=>GROUPS[g].label);
-      if (missing.length){ m='Carga coerente. Para variar a aprendizagem, considere: '+missing.join(', ')+'.'; }
-      else { m='Tudo certo — curso equilibrado e carga coerente. Revise e exporte.'; }
-    }
-  }
-  txt.textContent=m;
 }
 
 /* ===== CONTEXTO ===== */
