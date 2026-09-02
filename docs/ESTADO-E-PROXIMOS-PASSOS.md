@@ -18,35 +18,42 @@ Ferramenta web para **estimar e validar a carga horária (CH)** de cursos a dist
 
 ## 2. Estrutura de arquivos (atual)
 
+> Reorganizado em 2026-09-02: os dois estimadores oficiais passaram a viver na **raiz** (que é o que o GitHub Pages publica), as dependências foram para `assets/` e as páginas antigas saíram da raiz para `arquivo/`.
+
 ```
 calculadora-ch-cursos-ead/
-├── index.html                   # PORTA DE ENTRADA (gateway) → leva a index-cefor-v2.html — criado 2026-08-26
-├── index-cefor-v2.html          # CALCULADORA ATIVA — construtor de atividades guiado (3 etapas) ← ÚNICA VERSÃO ATIVA
-├── calculadora-workload-estimator.html   # STUB de redirect → arquivo/ (preserva a URL pública antiga da v1)
-├── README.md                   # doc da v1 — DESATUALIZADO, ver nota de limpeza em §5.4
-├── PRODUCT.md                  # ficha de produto (plataforma, usuários, positioning, princípios)
-├── design-logo-cefor.md        # notas de identidade visual
-├── cefor-horizontal-cor.png / icone_cefor-horizontal-cor.png   # logos de referência (não usados pelo HTML; logo é CSS)
-├── COMO ESTIMAR A CARGA HORÁRIA…IFES.md   # cópia na raiz — duplicata do arquivo em docs/, ver §5.4
-├── Revisão e ajustes da calculadora de carga horária.md   # feedback formal da Aline (revisão 2026-06-30)
-├── assets/                      # logos de referência (não usados; logo é CSS)
-├── arquivo/                     # MATERIAL ARQUIVADO (preservado, não em uso)
-│   ├── README.md                # inventário do arquivo (atualizado em 2026-08-26)
-│   ├── calculadora-workload-estimator.html  # v1 — porte do Workload Estimator (arquivada 2026-06-30)
-│   ├── index-cefor.html         # blocos fixos por Quadro 2 — arquivada 2026-08-26 (v2 assumiu como oficial)
-│   └── ANALISE-UX-UI.md         # análise UX/UI que fundamentou o redesign guiado
+├── estimador-carga-horaria-a.html    # OPÇÃO A — direção editorial   — publicado no Pages
+├── estimador-carga-horaria-b.html    # OPÇÃO B — direção brutalista  — publicado no Pages
+├── README.md                         # documentação do repositório
+├── PRODUCT.md                        # ficha de produto (plataforma, usuários, positioning, princípios)
+├── assets/                           # tudo que as páginas carregam + material de marca
+│   ├── vendor/pdfjs/                 # pdf.js embarcado (import do PDF) — dependência real das páginas
+│   ├── cefor-horizontal-cor-web.png  # logo usada pelos estimadores (versão web, 2508×597)
+│   ├── cefor-horizontal-cor.png      # logo oficial em alta (2835×1135) — referência
+│   ├── icone_cefor-horizontal-cor.png# ícone oficial — referência
+│   └── hero-proposta-editorial.svg   # arte da proposta editorial
+├── arquivo/                          # MATERIAL ARQUIVADO (preservado, não em uso, fora do fluxo)
+│   ├── README.md                     # inventário do arquivo
+│   ├── index-gateway.html            # ex-`index.html` — porta de entrada de 26/08, aposentada em 02/09
+│   ├── index-cefor-v2.html           # calculadora guiada em 3 etapas — antecessora dos estimadores oficiais
+│   ├── index-cefor.html              # blocos fixos por Quadro 2 — arquivada em 26/08
+│   ├── calculadora-workload-estimator.html  # v1 — porte do Workload Estimator (arquivada 30/06)
+│   └── ANALISE-UX-UI.md              # análise UX/UI que fundamentou o redesign guiado
 └── docs/
     ├── COMO ESTIMAR A CARGA HORÁRIA…PROPOSTA…IFES.md   # A PROPOSTA (Quadro 2 + Laurillard)
     ├── COMPARATIVO_calculadora-atual-vs-proposta-cefor.md  # comparativo v1 × proposta (histórico)
+    ├── DESIGN.md / DESIGN-BRUTALISMO.md                 # racional das direções visuais
+    ├── design-logo-cefor.md                             # notas de identidade visual
     ├── ESTADO-E-PROXIMOS-PASSOS.md                      # ESTE arquivo
+    ├── Revisão e ajustes da calculadora de carga horária.md  # feedback formal da Aline (30/06)
     ├── transcrição 2026-06-29 - Reuniao MOOC…txt         # racional das decisões da 1ª reunião
     ├── transcricao 2026-08-26 - Reunião…Aline Amorim Marquito e Elton.txt   # reunião de alinhamento (§3.5)
     └── source/                  # código original R/Shiny (server.R, ui.R) — referência
 ```
 
-> **Nota de versões:** a **porta de entrada** é `index.html` (novo, 2026-08-26), que leva à **única calculadora ativa**, `index-cefor-v2.html` — construtor de atividades guiado em 3 etapas (Configurar → Atividades → Calibrar), **promovido a versão oficial em 2026-08-26**. O antigo `index-cefor.html` (fiel ao Quadro 2 em blocos fixos, que era a versão ativa desde 06/2026) foi **arquivado na mesma data** — o motor de cálculo é idêntico entre as duas, só a interface mudou. A v1 (`calculadora-workload-estimator.html`, porte do Workload Estimator) segue arquivada desde 2026-06-30; a URL pública antiga na raiz continua um **stub de redirect**. Para retomar qualquer versão arquivada, ver `arquivo/README.md`.
+> **Nota de versões:** as duas versões ativas são `estimador-carga-horaria-a.html` (**Opção A**, editorial) e `estimador-carga-horaria-b.html` (**Opção B**, brutalista), ambas na raiz e ambas publicadas. Os sufixos `-a`/`-b` são deliberadamente neutros: as duas são direções paralelas em avaliação pela Aline, não versões sucessivas — nomes como `v1`/`v2` enviesariam a escolha. As chaves de `localStorage` internas (`:v1` e `:v2-brutal`) foram mantidas como estavam. Toda a linhagem anterior — a porta de entrada `index.html`, a calculadora guiada `index-cefor-v2.html`, os blocos fixos `index-cefor.html` e a v1 `calculadora-workload-estimator.html` — está em `arquivo/`, fora do site publicado. Para retomar qualquer versão arquivada, ver `arquivo/README.md`.
 
-> **Pendência de limpeza (não bloqueante):** `README.md` na raiz ainda descreve majoritariamente a v1 arquivada (mesmo com o aviso no topo apontando para este documento), e há uma cópia duplicada de `COMO ESTIMAR A CARGA HORÁRIA…IFES.md` entre a raiz e `docs/`. Ver §5.4.
+> **Nota de caminhos:** os estimadores carregam `./assets/vendor/pdfjs/…` e `assets/cefor-horizontal-cor-web.png`. Se algum dos dois for movido de diretório, esses caminhos precisam ser reajustados juntos.
 
 ---
 
@@ -138,12 +145,13 @@ Sintaxe JS validada via `vm.Script` (Node); fidelidade ao Quadro 2 — 16/16 tes
 - Ferramenta de análise (ler Moodle, comparar carga estimada × real) — parte de um sistema de design integrado maior, depende de um orientando de Computação.
 - Presets adicionais, empacotar fontes em base64 (100% offline), publicar (GitHub Pages) + `<iframe>` no Moodle.
 
-### 5.4 Limpeza de documentação (dívida, não bloqueante)
-- `README.md` na raiz ainda descreve principalmente a v1 arquivada — reescrever para refletir `index.html` → `index-cefor-v2.html` como fluxo atual.
-- Duplicata de `COMO ESTIMAR A CARGA HORÁRIA…IFES.md` entre a raiz e `docs/` — unificar em um único local.
+### 5.4 Limpeza de documentação — RESOLVIDA em 2026-09-02
+- `README.md` reescrito para descrever os estimadores oficiais como fluxo atual (a descrição do modelo de cálculo da v1 ficou marcada como histórico).
+- Duplicata de `COMO ESTIMAR A CARGA HORÁRIA…IFES.md` entre raiz e `docs/`: a cópia da raiz foi removida (era idêntica, só diferia em fim de linha); `docs/` é o local único.
+- Reorganização do repositório: estimadores oficiais na raiz, dependências em `assets/`, páginas antigas em `arquivo/`, raiz reduzida ao essencial.
 
 ### 5.5 Git
-`index.html` (novo) e `index-cefor-v2.html` (modificado) estão **untracked/não commitados**, junto com vários documentos novos (`PRODUCT.md`, as duas transcrições, imagens de logo, este arquivo). Há também um arquivo antigo, `docs/transcrição da Reuniao MOOC 29-06-2026…txt`, marcado como **deletado** no working tree — confirmar se é intencional (parece ter sido substituído por `docs/transcrição 2026-06-29…txt`, que já está no repositório) antes de commitar. Quando autorizado: revisar `git status` com atenção e commitar; *push é exclusivo do @devops*.
+Reorganização de 2026-09-02 commitada em `main` (movimentações feitas com `git mv`, histórico preservado). **Pendente:** o push — *push é exclusivo do @devops*. Depois do push, conferir no GitHub Pages que `/estimador-carga-horaria-a.html` e `/estimador-carga-horaria-b.html` respondem e que `index.html` deixou de existir. A raiz do Pages passa a responder 404 (não há mais `index.html`); se isso incomodar, a saída é publicar um `index.html` novo que redirecione para o estimador escolhido.
 
 ---
 
