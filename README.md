@@ -1,11 +1,19 @@
-# Calculadora de Carga Horária de Cursos EAD — IFES / CEFOR
+# Estimador de Carga Horária de Cursos EaD — IFES / CEFOR
 
-> ⚠️ **Este README documenta a v1 (porte do *Course Workload Estimator*), arquivada em 2026-06-30.**
-> A **versão ativa** do projeto é a **`index-cefor-v2.html`** — construtor de atividades guiado, fiel ao Quadro 2 da pesquisa (lógica por **tópico**, não semanal). A v1 ficou só como **referência** em `arquivo/calculadora-workload-estimator.html`; o `calculadora-workload-estimator.html` na raiz é apenas um **stub de redirect**. A antiga `index-cefor.html` (blocos fixos) foi arquivada em 2026-08-26 e está em `arquivo/index-cefor.html`. Para o estado atual, ver `docs/ESTADO-E-PROXIMOS-PASSOS.md`.
+Ferramenta web que estima **quanto tempo um curso a distância realmente exige do estudante** a partir das atividades planejadas, e ajuda a **validar se a carga horária declarada é realista**. Uso interno de design instrucional do CEFOR (Centro de Referência em Formação e em Educação a Distância — IFES).
 
-Ferramenta web que estima **quantas horas por semana** um curso a distância exige do estudante a partir das atividades planejadas, e ajuda a **validar se a carga horária declarada é realista**. Uso interno de design instrucional do CEFOR (Centro de Referência em Formação e em Educação a Distância — IFES).
+## Versões publicadas
 
-> **Status (v1):** arquivada — referência histórica. Página única autocontida, em `arquivo/calculadora-workload-estimator.html`.
+Duas versões oficiais, ambas na raiz do repositório e ambas publicadas no GitHub Pages:
+
+| Arquivo | O que é | URL |
+|---|---|---|
+| **Opção A** — `estimador-carga-horaria-a.html` | Direção visual editorial | [/estimador-carga-horaria-a.html](https://vertumno.github.io/calculadora-ch-cursos-ead/estimador-carga-horaria-a.html) |
+| **Opção B** — `estimador-carga-horaria-b.html` | Direção visual brutalista | [/estimador-carga-horaria-b.html](https://vertumno.github.io/calculadora-ch-cursos-ead/estimador-carga-horaria-b.html) |
+
+> A raiz do Pages não tem `index.html` — use as URLs acima. Toda a linhagem anterior (a porta de entrada `index.html`, a calculadora guiada `index-cefor-v2.html`, os blocos fixos `index-cefor.html` e a v1 `calculadora-workload-estimator.html`) está preservada em `arquivo/` e **não** é publicada.
+
+Para o estado atual do projeto e os próximos passos, ver **`docs/ESTADO-E-PROXIMOS-PASSOS.md`**.
 
 ---
 
@@ -21,16 +29,16 @@ Ferramenta web que estima **quantas horas por semana** um curso a distância exi
 
 ## 2. Como usar
 
-1. Abra **`calculadora-workload-estimator.html`** em qualquer navegador moderno (duplo clique já funciona).
-2. Preencha apenas os blocos de atividade que existem no seu curso. Cada bloco **acende** e mostra sua contribuição em `h/semana`.
-3. Leia o resultado: **carga total do curso (h)**, dedicação **por semana**, divisão **Autônomo × Contato** e a **composição** da carga por tipo de atividade.
-4. Informe a **carga declarada** do curso para receber o veredito de calibração (Realista / Subdimensionada / Superdimensionada).
-
-> Para hospedar ou incorporar no Moodle/AVA, basta servir o `calculadora-workload-estimator.html` (ver seção 7).
+1. Abra um dos dois estimadores (link acima) ou, localmente, o `.html` correspondente. Para uso local, prefira servir por HTTP (seção 7) — a importação de PDF depende de arquivos em `assets/` e não funciona bem via `file://`.
+2. Descreva as atividades do curso. Cada uma mostra sua contribuição ao vivo em horas.
+3. Leia o resultado: carga total, divisão entre estudo autônomo e tempo de contato, e a composição por tipo de atividade.
+4. Informe a **carga declarada** para receber o veredito de calibração.
 
 ---
 
-## 3. Como funciona (modelo de cálculo)
+## 3. Como funciona (modelo de cálculo) — descrição da v1, histórico
+
+> As seções 3 a 6 descrevem a **v1 arquivada** (`arquivo/calculadora-workload-estimator.html`). O motor de cálculo dos estimadores oficiais deriva da proposta em `docs/COMO ESTIMAR A CARGA HORÁRIA…IFES.md` (Quadro 2), não desta modelagem por blocos. Mantidas como referência da origem das taxas.
 
 A ferramenta soma a carga de **8 categorias de atividade** e gera três totais semanais, além da carga total do curso.
 
@@ -62,11 +70,11 @@ A ferramenta soma a carga de **8 categorias de atividade** e gera três totais s
 
 As **taxas e fórmulas são derivadas do _Course Workload Estimator_** de **Betsy Barre, Allen Brown e Justin Esarey** (Wake Forest University / Rice University), licenciado sob **CC BY-NC-SA 4.0**.
 
-- As duas matrizes de pesquisa (ritmo de **leitura** 3×3×3 e **escrita** 2×3×3) foram **portadas fielmente** do `source/server.R` original (em R/Shiny) para JavaScript e validadas célula a célula.
+- As duas matrizes de pesquisa (ritmo de **leitura** 3×3×3 e **escrita** 2×3×3) foram **portadas fielmente** do `docs/source/server.R` original (em R/Shiny) para JavaScript e validadas célula a célula.
 - A lógica garante `Autônomo + Contato = Total` (para fóruns de texto).
 - **Quirk preservado do original:** para fóruns em **áudio/vídeo**, o *Total* usa `0,18·X + X/6` enquanto *Contato* e o valor exibido usam `X/3` (X = minutos × postagens). Mantido por fidelidade à pesquisa; candidato a unificação futura.
 
-O código-fonte original em R/Shiny está preservado em **`source/`** (`server.R`, `ui.R`) e em **`source.zip`** para referência.
+O código-fonte original em R/Shiny está preservado em **`docs/source/`** (`server.R`, `ui.R`) para referência.
 
 ---
 
@@ -97,15 +105,16 @@ O código-fonte original em R/Shiny está preservado em **`source/`** (`server.R
 
 ## 7. Rodar / hospedar
 
-**Local (simples):** abra `calculadora-workload-estimator.html` no navegador.
-
-**Servidor local (para testar como será servido):**
+**Servidor local** (recomendado — a importação de PDF precisa disso):
 ```bash
 python -m http.server 8000
-# acesse http://localhost:8000/calculadora-workload-estimator.html
+# http://localhost:8000/estimador-carga-horaria-a.html
+# http://localhost:8000/estimador-carga-horaria-b.html
 ```
 
-**Hospedagem gratuita:** GitHub Pages, Netlify ou similar — basta publicar o `calculadora-workload-estimator.html`. Para incorporar no Moodle/AVA, usar um `<iframe>` apontando para a URL hospedada.
+**Publicação:** o GitHub Pages serve a **raiz do branch `main`**. Qualquer arquivo commitado na raiz vira público — por isso os estimadores ficam lá e as versões aposentadas ficam em `arquivo/`. Para incorporar no Moodle/AVA, usar um `<iframe>` apontando para a URL publicada.
+
+**Caminhos:** os estimadores carregam `./assets/vendor/pdfjs/…` e `assets/cefor-horizontal-cor-web.png`. Se um `.html` for movido de diretório, esses caminhos precisam ser reajustados junto.
 
 ---
 
@@ -113,24 +122,32 @@ python -m http.server 8000
 
 ```
 calculadora-ch-cursos-ead/
-├── calculadora-workload-estimator.html                      # A calculadora (página única autocontida)
-├── README.md                       # Este documento
-├── source/                         # Código-fonte original (R/Shiny) — referência
-│   ├── server.R                    # Lógica e matrizes de pesquisa originais
-│   └── ui.R                        # Interface original
-├── source.zip                      # Pacote original do estimador
-├── cefor-horizontal-cor.png        # Logo oficial (referência; NAO usado pelo HTML)
-├── icone_cefor-horizontal-cor.png  # Ícone oficial (referência do padrão do símbolo)
-└── Meeting Transcription (1).txt   # Transcrição de reunião (insumo/contexto)
+├── estimador-carga-horaria-a.html    # Opção A — direção editorial   (publicado)
+├── estimador-carga-horaria-b.html    # Opção B — direção brutalista  (publicado)
+├── README.md                         # este documento
+├── PRODUCT.md                        # ficha de produto
+├── assets/                           # o que as páginas carregam + material de marca
+│   ├── vendor/pdfjs/                 # pdf.js embarcado (importação de PDF)
+│   ├── cefor-horizontal-cor-web.png  # logo usada pelos estimadores
+│   ├── cefor-horizontal-cor.png      # logo oficial em alta — referência
+│   ├── icone_cefor-horizontal-cor.png# ícone oficial — referência
+│   └── hero-proposta-editorial.svg
+├── arquivo/                          # versões aposentadas (preservadas, não publicadas em uso)
+│   ├── README.md                     # inventário do arquivo
+│   ├── index-gateway.html            # ex-index.html — porta de entrada aposentada
+│   ├── index-cefor-v2.html           # calculadora guiada em 3 etapas
+│   ├── index-cefor.html              # blocos fixos por Quadro 2
+│   ├── calculadora-workload-estimator.html   # v1 — porte do Workload Estimator
+│   └── ANALISE-UX-UI.md
+└── docs/                             # proposta, transcrições, design, estado do projeto
+    └── source/                       # código original R/Shiny (server.R, ui.R)
 ```
-
-> Os arquivos `.png` ficam como **referência da marca**; o `calculadora-workload-estimator.html` não depende deles (logo em CSS).
 
 ---
 
 ## 9. Histórico do que já foi feito
 
-1. **Análise do sistema original** (`source/ui.R` + `source/server.R`) — _Course Workload Estimator_ em R/Shiny.
+1. **Análise do sistema original** (`docs/source/ui.R` + `docs/source/server.R`) — _Course Workload Estimator_ em R/Shiny.
 2. **Reescrita** como página única HTML/CSS/JS, em português, adaptada ao contexto EAD/MOOC brasileiro, mantendo as taxas de pesquisa originais (validadas).
 3. **Adaptações próprias:** cálculo da carga horária total do curso e comparador estimado × declarado.
 4. **Identidade visual IFES/CEFOR** aplicada (cores, tipografia, símbolo da marca).
@@ -143,10 +160,12 @@ calculadora-ch-cursos-ead/
 
 ## 10. Próximos passos sugeridos
 
-- [ ] Commit + push dos arquivos migrados (atualmente *untracked*).
-- [ ] Presets ("MOOC típico", "Disciplina semestral") para acelerar o preenchimento.
-- [ ] Empacotar fontes em base64 para funcionamento 100% offline.
-- [ ] Publicar (GitHub Pages) e gerar `<iframe>` para o Moodle/AVA.
+- [ ] Escolher uma das duas direções visuais como versão única.
+- [ ] Teste de usabilidade (combinado com a Rute).
+- [ ] Empacotar fontes para funcionamento 100% offline.
+- [ ] Gerar `<iframe>` para o Moodle/AVA a partir da URL publicada.
+
+Backlog detalhado em `docs/ESTADO-E-PROXIMOS-PASSOS.md` §5.
 
 ---
 
