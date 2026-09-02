@@ -150,8 +150,19 @@ Sintaxe JS validada via `vm.Script` (Node); fidelidade ao Quadro 2 — 16/16 tes
 - Duplicata de `COMO ESTIMAR A CARGA HORÁRIA…IFES.md` entre raiz e `docs/`: a cópia da raiz foi removida (era idêntica, só diferia em fim de linha); `docs/` é o local único.
 - Reorganização do repositório: estimadores oficiais na raiz, dependências em `assets/`, páginas antigas em `arquivo/`, raiz reduzida ao essencial.
 
-### 5.5 Git
-Reorganização de 2026-09-02 commitada em `main` (movimentações feitas com `git mv`, histórico preservado). **Pendente:** o push — *push é exclusivo do @devops*. Depois do push, conferir no GitHub Pages que `/estimador-carga-horaria-a.html` e `/estimador-carga-horaria-b.html` respondem e que `index.html` deixou de existir. A raiz do Pages passa a responder 404 (não há mais `index.html`); se isso incomodar, a saída é publicar um `index.html` novo que redirecione para o estimador escolhido.
+### 5.5 Git e publicação — CONCLUÍDO em 2026-09-02
+Reorganização commitada e publicada (`a2c8201`, `origin/main`). No ar e verificado no navegador:
+
+- **Opção A** — https://vertumno.github.io/calculadora-ch-cursos-ead/estimador-carga-horaria-a.html
+- **Opção B** — https://vertumno.github.io/calculadora-ch-cursos-ead/estimador-carga-horaria-b.html
+
+Nas duas: logo carrega, pdf.js carrega no `<script>` clássico e no `import()` ESM. Único erro de console é `favicon.ico` 404 (o repositório não tem favicon) — cosmético.
+
+`index.html`, `index-cefor-v2.html` e `calculadora-workload-estimator.html` saíram do site publicado (404, confirmado).
+
+**A raiz do Pages não ficou 404:** sem `index.html`, o Jekyll do GitHub Pages renderiza o `README.md` como página inicial — e ela já traz a tabela com os dois links. Ou seja, https://vertumno.github.io/calculadora-ch-cursos-ead/ funciona como índice sem precisar de página extra. Consequência prática: **o README é uma página pública**, não só documentação interna — escrever pensando nisso.
+
+Links enviados à Aline para escolha entre as duas direções visuais.
 
 ---
 
