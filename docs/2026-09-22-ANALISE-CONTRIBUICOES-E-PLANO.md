@@ -133,6 +133,8 @@ Responder as dúvidas da §5, sem mexer em código. As três que travam mais tra
 
 ### Fase 1: correções
 
+> **Feita em 23/09/2026** na Opção A. A versão testada ficou salva em `arquivo/estimador-carga-horaria-a-2026-09-22.html` e na tag git `estimador-a-2026-09-22`. D2: Prática passou de ferrugem para oliva (`#4C5800`), validada no script de paleta — detalhes em `docs/DESIGN.md`. D1 foi aplicada com a proposta da §5 (os dois lados trocam juntos); confirmar na reunião.
+
 Os dois bugs foram confirmados no estimador publicado em 22/09/2026. Digitar `1200` no campo de palavras deixa só `1`, porque o campo perde o foco a cada tecla — o handler `input` de `#modal-activity-body` chama `renderModalBody()`, que recria o campo. E o botão de adicionar já fica ativo com o campo vazio, gravando a atividade com 0 min.
 
 | Item | O que fazer | Onde no código | Esforço |

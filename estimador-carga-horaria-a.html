@@ -90,7 +90,7 @@ verdict, and DESIGN.md.
      A marca (sem sufixo) é validada em contraste >= 3:1 no branco e em separação
      para daltonismo entre vizinhos; -ink passa 4.5:1 sobre o próprio -soft. */
   --cat-1: #17509E; --cat-1-soft: #E1E8F2; --cat-1-line: #A7BDDA; --cat-1-ink: #17509E; /* azul     · Aquisição    */
-  --cat-2: #C2521A; --cat-2-soft: #F7E9E1; --cat-2-line: #E8BDA8; --cat-2-ink: #AF4A17; /* ferrugem · Prática      */
+  --cat-2: #4C5800; --cat-2-soft: #EEF0DC; --cat-2-line: #C9D09A; --cat-2-ink: #4C5800; /* oliva    · Prática      */
   --cat-3: #00A0C6; --cat-3-soft: #DEF3F8; --cat-3-line: #9EDBE9; --cat-3-ink: #00738F; /* ciano    · Produção     */
   --cat-4: #B08600; --cat-4-soft: #F5EFDE; --cat-4-line: #E1D19E; --cat-4-ink: #866600; /* ouro     · Discussão    */
   --cat-5: #D24A9E; --cat-5-soft: #F9E7F2; --cat-5-line: #EEBADA; --cat-5-ink: #AC3D82; /* magenta  · Investigação */
@@ -479,12 +479,15 @@ table{ border-collapse:collapse; }
 .modal-sm{ max-width:460px; }
 .confirm-msg{ font-size:0.92rem; color: var(--ink-soft); }
 .field-group label{ display:block; font-size:0.78rem; font-weight:600; color: var(--ink-soft); margin-bottom:8px; }
-.field-row{ display:flex; gap:12px; }
+.field-row{ display:flex; gap:12px; align-items:flex-end; }
 .field-row > *{ flex:1; }
-.modal-body input[type="text"], .modal-body input[type="number"]{
+.modal-body input[type="text"]{
   width:100%; padding:9px 11px; border-radius:var(--radius-s); border:1px solid var(--border-strong); background: var(--surface); color: var(--ink);
 }
-.modal-body input[type="number"]{ font-variant-numeric: tabular-nums; }
+.modal-body .qty-input{ font-variant-numeric: tabular-nums; }
+#param-fields .helper-note{ margin-top:12px; }
+.field-msg{ margin-top:8px; font-size:0.8rem; color: var(--muted); }
+.field-msg.is-error{ color: var(--status-critical); font-weight:600; }
 .modal-body select{ width:100%; padding:9px 11px; border-radius:var(--radius-s); border:1px solid var(--border-strong); background: var(--surface); color: var(--ink); font-family: var(--font-body); font-size:0.9rem; }
 .pick-grid{ display:grid; grid-template-columns: repeat(auto-fill, minmax(140px,1fr)); gap:8px; }
 .pick-card{ text-align:left; padding:12px 13px; min-height:60px; border-radius:var(--radius-s); border:1px solid var(--c-line); background: var(--c-soft); display:flex; flex-direction:column; justify-content:center; gap:4px; }
@@ -746,7 +749,7 @@ table{ border-collapse:collapse; }
             <button class="chip" data-hours="60">60h</button>
           </div>
           <div class="target-custom">
-            <input id="target-input" class="target-input" type="number" min="1" step="1" value="40" aria-label="Carga horária pretendida, em horas">
+            <input id="target-input" class="target-input" type="text" inputmode="numeric" autocomplete="off" maxlength="4" value="40" aria-label="Carga horária pretendida, em horas">
             <span aria-hidden="true">h</span>
           </div>
         </div>
@@ -1076,6 +1079,15 @@ function moveModuleBy(id, delta){
   renderActivityList(); renderResults(); save();
 }
 
+/* Quantidades chegam como número (exemplos, arquivos) ou como o texto digitado
+   no modal, que aceita vírgula decimal ("7,5"). Vazio, negativo ou inválido = 0. */
+function parseQty(v){
+  if(v==null) return 0;
+  var n = Number(String(v).trim().replace(",", "."));
+  return isFinite(n) && n>0 ? n : 0;
+}
+function formatQty(n){ return n.toLocaleString("pt-BR"); }
+
 function computeMinutes(a){
   var task = getTask(a.typeId, a.taskId);
   if(!task) return 0;
@@ -1083,20 +1095,20 @@ function computeMinutes(a){
   var p = a.params || {};
   if(task.inputMode==="reading"){
     var c = getComplexity(task, a.complexityId);
-    per = c ? (Number(p.words)||0)/c.rate : 0;
+    per = c ? parseQty(p.words)/c.rate : 0;
   } else if(task.inputMode==="media"){
     var c2 = getComplexity(task, a.complexityId);
-    per = c2 ? (Number(p.mediaMinutes)||0)*c2.factor : 0;
+    per = c2 ? parseQty(p.mediaMinutes)*c2.factor : 0;
   } else if(task.inputMode==="quiz"){
-    per = (Number(p.quizLow)||0)*2 + (Number(p.quizHigh)||0)*5;
+    per = parseQty(p.quizLow)*2 + parseQty(p.quizHigh)*5;
   } else if(task.inputMode==="fixed"){
     var c3 = getComplexity(task, a.complexityId);
     per = c3 ? c3.minutes : 0;
   } else if(task.inputMode==="writing"){
     var c4 = getComplexity(task, a.complexityId);
-    per = c4 ? ((Number(p.words)||0)/c4.rate)*60 : 0;
+    per = c4 ? (parseQty(p.words)/c4.rate)*60 : 0;
   } else if(task.inputMode==="manual"){
-    per = (Number(p.manualHours)||0)*60 + (Number(p.manualMinutes)||0);
+    per = parseQty(p.manualHours)*60 + parseQty(p.manualMinutes);
   }
   return per;
 }
@@ -1120,10 +1132,10 @@ function detailText(a){
   var p = a.params||{};
   if(!task) return "";
   var bits = [];
-  if(task.inputMode==="reading") bits.push((Number(p.words)||0)+" palavras");
-  if(task.inputMode==="media") bits.push((Number(p.mediaMinutes)||0)+" min de mídia");
-  if(task.inputMode==="quiz") bits.push((Number(p.quizLow)||0)+" baixa complexidade + "+(Number(p.quizHigh)||0)+" alta complexidade");
-  if(task.inputMode==="writing") bits.push((Number(p.words)||0)+" palavras");
+  if(task.inputMode==="reading") bits.push(formatQty(parseQty(p.words))+" palavras");
+  if(task.inputMode==="media") bits.push(formatQty(parseQty(p.mediaMinutes))+" min de mídia");
+  if(task.inputMode==="quiz") bits.push(formatQty(parseQty(p.quizLow))+" baixa complexidade + "+formatQty(parseQty(p.quizHigh))+" alta complexidade");
+  if(task.inputMode==="writing") bits.push(formatQty(parseQty(p.words))+" palavras");
   if(task.inputMode==="manual" && a.taskId!=="artefato" && a.taskId!=="investigacao") bits.push("definido pelo professor");
   return bits.join(" · ");
 }
@@ -1767,12 +1779,14 @@ function moveBy(id, delta){
   return to;
 }
 
+/* pct compara o estimado com a carga declarada. O rótulo crítico fala da carga
+   declarada: estimado acima da meta = carga subestimada, e vice-versa. */
 function statusForDelta(pct){
   var abs = Math.abs(pct);
   if(abs<=10) return {key:"good", label:"Dentro do esperado"};
   if(abs<=25) return {key:"warning", label: pct>0 ? "Atenção: um pouco acima da meta" : "Atenção: um pouco abaixo da meta"};
   if(abs<=45) return {key:"serious", label: pct>0 ? "Desvio considerável para mais" : "Desvio considerável para menos"};
-  return {key:"critical", label: pct>0 ? "Alta discrepância: curso superestimado" : "Alta discrepância: curso subestimado"};
+  return {key:"critical", label: pct>0 ? "Alta discrepância: carga horária subestimada" : "Alta discrepância: carga horária superestimada"};
 }
 var STATUS_ICONS = {
   good:'<svg viewBox="0 0 20 20" fill="none"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -1981,7 +1995,7 @@ document.getElementById("course-name").addEventListener("input", function(e){
   state.courseName = e.target.value; save();
 });
 document.getElementById("target-input").addEventListener("input", function(e){
-  state.targetHours = Number(e.target.value)||0;
+  state.targetHours = parseQty(sanitizeQtyInput(e.target));
   document.querySelectorAll("#target-chips .chip").forEach(function(c){
     c.classList.toggle("is-active", Number(c.getAttribute("data-hours"))===Number(state.targetHours));
   });
@@ -2365,11 +2379,87 @@ document.getElementById("modal-activity-close").addEventListener("click", closeA
 document.getElementById("modal-activity-cancel").addEventListener("click", closeActivityModal);
 document.getElementById("modal-activity-backdrop").addEventListener("click", function(e){ if(e.target===this) closeActivityModal(); });
 
-function draftValid(){
+/* Estrutura escolhida (tipo, tarefa, complexidade) libera nome e prévia;
+   só uma quantidade maior que zero libera o botão de adicionar. */
+function draftStructureValid(){
   if(!draft.typeId || !draft.taskId) return false;
   var task = getTask(draft.typeId, draft.taskId);
   if(task.complexities && !draft.complexityId) return false;
   return true;
+}
+function draftValid(){
+  return draftStructureValid() && computeMinutes(draft) > 0;
+}
+
+var QTY_PARAMS = {"p-words":"words", "p-media":"mediaMinutes", "p-quiz-low":"quizLow", "p-quiz-high":"quizHigh", "p-hours":"manualHours", "p-minutes":"manualMinutes"};
+var QTY_HINTS = {
+  reading: "Informe o número de palavras para calcular o tempo.",
+  writing: "Informe o número de palavras para calcular o tempo.",
+  media: "Informe a duração da mídia para calcular o tempo.",
+  quiz: "Informe quantas questões o questionário tem.",
+  manual: "Informe o tempo em horas, minutos ou ambos."
+};
+function paramMessage(task){
+  if(!QTY_HINTS[task.inputMode] || computeMinutes(draft) > 0) return {text:"", error:false};
+  var typed = Object.keys(QTY_PARAMS).some(function(id){
+    var v = draft.params[QTY_PARAMS[id]];
+    return v!=null && String(v).trim()!=="";
+  });
+  return typed
+    ? {text:"O valor precisa ser maior que zero para adicionar a atividade.", error:true}
+    : {text:QTY_HINTS[task.inputMode], error:false};
+}
+function paramMessageHtml(task){
+  var m = paramMessage(task);
+  return '<p class="field-msg'+(m.error?' is-error':'')+(m.text?'':' hidden')+'" id="param-msg" aria-live="polite">'+m.text+'</p>';
+}
+
+/* Enquanto se digita, só a prévia, a mensagem e o botão mudam. Redesenhar o
+   corpo do modal recriaria o campo e roubaria o foco a cada tecla. */
+function refreshModalLive(){
+  var task = (draft.typeId && draft.taskId) ? getTask(draft.typeId, draft.taskId) : null;
+  var lp = document.getElementById("lp-val");
+  if(lp){
+    var totalMin = computeMinutes(draft);
+    lp.textContent = totalMin>0 ? formatMinutes(totalMin) : "—";
+  }
+  var msg = document.getElementById("param-msg");
+  if(msg && task){
+    var m = paramMessage(task);
+    msg.textContent = m.text;
+    msg.classList.toggle("is-error", m.error);
+    msg.classList.toggle("hidden", !m.text);
+  }
+  document.getElementById("modal-activity-confirm").disabled = !draftValid();
+}
+
+/* Campo de texto com teclado numérico: sem setas, sem rolagem que altera o
+   valor. Inteiros descartam tudo que não é dígito ("1.200" vira 1200);
+   decimais aceitam uma vírgula ou um ponto. */
+function sanitizeQtyInput(el){
+  var v = el.value, clean;
+  if(el.getAttribute("inputmode")==="decimal"){
+    clean = v.replace(/[^\d.,]/g, "");
+    var sep = clean.search(/[.,]/);
+    if(sep>=0) clean = clean.slice(0, sep+1) + clean.slice(sep+1).replace(/[.,]/g, "");
+  } else {
+    clean = v.replace(/\D/g, "");
+  }
+  if(clean!==v){
+    var pos = Math.max(0, (el.selectionStart||0) - (v.length - clean.length));
+    el.value = clean;
+    el.setSelectionRange(pos, pos);
+  }
+  return clean;
+}
+function qtyFieldValue(v){
+  if(v==null || v==="") return "";
+  return typeof v==="number" ? String(v).replace(".", ",") : escapeHtml(String(v));
+}
+function qtyInput(id, value, opts){
+  opts = opts || {};
+  return '<input type="text" class="qty-input" id="'+id+'" inputmode="'+(opts.decimal?'decimal':'numeric')+'" autocomplete="off" aria-describedby="param-msg"' +
+    ' value="'+qtyFieldValue(value)+'"'+(opts.placeholder?' placeholder="'+opts.placeholder+'"':'')+'>';
 }
 
 function renderModalBody(){
@@ -2414,8 +2504,8 @@ function renderModalBody(){
     html += renderParamFields(task);
   }
 
-  if(task && draftValid()){
-    var totalMin = computeMinutes({typeId:draft.typeId, taskId:draft.taskId, complexityId:draft.complexityId, params:draft.params});
+  if(task && draftStructureValid()){
+    var totalMin = computeMinutes(draft);
     if(state.modules.length){
       html += '<div class="field-group"><label for="input-module">Módulo</label><select id="input-module">' +
         '<option value=""' + (draft.moduleId ? '' : ' selected') + '>Sem módulo</option>';
@@ -2426,7 +2516,7 @@ function renderModalBody(){
     }
     html += '<div class="field-group"><label for="input-label">Nome da atividade (opcional)</label>' +
       '<input type="text" id="input-label" placeholder="'+escapeHtml(defaultLabel(draft))+'" value="'+escapeHtml(draft.label||"")+'"></div>';
-    html += '<div class="live-preview"><span class="lp-label">Tempo estimado</span><span class="lp-val mono-num">'+formatMinutes(totalMin)+'</span></div>';
+    html += '<div class="live-preview"><span class="lp-label">Tempo estimado</span><span class="lp-val mono-num" id="lp-val">'+(totalMin>0 ? formatMinutes(totalMin) : "—")+'</span></div>';
   }
 
   body.innerHTML = html;
@@ -2436,28 +2526,30 @@ function renderModalBody(){
 function renderParamFields(task){
   var p = draft.params || {};
   var html = '<div id="param-fields">';
+  var after = "";   /* ajuda que vem depois do aviso, para o aviso ficar colado ao campo */
   if(task.inputMode==="reading" || task.inputMode==="writing"){
     html += '<div class="field-group"><label for="p-words">Número de palavras</label>' +
-      '<input type="number" id="p-words" min="0" step="10" value="'+(p.words||"")+'" placeholder="Ex.: 1200"></div>';
+      qtyInput("p-words", p.words, {placeholder:"Ex.: 1200"}) + '</div>';
     if(task.inputMode==="reading"){
-      html += '<div class="text-counter-helper"><span>Tenho o texto.</span>' +
+      after = '<div class="text-counter-helper"><span>Tenho o texto.</span>' +
         '<button type="button" class="text-counter-trigger" id="btn-open-word-counter">Abrir contador de palavras</button></div>';
     }
   } else if(task.inputMode==="media"){
-    html += '<div class="field-group"><label>Duração da mídia (minutos)</label>' +
-      '<input type="number" id="p-media" min="0" step="0.5" value="'+(p.mediaMinutes||"")+'" placeholder="Ex.: 8"></div>';
+    html += '<div class="field-group"><label for="p-media">Duração da mídia (minutos)</label>' +
+      qtyInput("p-media", p.mediaMinutes, {decimal:true, placeholder:"Ex.: 7,5"}) + '</div>';
   } else if(task.inputMode==="quiz"){
     html += '<div class="field-row">' +
-      '<div class="field-group"><label>Questões: baixa complexidade (2 min cada)</label><input type="number" id="p-quiz-low" min="0" step="1" value="'+(p.quizLow||"")+'"></div>' +
-      '<div class="field-group"><label>Questões: alta complexidade (5 min cada)</label><input type="number" id="p-quiz-high" min="0" step="1" value="'+(p.quizHigh||"")+'"></div>' +
-    '</div>' +
-    '<p class="helper-note">Se o questionário mistura os dois níveis, informe as duas quantidades aqui; não é preciso lançar como duas atividades.</p>';
+      '<div class="field-group"><label for="p-quiz-low">Questões: baixa complexidade (2 min cada)</label>'+qtyInput("p-quiz-low", p.quizLow)+'</div>' +
+      '<div class="field-group"><label for="p-quiz-high">Questões: alta complexidade (5 min cada)</label>'+qtyInput("p-quiz-high", p.quizHigh)+'</div>' +
+    '</div>';
+    after = '<p class="helper-note">Se o questionário mistura os dois níveis, informe as duas quantidades aqui; não é preciso lançar como duas atividades.</p>';
   } else if(task.inputMode==="manual"){
     html += '<div class="field-row">' +
-      '<div class="field-group"><label>Horas</label><input type="number" id="p-hours" min="0" step="1" value="'+(p.manualHours||"")+'"></div>' +
-      '<div class="field-group"><label>Minutos</label><input type="number" id="p-minutes" min="0" max="59" step="1" value="'+(p.manualMinutes||"")+'"></div>' +
+      '<div class="field-group"><label for="p-hours">Horas</label>'+qtyInput("p-hours", p.manualHours)+'</div>' +
+      '<div class="field-group"><label for="p-minutes">Minutos</label>'+qtyInput("p-minutes", p.manualMinutes)+'</div>' +
     '</div>';
   }
+  html += paramMessageHtml(task) + after;
   html += '</div>';
   return html;
 }
@@ -2659,17 +2751,10 @@ document.getElementById("modal-word-counter-use").addEventListener("click", func
 
 document.getElementById("modal-activity-body").addEventListener("input", function(e){
   var id = e.target.id;
-  if(id==="p-words") draft.params.words = e.target.value;
-  else if(id==="p-media") draft.params.mediaMinutes = e.target.value;
-  else if(id==="p-quiz-low") draft.params.quizLow = e.target.value;
-  else if(id==="p-quiz-high") draft.params.quizHigh = e.target.value;
-  else if(id==="p-hours") draft.params.manualHours = e.target.value;
-  else if(id==="p-minutes") draft.params.manualMinutes = e.target.value;
-  else if(id==="input-label"){ draft.label = e.target.value; return; }
-  else return;
-  renderModalBody();
-  var labelInput = document.getElementById("input-label");
-  if(labelInput) labelInput.value = draft.label||"";
+  if(id==="input-label"){ draft.label = e.target.value; return; }
+  if(!QTY_PARAMS[id]) return;
+  draft.params[QTY_PARAMS[id]] = sanitizeQtyInput(e.target);
+  refreshModalLive();
 });
 
 /* O select dispara change; escolher "+ Novo módulo…" cria o módulo já
@@ -2687,6 +2772,10 @@ document.getElementById("modal-activity-body").addEventListener("change", functi
 document.getElementById("modal-activity-confirm").addEventListener("click", function(){
   if(!draftValid()) return;
   if(!draft.label){ draft.label = defaultLabel(draft); }
+  /* O texto digitado ("7,5") vira número antes de ir para o estado e o JSON. */
+  Object.keys(draft.params).forEach(function(k){
+    if(typeof draft.params[k]==="string") draft.params[k] = parseQty(draft.params[k]);
+  });
   if(editingId){
     state.activities = state.activities.map(function(a){ return a.id===editingId ? Object.assign({id:editingId}, draft) : a; });
   } else {

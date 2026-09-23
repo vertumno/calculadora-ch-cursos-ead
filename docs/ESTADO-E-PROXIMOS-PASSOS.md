@@ -137,6 +137,8 @@ Sintaxe JS validada via `vm.Script` (Node); fidelidade ao Quadro 2 — 16/16 tes
 ### 5.2 Combinados pendentes de execução
 
 > **2026-09-22 — a rodada de testes aconteceu** (Aline, Rutinelli, Mariella e Bruno, sobre a Opção A). As 32 contribuições, o plano de ajustes em 5 fases e as 17 dúvidas para a reunião estão em `2026-09-22-ANALISE-CONTRIBUICOES-E-PLANO.md`. Isso cumpre os itens 1 e 2 abaixo — o link enviado foi o dos estimadores A e B (§5.5), não o da v2.
+>
+> **2026-09-23 — Fase 1 do plano aplicada na Opção A** (C1, C2, D1, D2): digitação no modal sem perder o foco, campos numéricos sem setas e com vírgula decimal, quantidade zero bloqueada com aviso, veredito crítico corrigido e nova cor de Prática. A versão anterior está em `arquivo/estimador-carga-horaria-a-2026-09-22.html`.
 
 1. Enviar o link de `index-cefor-v2.html` para a Aline testar e detalhar feedback (visual, nomenclatura, interação) — combinado em 26/08, ainda não enviado.
 2. Aline + Rute vão rodar o teste de usabilidade assim que o link for enviado.

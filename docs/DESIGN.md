@@ -95,7 +95,7 @@ Ordem fixa, jamais ciclada. Quatro tons por tipo: **marca** (a cor da barra),
 | Slot | marca | -soft | -line | -ink | Tipo |
 |---|---|---|---|---|---|
 | 1 | `#17509E` | `#E1E8F2` | `#A7BDDA` | `#17509E` | Aquisição |
-| 2 | `#C2521A` | `#F7E9E1` | `#E8BDA8` | `#AF4A17` | Prática |
+| 2 | `#4C5800` | `#EEF0DC` | `#C9D09A` | `#4C5800` | Prática |
 | 3 | `#00A0C6` | `#DEF3F8` | `#9EDBE9` | `#00738F` | Produção |
 | 4 | `#B08600` | `#F5EFDE` | `#E1D19E` | `#866600` | Discussão |
 | 5 | `#D24A9E` | `#F9E7F2` | `#EEBADA` | `#AC3D82` | Investigação |
@@ -105,15 +105,22 @@ Ordem fixa, jamais ciclada. Quatro tons por tipo: **marca** (a cor da barra),
 **Validação das marcas** (`dataviz/scripts/validate_palette.js --mode light
 --surface #ffffff`): banda de luminosidade ✓, piso de croma ✓, separação para
 daltonismo em pares vizinhos ΔE 16.1 (pior caso, deutan) ✓, piso de visão normal
-ΔE 20.8 ✓, **contraste ≥ 3:1 nas sete** ✓ — acima da paleta de referência da
+ΔE 22.7 ✓, **contraste ≥ 3:1 nas sete** ✓ — acima da paleta de referência da
 própria skill, que aceita três slots abaixo de 3:1.
 
-Cada `-ink` passa **≥ 4.5:1 sobre o seu próprio -soft** (4.64 a 6.37); `--ink`
+Cada `-ink` passa **≥ 4.5:1 sobre o seu próprio -soft** (4.64 a 6.71); `--ink`
 sobre qualquer `-soft` fica entre 10.3 e 11.0.
 
-Pares não-vizinhos mais próximos: ouro ↔ ferrugem (ΔE 12.8 normal). Aceito
+Pares não-vizinhos mais próximos: verde ↔ oliva (ΔE 13.5 normal). Aceito
 porque toda marca do sistema carrega rótulo de texto ao lado — identidade nunca
 depende só de cor.
+
+**Prática era ferrugem (`#C2521A`) até 23/09/2026.** Na rodada de testes, a Aline
+leu o tom como vermelho de alerta — e ele de fato quase coincidia com
+`--status-serious`. O oliva foi escolhido por varredura no validador: entre os
+matizes frios que passam os seis testes na ordem do gráfico, foi o que ficou mais
+longe de todas as outras seis famílias. O verde-azulado, primeira ideia, colava no
+verde de Colaboração para daltônicos; o lilás, no violeta de Síncrona.
 
 ---
 
