@@ -135,6 +135,9 @@ Sintaxe JS validada via `vm.Script` (Node); fidelidade ao Quadro 2 — 16/16 tes
 **Questionário misto** — quando um questionário mistura questões de baixa e alta complexidade, o parâmetro do Quadro 2 (por questão individual) não tem hoje uma forma natural de ser declarado na interface sem forçar o professor a lançar dois itens separados. Precisa virar decisão de produto antes de implementar.
 
 ### 5.2 Combinados pendentes de execução
+
+> **2026-09-22 — a rodada de testes aconteceu** (Aline, Rutinelli, Mariella e Bruno, sobre a Opção A). As 32 contribuições, o plano de ajustes em 5 fases e as 17 dúvidas para a reunião estão em `2026-09-22-ANALISE-CONTRIBUICOES-E-PLANO.md`. Isso cumpre os itens 1 e 2 abaixo — o link enviado foi o dos estimadores A e B (§5.5), não o da v2.
+
 1. Enviar o link de `index-cefor-v2.html` para a Aline testar e detalhar feedback (visual, nomenclatura, interação) — combinado em 26/08, ainda não enviado.
 2. Aline + Rute vão rodar o teste de usabilidade assim que o link for enviado.
 3. Confirmar com a Aline os pontos herdados da sessão anterior: nível "Média" ausente em vídeo/quiz/interativa/discussão (D3) e conversão palavra ↔ página.

@@ -7,6 +7,7 @@
 
 | Arquivo | O que é |
 |---|---|
+| `estimador-carga-horaria-a-2026-09-22.html` | **Opção A como estava na rodada de testes de 22/09/2026** (Aline, Rutinelli, Mariella e Bruno), salva antes dos ajustes do plano `docs/2026-09-22-ANALISE-CONTRIBUICOES-E-PLANO.md`. Cópia fiel, só com os caminhos de `assets/` trocados por `../assets/` para abrir desta pasta. Usa a mesma chave de rascunho no navegador que os estimadores da raiz. |
 | `index-gateway.html` | **Porta de entrada (gateway)** criada em 2026-08-26: nomeava a ferramenta e levava, com um único botão, à calculadora guiada. Era o `index.html` da raiz. **Aposentado em 2026-09-02**, quando os estimadores oficiais passaram a ser abertos diretamente. O link interno aponta para `index-cefor-v2.html`, que está nesta mesma pasta — continua funcionando. |
 | `index-cefor-v2.html` | **Calculadora guiada em 3 etapas** (Configurar → Atividades → Calibrar): onboarding, painel-resumo sempre visível, catálogo em modal, exemplo pronto, salvamento automático em `localStorage`. Foi a página oficial de 2026-08-26 até 2026-09-02, quando os `estimador-carga-horaria*.html` assumiram. Motor de cálculo do Quadro 2 (validado). |
 | `index-cefor.html` | **Calculadora MOOC fiel ao Quadro 2** (blocos fixos por tipo de aprendizagem, lógica por tópico). Foi a versão ativa até **2026-08-26**. Motor de cálculo idêntico ao da v2 (mesmas taxas do Quadro 2). |
