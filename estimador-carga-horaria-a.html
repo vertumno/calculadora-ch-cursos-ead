@@ -343,16 +343,6 @@ table{ border-collapse:collapse; }
 .target-input{ width:52px; padding:7px 2px; border:none; background:none; color: var(--ink); text-align:right; font-weight:600; font-size:0.85rem; font-variant-numeric: tabular-nums; }
 .target-input:focus{ outline:none; }
 
-.mode-row{ display:flex; align-items:center; gap:10px; padding:11px 0; border-bottom:1px solid var(--border); margin-bottom:18px; }
-.switch{ position:relative; width:38px; height:21px; flex:none; }
-.switch input{ position:absolute; inset:0; opacity:0; margin:0; cursor:pointer; }
-.switch .track{ position:absolute; inset:0; background: var(--border-strong); border-radius:999px; transition: background .15s; }
-.switch .thumb{ position:absolute; top:2px; left:2px; width:17px; height:17px; border-radius:50%; background: var(--surface); border:1px solid var(--border); box-shadow: var(--shadow-sm); transition: transform .15s; }
-.switch input:checked + .track{ background: var(--accent); }
-.switch input:checked + .track .thumb{ transform: translateX(17px); }
-.mode-copy{ font-size:0.86rem; color: var(--muted); cursor:pointer; }
-.mode-copy b{ color: var(--ink-soft); font-weight:600; }
-
 .toolbar{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
 .toolbar select.tpl-select{ padding:9px 12px; border-radius:var(--radius-s); border:1px solid var(--border-strong); background: var(--surface); font-weight:600; font-size:0.84rem; color: var(--ink); }
 .toolbar-sep{ width:1px; align-self:stretch; min-height:26px; background: var(--border); }
@@ -505,6 +495,7 @@ table{ border-collapse:collapse; }
 .live-preview{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; background: var(--accent-quiet); border:1px solid var(--accent-line); border-radius:var(--radius-s); }
 .live-preview .lp-label{ font-size:0.82rem; color: var(--ink-soft); font-weight:600; }
 .live-preview .lp-val{ font-family: var(--font-display); font-weight:600; font-size:1.3rem; color: var(--accent-deep); font-variant-numeric: tabular-nums; }
+.time-source{ margin-top:8px; font-size:0.78rem; color: var(--muted); }
 .text-counter-helper{ display:flex; align-items:baseline; gap:5px; flex-wrap:wrap; margin-top:8px; font-size:0.8rem; color:var(--muted); }
 .text-counter-trigger{ appearance:none; padding:0; border:0; background:none; color:var(--accent-deep); font-weight:600; text-decoration:underline; text-underline-offset:3px; }
 .text-counter-trigger:hover{ color:var(--accent); }
@@ -676,7 +667,7 @@ table{ border-collapse:collapse; }
       <div class="tax-table-wrap">
         <table class="tax-table" id="tax-table"></table>
       </div>
-      <p class="tax-foot">* Colaboração e atividades síncronas/presenciais não fazem parte do desenho padrão dos MOOCs, que são assíncronos e sem tutoria. Elas só entram no cálculo quando o curso integra uma pesquisa em contexto restrito com planejamento híbrido.</p>
+      <p class="tax-foot">* No Ifes, os MOOCs são totalmente assíncronos, sem tutoria, com atividades avaliativas autoinstrucionais. Admitem-se atividades de discussão ou colaborativas, desde que não sejam avaliativas. Quando o curso integra uma pesquisa em contexto restrito, admite-se também um planejamento híbrido; nesse caso, atividades síncronas/presenciais podem ser consideradas no cálculo da carga horária.</p>
     </div>
   </section>
 
@@ -696,7 +687,7 @@ table{ border-collapse:collapse; }
         <div class="lcol social">
           <h3>Aprendizagem social</h3>
           <p class="lsub">O estudante modula suas ideias a partir da troca com colegas.</p>
-          <div class="litem" style="--c-base:var(--cat-4); --c-soft:var(--cat-4-soft); --c-line:var(--cat-4-line); --c-ink:var(--cat-4-ink)"><b>Discussão</b><span>Trocar ideias e perguntas a partir de um estímulo do professor.</span></div>
+          <div class="litem" style="--c-base:var(--cat-4); --c-soft:var(--cat-4-soft); --c-line:var(--cat-4-line); --c-ink:var(--cat-4-ink)"><b>Discussão</b><span>Trocar ideias e perguntas a partir de um estímulo do professor.*</span></div>
           <div class="litem" style="--c-base:var(--cat-6); --c-soft:var(--cat-6-soft); --c-line:var(--cat-6-line); --c-ink:var(--cat-6-ink)"><b>Colaboração</b><span>Produzir um resultado conjunto com outros estudantes.*</span></div>
         </div>
       </div>
@@ -754,14 +745,6 @@ table{ border-collapse:collapse; }
           </div>
         </div>
       </div>
-    </div>
-
-    <div class="mode-row">
-      <label class="switch">
-        <input type="checkbox" id="mooc-toggle">
-        <span class="track"><span class="thumb"></span></span>
-      </label>
-      <label class="mode-copy" for="mooc-toggle"><b>Curso MOOC</b>: autoinstrucional: exclui colaboração e atividades síncronas ou presenciais.</label>
     </div>
 
     <div class="toolbar">
@@ -935,21 +918,31 @@ var TYPES = [
           { id:"media", label:"Média", hint:"Compreender o significado de conceitos", rate:130, rateLabel:"130 palavras/min" },
           { id:"alta", label:"Alta", hint:"Análise crítica", rate:70, rateLabel:"70 palavras/min" }
         ]},
+      /* Vídeo e atividade interativa: o Quadro 3 não descreve o que separa Baixa de
+         Alta, então não há dica até a pesquisa definir uma. */
       { id:"midia", label:"Assistir / ouvir (vídeo, podcast, áudio)", inputMode:"media",
         complexities:[
-          { id:"baixa", label:"Baixa", hint:"Vídeo ou áudio simples, com orientações diretas", factor:2, rateLabel:"2x a duração" },
-          { id:"alta", label:"Alta", hint:"Conteúdo denso: o aluno pausa e revê trechos", factor:3, rateLabel:"3x a duração" }
-        ]}
+          { id:"baixa", label:"Baixa", factor:2, rateLabel:"2x a duração" },
+          { id:"alta", label:"Alta", factor:3, rateLabel:"3x a duração" }
+        ]},
+      { id:"outros", label:"Outros materiais (H5P de conteúdo, mapa mental, slides, imagem, infográfico...)", inputMode:"manual",
+        note:"Sem parâmetro fixo: o professor define o tempo que o estudante leva para estudar o material." }
     ]},
   { id:"pratica", label:"Prática", color:2, group:"individual",
     desc:"O estudante aplica o conceito em desenvolvimento e recebe feedback.",
     tasks:[
       { id:"questionario", label:"Questionário", inputMode:"quiz", complexities:null },
+      { id:"enquete", label:"Enquete ou escolha", inputMode:"fixed",
+        complexities:[
+          { id:"baixa", label:"Baixa", hint:"Escolhas simples, coleta de impressões, pesquisa de opinião ou avaliação do curso", minutes:15 }
+        ]},
       { id:"interativa", label:"Atividade interativa (H5P ou jogo)", inputMode:"fixed",
         complexities:[
-          { id:"baixa", label:"Baixa", hint:"Interação simples", minutes:15 },
-          { id:"alta", label:"Alta", hint:"Múltiplas etapas ou decisões", minutes:30 }
-        ]}
+          { id:"baixa", label:"Baixa", minutes:15 },
+          { id:"alta", label:"Alta", minutes:30 }
+        ]},
+      { id:"outras-praticas", label:"Outras práticas (exercício em ambiente de prática...)", inputMode:"manual",
+        note:"Para práticas fora das categorias anteriores. Sem parâmetro fixo: tempo definido pelo professor conforme a complexidade da tarefa." }
     ]},
   { id:"producao", label:"Produção", color:3, group:"individual",
     desc:"O estudante consolida e articula a compreensão em um produto.",
@@ -957,13 +950,16 @@ var TYPES = [
       { id:"escrita", label:"Escrita", inputMode:"writing",
         complexities:[
           { id:"baixa", label:"Baixa", hint:"Escrita livre, reflexiva", rate:250, rateLabel:"250 palavras/hora" },
-          { id:"media", label:"Média", hint:"Escrita argumentativa baseada no curso", rate:125, rateLabel:"125 palavras/hora" },
-          { id:"alta", label:"Alta", hint:"Escrita baseada em pesquisa do estudante", rate:60, rateLabel:"60 palavras/hora" }
+          { id:"media", label:"Média", hint:"Escrita argumentativa baseada em material do curso", rate:125, rateLabel:"125 palavras/hora" },
+          { id:"alta", label:"Alta", hint:"Escrita baseada em pesquisa realizada pelo estudante", rate:60, rateLabel:"60 palavras/hora" }
         ]},
-      { id:"artefato", label:"Artefatos (mídia, apresentação, plano de aula, projeto...)", inputMode:"manual",
+      { id:"artefato", label:"Artefatos (mídia, apresentação, plano de aula, projeto ou outro produto que não seja texto escrito)", inputMode:"manual",
         note:"Sem parâmetro fixo: a literatura recomenda que o professor estime com base na complexidade da tarefa pedida." }
     ]},
+  /* moocNote: o asterisco da tabela e o aviso do modal, tirados da nota do Quadro 3.
+     Orienta, não restringe: os sete tipos estão sempre disponíveis. */
   { id:"discussao", label:"Discussão", color:4, group:"social",
+    moocNote:"Em MOOC do Ifes, a discussão entra no cálculo desde que não seja avaliativa.",
     desc:"O professor propõe uma questão e os estudantes trocam ideias entre si.",
     tasks:[
       { id:"discussao", label:"Discussão", inputMode:"fixed",
@@ -978,16 +974,20 @@ var TYPES = [
       { id:"investigacao", label:"Investigação / exploração de tema", inputMode:"manual",
         note:"Sem parâmetro fixo: tempo definido pelo professor conforme a complexidade da tarefa." }
     ]},
-  { id:"colaboracao", label:"Colaboração", color:6, group:"social", restricted:true,
+  { id:"colaboracao", label:"Colaboração", color:6, group:"social",
+    moocNote:"Em MOOC do Ifes, a colaboração entra no cálculo desde que não seja avaliativa.",
     desc:"Atividade em grupo ou avaliação por pares: sempre alta complexidade cognitiva.",
     tasks:[
       { id:"colaboracao", label:"Atividade com um ou mais colegas", inputMode:"manual",
+        table:{ comp:"Alta", rate:"2x uma produção individual" },
         note:"Sempre complexidade alta: a literatura mostra que qualquer atividade colaborativa carrega alta carga cognitiva por envolver negociação entre pessoas. Considere o dobro do tempo de uma atividade de produção individual equivalente." }
     ]},
-  { id:"sincrona", label:"Síncrona ou presencial", color:7, group:"social", restricted:true,
+  { id:"sincrona", label:"Síncrona ou presencial", color:7, group:"social",
+    moocNote:"MOOC do Ifes é assíncrono: atividade síncrona ou presencial só entra no cálculo quando o curso integra uma pesquisa em contexto restrito com planejamento híbrido.",
     desc:"Aulas, encontros, mentorias ou palestras ao vivo.",
     tasks:[
       { id:"sincrona", label:"Aula, encontro, mentoria ou palestra", inputMode:"manual",
+        table:{ comp:"Duração do evento", rate:"Duração do evento" },
         note:"O tempo é a própria duração do evento." }
     ]}
 ];
@@ -1000,7 +1000,6 @@ function getComplexity(task, cId){ return (task && task.complexities) ? task.com
 var state = {
   courseName: "",
   targetHours: 40,
-  moocMode: true,
   modules: [],          /* [{id,name}]: ordem do array é a ordem na tela */
   activities: []        /* cada atividade carrega moduleId: id de módulo ou null */
 };
@@ -1180,11 +1179,9 @@ var TEMPLATES = {
      figura da abertura precisa mostrar a taxonomia inteira em uso. Aquisição e
      prática seguem predominantes (63% somadas), como em qualquer curso real;
      discussão, produção, investigação, colaboração e o encontro síncrono entram
-     na proporção que um curso com tutoria comporta. Fecha em 1200 min exatos.
-     É o único que declara mooc:false: carregá-lo desliga o modo MOOC, senão a
-     colaboração e o encontro síncrono seriam varridos na entrada. */
+     na proporção que um curso com tutoria comporta. Fecha em 1200 min exatos. */
   "hibrido20": {
-    label: "híbrido de 20 horas", hours: 20, mooc: false,
+    label: "híbrido de 20 horas", hours: 20,
     modules: ["Módulo 1", "Módulo 2", "Módulo 3", "Módulo 4"],
     items: [
       tpl("sincrona","sincrona",null,{manualMinutes:30},0,"Encontro de abertura ao vivo"),
@@ -1235,7 +1232,7 @@ var TEMPLATES = {
     ]
   },
   "20": {
-    label: "MOOC de 20 horas", mooc: true,
+    label: "MOOC de 20 horas",
     modules: ["Módulo 1", "Módulo 2", "Módulo 3", "Módulo 4"],
     items: [
       tpl("aquisicao","midia","alta",{mediaMinutes:8},0,"Boas-vindas e visão geral"),
@@ -1293,7 +1290,7 @@ var TEMPLATES = {
     ]
   },
   "40": {
-    label: "MOOC de 40 horas", mooc: true,
+    label: "MOOC de 40 horas",
     modules: ["Módulo 1", "Módulo 2", "Módulo 3", "Módulo 4", "Módulo 5", "Módulo 6"],
     items: [
       tpl("aquisicao","midia","alta",{mediaMinutes:8},0,"Boas-vindas e visão geral"),
@@ -1388,7 +1385,7 @@ var TEMPLATES = {
     ]
   },
   "60": {
-    label: "MOOC de 60 horas", mooc: true,
+    label: "MOOC de 60 horas",
     modules: ["Módulo 1", "Módulo 2", "Módulo 3", "Módulo 4", "Módulo 5", "Módulo 6", "Módulo 7", "Módulo 8"],
     items: [
       tpl("aquisicao","midia","alta",{mediaMinutes:10},0,"Boas-vindas e visão geral"),
@@ -1642,12 +1639,6 @@ document.getElementById("modal-confirm-backdrop").addEventListener("click", func
    Restaurar tratam de arquivo: levar o curso para fora deste navegador e trazer
    de volta. */
 var STORAGE_KEY = "estimador-carga-horaria:v1";
-/* Dados salvos antes da inversão do botão guardavam "hybridEnabled": o inverso de moocMode. */
-function readMoocMode(parsed){
-  if(typeof parsed.moocMode === "boolean") return parsed.moocMode;
-  if(typeof parsed.hybridEnabled === "boolean") return !parsed.hybridEnabled;
-  return true;
-}
 function save(){
   /* Silencioso de propósito: o rascunho é gravado a cada mudança e não precisa
      avisar nada. Só ação de arquivo fala, e fala pelo toast. */
@@ -1675,7 +1666,6 @@ function load(){
       if(parsed && typeof parsed==="object"){
         state.courseName = parsed.courseName || "";
         state.targetHours = parsed.targetHours || 40;
-        state.moocMode = readMoocMode(parsed);
         state.modules = Array.isArray(parsed.modules)
           ? parsed.modules.filter(function(m){ return m && typeof m.id === "string"; })
               .map(function(m){ return { id:m.id, name: String(m.name || "Módulo") }; })
@@ -1906,7 +1896,6 @@ function renderModuleChart(totalMin){
 function renderAll(){
   document.getElementById("course-name").value = state.courseName;
   document.getElementById("target-input").value = state.targetHours;
-  document.getElementById("mooc-toggle").checked = state.moocMode;
   document.querySelectorAll("#target-chips .chip").forEach(function(c){
     c.classList.toggle("is-active", Number(c.getAttribute("data-hours"))===Number(state.targetHours));
   });
@@ -1921,7 +1910,7 @@ function escapeHtml(s){
   });
 }
 
-/* ============ QUADRO 2 TABLE (HOME) ============ */
+/* ============ QUADRO 3 TABLE (HOME) ============ */
 function renderTaxTable(){
   var wrap = document.getElementById("tax-table");
   var rows = [];
@@ -1931,13 +1920,15 @@ function renderTaxTable(){
       if(task.complexities){
         task.complexities.forEach(function(c, i){
           typeRows.push({ taskLabel:task.label, taskFirst:i===0, taskRowspan:task.complexities.length,
-            compLabel: c.label+" - "+c.hint, rateLabel: c.rateLabel||formatMinutes(c.minutes) });
+            compLabel: c.label+(c.hint ? " - "+c.hint : ""), rateLabel: c.rateLabel||formatMinutes(c.minutes) });
         });
       } else if(task.inputMode==="quiz"){
         typeRows.push({ taskLabel:task.label, taskFirst:true, taskRowspan:2, compLabel:"Baixa complexidade", rateLabel:"2 min/questão" });
         typeRows.push({ taskLabel:task.label, taskFirst:false, taskRowspan:2, compLabel:"Alta complexidade", rateLabel:"5 min/questão" });
       } else {
-        typeRows.push({ taskLabel:task.label, taskFirst:true, taskRowspan:1, compLabel:"Não definido", rateLabel:"Definido pelo professor" });
+        var tb = task.table || {};
+        typeRows.push({ taskLabel:task.label, taskFirst:true, taskRowspan:1,
+          compLabel: tb.comp || "Definida pelo professor", rateLabel: tb.rate || "Definido pelo professor" });
       }
     });
     typeRows.forEach(function(r, i){ r.typeFirst = i===0; r.typeRowspan = typeRows.length; r.type = t; });
@@ -1948,7 +1939,7 @@ function renderTaxTable(){
   rows.forEach(function(r){
     html += "<tr>";
     if(r.typeFirst){
-      html += '<th scope="rowgroup" rowspan="'+r.typeRowspan+'" style="'+catVars(r.type.color)+'">'+r.type.label+(r.type.restricted?' <span class="tax-flag">*</span>':'')+'</th>';
+      html += '<th scope="rowgroup" rowspan="'+r.typeRowspan+'" style="'+catVars(r.type.color)+'">'+r.type.label+(r.type.moocNote?' <span class="tax-flag">*</span>':'')+'</th>';
     }
     if(r.taskFirst){
       html += '<td rowspan="'+r.taskRowspan+'">'+r.taskLabel+'</td>';
@@ -2008,34 +1999,6 @@ document.getElementById("target-chips").addEventListener("click", function(e){
   document.getElementById("target-input").value = state.targetHours;
   document.querySelectorAll("#target-chips .chip").forEach(function(c){ c.classList.toggle("is-active", c===chip); });
   renderResults(); save();
-});
-document.getElementById("mooc-toggle").addEventListener("change", function(e){
-  var applyMode = function(){
-    state.moocMode = document.getElementById("mooc-toggle").checked;
-    renderAll(); save();
-  };
-  if(e.target.checked){
-    var presas = state.activities.filter(function(a){
-      var t = getType(a.typeId); return t && t.restricted;
-    });
-    if(presas.length){
-      askConfirm({
-        title: "Remover as atividades que um MOOC não comporta?",
-        message: "Este curso tem " + plural(presas.length, "atividade", "atividades") + " de colaboração ou síncrona/presencial. Um MOOC autoinstrucional não as comporta, então elas serão removidas do curso.",
-        confirmLabel: "Remover e marcar como MOOC",
-        danger: true,
-        onConfirm: function(){
-          state.activities = state.activities.filter(function(a){
-            var t = getType(a.typeId); return !(t && t.restricted);
-          });
-          applyMode();
-        },
-        onCancel: function(){ document.getElementById("mooc-toggle").checked = false; }
-      });
-      return;
-    }
-  }
-  applyMode();
 });
 
 /* ============ ACTIVITY LIST EVENTS ============ */
@@ -2205,9 +2168,6 @@ document.getElementById("template-select").addEventListener("change", function(e
       return a;
     });
     state.targetHours = TEMPLATES[val].hours || Number(val);
-    /* só o exemplo que declara o modo o troca: quem não declara não mexe na
-       escolha que o professor já fez no interruptor */
-    if(typeof TEMPLATES[val].mooc === "boolean") state.moocMode = TEMPLATES[val].mooc;
     renderAll(); save();
   };
   if(!state.activities.length){ apply(); return; }
@@ -2309,7 +2269,6 @@ document.getElementById("file-input").addEventListener("change", function(e){
     var apply = function(){
       state.courseName = parsed.courseName || "";
       state.targetHours = parsed.targetHours || 40;
-      state.moocMode = readMoocMode(parsed);
       state.modules = mods;
       state.activities = clean;
       renderAll(); save();
@@ -2390,6 +2349,12 @@ function draftStructureValid(){
 function draftValid(){
   return draftStructureValid() && computeMinutes(draft) > 0;
 }
+/* Fonte do tempo, com a legenda do Quadro 3. Tarefa manual não tem parâmetro:
+   o próprio Quadro manda o professor definir. */
+function timeSource(task){
+  if(task.inputMode==="manual") return "Tempo definido pelo professor, como prevê o Quadro 3.";
+  return "Parâmetro do Quadro 3, com base em McInnes et al. (2026), Liu e Evans (2020) e Beer (2019), adaptado para os MOOCs do Ifes.";
+}
 
 var QTY_PARAMS = {"p-words":"words", "p-media":"mediaMinutes", "p-quiz-low":"quizLow", "p-quiz-high":"quizHigh", "p-hours":"manualHours", "p-minutes":"manualMinutes"};
 var QTY_HINTS = {
@@ -2467,13 +2432,16 @@ function renderModalBody(){
   var html = "";
 
   html += '<div class="field-group"><label>Tipo de atividade</label><div class="pick-grid" id="pick-type">';
-  TYPES.filter(function(t){ return !state.moocMode || !t.restricted; }).forEach(function(t){
+  TYPES.forEach(function(t){
     html += '<button type="button" class="pick-card'+(draft.typeId===t.id?' is-selected':'')+'" data-type="'+t.id+'" style="'+catVars(t.color)+'" title="'+escapeHtml(t.desc)+'">' +
       '<b>'+t.label+'</b></button>';
   });
   html += '</div></div>';
 
   var type = draft.typeId ? getType(draft.typeId) : null;
+  if(type && type.moocNote){
+    html += '<p class="helper-note">'+type.moocNote+'</p>';
+  }
   if(type && type.tasks.length>1){
     html += '<div class="field-group"><label>Tarefa</label><div class="pick-list" id="pick-task">';
     type.tasks.forEach(function(task){
@@ -2487,11 +2455,16 @@ function renderModalBody(){
 
   var task = (draft.typeId && draft.taskId) ? getTask(draft.typeId, draft.taskId) : null;
 
+  /* Tarefa de complexidade única (enquete) já vem escolhida. */
+  if(task && task.complexities && task.complexities.length===1 && !draft.complexityId){
+    draft.complexityId = task.complexities[0].id;
+  }
+
   if(task && task.complexities){
     html += '<div class="field-group"><label>Complexidade</label><div class="pick-list" id="pick-complexity">';
     task.complexities.forEach(function(c){
       html += '<button type="button" class="pick-opt'+(draft.complexityId===c.id?' is-selected':'')+'" data-complexity="'+c.id+'">' +
-        '<span><b>'+c.label+'</b><small>'+c.hint+'</small></span><span class="rate">'+(c.rateLabel||formatMinutes(c.minutes))+'</span></button>';
+        '<span><b>'+c.label+'</b>'+(c.hint ? '<small>'+c.hint+'</small>' : '')+'</span><span class="rate">'+(c.rateLabel||formatMinutes(c.minutes))+'</span></button>';
     });
     html += '</div></div>';
   }
@@ -2516,7 +2489,8 @@ function renderModalBody(){
     }
     html += '<div class="field-group"><label for="input-label">Nome da atividade (opcional)</label>' +
       '<input type="text" id="input-label" placeholder="'+escapeHtml(defaultLabel(draft))+'" value="'+escapeHtml(draft.label||"")+'"></div>';
-    html += '<div class="live-preview"><span class="lp-label">Tempo estimado</span><span class="lp-val mono-num" id="lp-val">'+(totalMin>0 ? formatMinutes(totalMin) : "—")+'</span></div>';
+    html += '<div><div class="live-preview"><span class="lp-label">Tempo estimado</span><span class="lp-val mono-num" id="lp-val">'+(totalMin>0 ? formatMinutes(totalMin) : "—")+'</span></div>' +
+      '<p class="time-source">'+timeSource(task)+'</p></div>';
   }
 
   body.innerHTML = html;

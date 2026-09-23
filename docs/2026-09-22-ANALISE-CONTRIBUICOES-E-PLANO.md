@@ -1,8 +1,8 @@
 # Análise das contribuições dos testes e plano de ajustes — Estimador de CH
 
 > Documento de trabalho. Processa as contribuições dos testes enviadas pela **Aline Amorim em 22/09/2026** e as transforma em plano de alterações.
-> **Estado: aguardando a reunião com a Aline** — as 17 dúvidas da §5 precisam de resposta antes das fases 2 a 4.
-> Última atualização: 2026-09-22.
+> **Estado: fases 1 e 2 aplicadas em 23/09/2026; aguardando a reunião com a Aline** — as 17 dúvidas da §5 precisam de resposta antes das fases 3 e 4, e confirmam o que a fase 2 adotou por proposta.
+> Última atualização: 2026-09-23.
 
 Testaram o estimador: **Aline Amorim, Rutinelli, Mariella e Bruno**. Antes de enviar, a Aline reuniu-se com a **Vanessa Battestin** para validar as sugestões — é o que a coluna *Decisão* registra.
 
@@ -146,13 +146,15 @@ Os dois bugs foram confirmados no estimador publicado em 22/09/2026. Digitar `12
 
 ### Fase 2: Quadro 3 e tipos de atividade
 
+> **Feita em 23/09/2026** na Opção A, antes da reunião, com as propostas da §5 para B2 (15 min fixos), B5 (os sete tipos liberados, síncrona inclusive, com aviso), B6 (vídeo e atividade interativa só com "Baixa" e "Alta") e H5P (de conteúdo em Aquisição › Outros materiais; com resposta em Prática › Atividade interativa); confirmar na reunião. Também seguem o Quadro 3: as descrições de escrita média e alta, "Alta" e "2x uma produção individual" na linha de Colaboração, e "Definida pelo professor" no lugar de "Não definido" nas tarefas sem parâmetro. Na nota de rodapé, a vírgula antes de "nesse caso" virou ponto e vírgula.
+
 | Item | O que fazer | Onde no código | Esforço |
 |---|---|---|---|
 | B1 | Tarefa "Outros materiais" em Aquisição, com tempo informado à mão | `TYPES` (aquisicao) | P |
 | B2 | Tarefa "Enquete ou escolha" em Prática: 15 min por enquete | `TYPES` (pratica) | P |
 | B3 | Tarefa "Outras práticas" em Prática, com tempo informado à mão | `TYPES` (pratica) | P |
 | B4 | Tabela da página inicial igual ao Quadro 3: rótulo de Artefatos, asterisco em Discussão, nota de rodapé nova, "Duração do evento" na síncrona | `renderTaxTable`, `.tax-foot` | P |
-| B5 | Tirar a chave "Curso MOOC": os sete tipos sempre disponíveis, com aviso no modal (discussão e colaboração não avaliativas; síncrona só em pesquisa híbrida). Arquivos antigos com `moocMode` continuam abrindo | `#mooc-toggle` e seu handler, `readMoocMode`, `TEMPLATES` | M |
+| B5 | Tirar a chave "Curso MOOC": os sete tipos sempre disponíveis, com aviso no modal (discussão e colaboração não avaliativas; síncrona só em pesquisa híbrida). | `#mooc-toggle` e seu handler, `readMoocMode`, `TEMPLATES` | M |
 | B6 | Mostrar no modal a fonte de cada tempo. Trocar as dicas de vídeo e de atividade interativa, escritas por nós e ausentes do Quadro, pelas que a Aline validar | `TYPES` (campo `hint`), `renderModalBody` | P |
 
 ### Fase 3: textos e orientação
