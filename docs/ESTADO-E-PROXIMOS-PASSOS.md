@@ -1,6 +1,6 @@
 # Estado do projeto e próximos passos — Calculadora de CH MOOC (CEFOR/IFES)
 
-> Documento de retomada. Resume **o que existe**, **o que foi feito**, **as decisões tomadas** e **o que falta**. Última atualização: **2026-08-26**.
+> Documento de retomada. Resume **o que existe**, **o que foi feito**, **as decisões tomadas** e **o que falta**. Última atualização: **2026-09-30**.
 
 ---
 
@@ -142,6 +142,8 @@ Sintaxe JS validada via `vm.Script` (Node); fidelidade ao Quadro 2 — 16/16 tes
 >
 > **2026-09-23 — Fase 2 do plano aplicada na Opção A** (B1 a B6): a Opção A passa a seguir o **Quadro 3**. Tarefas novas "Outros materiais" (Aquisição, tempo do professor), "Enquete ou escolha" (Prática, 15 min) e "Outras práticas" (Prática, tempo do professor); tabela da página inicial com a nota de rodapé e os asteriscos do Quadro 3; interruptor "Curso MOOC" removido — os sete tipos ficam sempre disponíveis, com aviso no modal para discussão, colaboração e síncrona; dicas de vídeo e de atividade interativa, que o Quadro não tem, retiradas; o modal mostra a fonte de cada tempo. As dúvidas da reunião que tocam a fase 2 (B2, B5, B6, H5P) seguiram a proposta do plano e precisam ser confirmadas com a Aline.
 
+> **2026-09-30 — Fases 3 e 4 do plano aplicadas na Opção A, antes da reunião.** Fase 3: textos da página inicial do Anexo A (T2 a T7, com as duas seções de metodologia fundidas e o desenvolvimento técnico no crédito), destaques em negrito no lugar de itálico (T1), bloco "Uma estimativa, não uma medida exata" na página inicial e uma linha sob o resultado com link para ele (T8), quadro "Ainda não tenho o material pronto" no topo da coluna da lista (E1), item sobre materiais mistos (E2) e aviso fixo sobre materiais complementares (E3). Fase 4: alerta que não bloqueia para mídia acima de 20 min e leitura acima de 1 h, no modal e na lista (C3); lista das cinco atividades que mais pesam (D4); botão "PDF" com versão de impressão da análise (D5); aviso quando a meta passa de 60 h (T6). Seguiram a proposta do plano, a confirmar: T8 (local), E2, T7 (nome novo do documento), T6 (campo livre com aviso) e D4 (só a lista; o gráfico individual × social espera a Aline). Ficaram de fora por falta de insumo: **D3** (definir o que conta como avaliação), **F1** (dados de um curso real) e **F2** (formulário e e-mail).
+
 1. Enviar o link de `index-cefor-v2.html` para a Aline testar e detalhar feedback (visual, nomenclatura, interação) — combinado em 26/08, ainda não enviado.
 2. Aline + Rute vão rodar o teste de usabilidade assim que o link for enviado.
 3. Confirmar com a Aline os pontos herdados da sessão anterior: nível "Média" ausente em vídeo/quiz/interativa/discussão (D3) e conversão palavra ↔ página.
@@ -175,8 +177,7 @@ Links enviados à Aline para escolha entre as duas direções visuais.
 
 ## 6. Como retomar (resumo de 30s)
 
-1. A **proposta** está em `docs/COMO ESTIMAR…IFES.md` (Quadro 2 = fonte da verdade dos valores).
-2. A **calculadora ativa** é `index-cefor-v2.html` (fluxo guiado, 3 etapas); a porta de entrada é `index.html`.
-3. A reunião de 26/08 com Aline e Marcos validou esse fluxo ao vivo e fechou o escopo (estimador, MOOC-first, fora da planilha) — ver `docs/transcricao 2026-08-26…txt` e §3.5/§4 acima.
-4. **Falta:** resolver o design do questionário misto (§5.1), enviar o link para a Aline testar (§5.2) e, quando sobrar tempo, arrumar a documentação desatualizada (§5.4).
-5. Tudo o que não é a versão ativa está em `arquivo/` (v1 e os blocos fixos do Quadro 2) — ver `arquivo/README.md`.
+1. O **site no ar** são os dois estimadores da raiz: `estimador-carga-horaria-a.html` e `-b.html` (§5.5). A Opção A é a que recebe os ajustes da rodada de testes.
+2. O **plano em andamento** é `docs/2026-09-22-ANALISE-CONTRIBUICOES-E-PLANO.md`: fases 1 a 4 aplicadas na Opção A; faltam D3, F1 e F2 e a reunião com a Aline (§5 do plano), que confirma as propostas adotadas.
+3. Os **valores** vêm do Quadro 3, no Google Doc de parâmetros (link no §7 do plano).
+4. Tudo o que não é a versão ativa está em `arquivo/`, ver `arquivo/README.md`.

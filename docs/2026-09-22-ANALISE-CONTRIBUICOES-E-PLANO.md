@@ -1,8 +1,8 @@
 # Análise das contribuições dos testes e plano de ajustes — Estimador de CH
 
 > Documento de trabalho. Processa as contribuições dos testes enviadas pela **Aline Amorim em 22/09/2026** e as transforma em plano de alterações.
-> **Estado: fases 1 e 2 aplicadas em 23/09/2026; aguardando a reunião com a Aline** — as 17 dúvidas da §5 precisam de resposta antes das fases 3 e 4, e confirmam o que a fase 2 adotou por proposta.
-> Última atualização: 2026-09-23.
+> **Estado: fases 1 e 2 aplicadas em 23/09/2026 e fases 3 e 4 em 30/09/2026, todas antes da reunião com a Aline.** Onde a §5 tinha dúvida, valeu a proposta, e a reunião confirma. Faltam D3, F1 e F2, que dependem de insumo da equipe (ver fase 4).
+> Última atualização: 2026-09-30.
 
 Testaram o estimador: **Aline Amorim, Rutinelli, Mariella e Bruno**. Antes de enviar, a Aline reuniu-se com a **Vanessa Battestin** para validar as sugestões — é o que a coluna *Decisão* registra.
 
@@ -159,6 +159,8 @@ Os dois bugs foram confirmados no estimador publicado em 22/09/2026. Digitar `12
 
 ### Fase 3: textos e orientação
 
+> **Feita em 30/09/2026** na Opção A, com os textos do Anexo A. Seguiram a proposta da §5: T7 com o nome novo do documento no link, T8 na página inicial (faixa entre Laurillard e os créditos) mais a linha "Tempo médio esperado, não uma medida exata" sob o resultado, e E2 como item do quadro de ajuda, redigido a partir das observações da Aline sobre livros e páginas do Moodle. T1 tirou a Instrument Serif da página: o destaque agora é `<strong>` na própria Inter Tight. Em T5, o travessão do texto da Aline virou dois-pontos, como no resto da página. E3 fica sempre à vista, abaixo do quadro de ajuda, em vez de dentro do item recolhível.
+
 | Item | O que fazer | Onde no código | Esforço |
 |---|---|---|---|
 | T1 | Trocar `<em>` por `<strong>` e ajustar o estilo, que hoje usa itálico como voz de destaque | CSS `em`, `#view-home` | P |
@@ -169,6 +171,8 @@ Os dois bugs foram confirmados no estimador publicado em 22/09/2026. Digitar `12
 | E3 | Aviso sobre materiais complementares, com o texto da Aline e da Vanessa | `.support-wrap` | P |
 
 ### Fase 4: recursos novos
+
+> **Parcialmente feita em 30/09/2026** na Opção A: C3, D4 (só a lista das cinco atividades que mais pesam; o gráfico individual × social espera a confirmação da §5) e D5 (botão "PDF" na barra, versão de impressão com curso, meta, data, resultado, gráficos e lista). Também entrou a proposta de T6: o campo de meta continua livre e mostra um aviso acima de 60 h. O alerta de C3 diz só que o valor está "acima do esperado" e pede para conferir; não sugere dividir o material, porque isso não está nas fontes. **Faltam:** D3 (depende de definir o que conta como avaliação), F1 (depende dos dados de um curso real) e F2 (depende do formulário e do e-mail que o recebe).
 
 | Item | O que fazer | Onde no código | Esforço |
 |---|---|---|---|

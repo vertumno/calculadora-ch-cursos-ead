@@ -148,12 +148,12 @@ nunca a cor da série.
 | Papel | Face | Uso |
 |---|---|---|
 | Texto | **Inter Tight** 300–600 | tudo: títulos, leitura grande, listas, rótulos, controles |
-| Ênfase | **Instrument Serif** itálico 400, em `--accent` | `<em>` — a única voz fora da família |
+| Ênfase | **Inter Tight** 600, em `--ink` | `<strong>` — negrito, nunca itálico (desde 30/09/2026) |
 
-Duas faces fixadas pelo cliente. O que faz o conjunto não ler como padrão não é
+Uma face fixada pelo cliente. O que faz o conjunto não ler como padrão não é
 a escolha da família — é o **tratamento**: peso 300 nos tamanhos grandes com
 tracking bem fechado, de modo que a presença venha do tamanho e não da gordura
-da letra; e uma serifa itálica verde como único contraponto.
+da letra.
 
 **A regra do peso segue o tamanho.** 300 só onde o texto é grande o bastante
 para sustentar traço fino; abaixo disso a legibilidade manda:
@@ -169,10 +169,13 @@ página. É o número que a ferramenta existe para entregar — ele ancora o pai
 não divide peso com nada. Tracking em `-0.028em`, menos fechado que o dos títulos
 leves, porque peso maior precisa de mais ar entre as letras.
 
-**A ênfase** (`em`) troca de família, entra em itálico e assume `--accent`
-(#1F7027 — 5.8:1 sobre o papel, 5.3:1 sobre a faixa). Vem 8% maior para casar a
-altura-x com a grotesca ao lado. Aparece quatro vezes na página inteira: uma no
-H1 e três na prosa. Ênfase que aparece em todo lugar deixa de enfatizar.
+**A ênfase** é `<strong>` em 600, na tinta do texto. Até 29/09/2026 era
+`<em>` em Instrument Serif itálico verde; na rodada de testes de 22/09/2026 a
+equipe de pesquisa pediu negrito no lugar de itálico em todos os destaques (T1),
+e a Instrument Serif saiu da página. Os textos novos da página inicial quase não
+usam destaque: fica o "estimador" do bloco de créditos e a primeira frase do
+aviso de materiais complementares. Ênfase que aparece em todo lugar deixa de
+enfatizar.
 
 - H1 em 300, `letter-spacing: -0.032em`, `clamp(2.4rem, 4.2vw, 3.7rem)`.
 - Leitura em `2.9rem/600` com `-0.028em` — a exceção deliberada à regra do peso.
