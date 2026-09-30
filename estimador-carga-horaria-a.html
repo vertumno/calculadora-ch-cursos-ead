@@ -1,16 +1,16 @@
 <meta charset="utf-8">
-<title>Estimador de Carga Horária</title>
+<title>Estimador de Carga Horária de Curso MOOC EaD</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300..700&display=swap" rel="stylesheet">
 <!--
 IMPECCABLE DIRECTION CONTRACT
 THESIS: an estimator is a measuring instrument, not a SaaS landing page: it reads like a research
 reference (tables, hairlines, one accent) refusing kicker/eyebrow labels, colored card rails, and
 the big-number-badge template.
 TYPE (pinned by the client): Inter Tight throughout, at 300 wherever the size can carry a thin
-stroke; presence comes from size, not weight; with Instrument Serif italic in the accent green as
-the one contrasting voice, on <em> only. The mechanical detector flags Inter as an overused face;
+stroke; presence comes from size, not weight. Emphasis is bold (<strong>), never italic: asked by
+the research team in the 22/09/2026 test round. The mechanical detector flags Inter as an overused face;
 the pinned brief wins over a saturated-pattern warning, and the treatment is what carries it.
 OWN-WORLD: a green-tinted white ground (#F6F9F4), ink that carries hue rather than black (#28362F,
 12.7:1), and the Cefor green as the single chrome accent: primary actions, links, active states,
@@ -104,11 +104,9 @@ verdict, and DESIGN.md.
   --radius-m: 8px;
   --radius-l: 10px;
   /* Uma família só, apertada, em peso leve nos tamanhos grandes; o peso vem do
-     tamanho, não da gordura da letra. A ênfase é a única voz contrastante:
-     serifa itálica, sempre no verde da marca. */
+     tamanho, não da gordura da letra. A ênfase é negrito, nunca itálico. */
   --font-display: "Inter Tight", system-ui, sans-serif;
   --font-body: "Inter Tight", system-ui, sans-serif;
-  --font-em: "Instrument Serif", Georgia, "Times New Roman", serif;
 }
 
 /* ============ RESET ============ */
@@ -127,9 +125,9 @@ img{ max-width:100%; display:block; }
 button, input, select, textarea{ font: inherit; color: inherit; }
 button{ cursor:pointer; }
 a{ color: var(--accent); text-underline-offset: 3px; }
-/* A ênfase é a única voz fora da família: serifa itálica, no verde da marca.
-   Vem 8% maior para casar a altura-x com a grotesca ao lado. */
-em{ font-family: var(--font-em); font-style: italic; font-weight:400; font-size:1.08em; letter-spacing:0; color: var(--accent); }
+/* Destaque é negrito na própria família, sem itálico: pedido da equipe de
+   pesquisa na rodada de testes de 22/09/2026. */
+strong{ font-weight:600; color: var(--ink); }
 h1,h2,h3,h4,p,figure{ margin:0; }
 ul{ margin:0; padding:0; list-style:none; }
 table{ border-collapse:collapse; }
@@ -225,7 +223,6 @@ table{ border-collapse:collapse; }
 .opening{ padding: 56px 0 48px; }
 .opening-grid{ display:grid; grid-template-columns: 1.06fr 0.94fr; gap:48px; align-items:start; }
 .opening h1{ font-size: clamp(2.4rem, 4.2vw, 3.7rem); line-height:1.08; }
-.opening h1 em{ font-size:1.06em; }
 .byline{ margin-top:16px; font-size:0.98rem; color: var(--muted); max-width:56ch; }
 .byline b{ color: var(--ink-soft); font-weight:600; }
 .opening .lede{ margin-top:18px; }
@@ -316,6 +313,9 @@ table{ border-collapse:collapse; }
 
 /* ============ TOOL SHELL ============ */
 .tool-shell{ padding: 28px 0 100px; }
+/* Sem padding lateral, a ferramenta usa os 1080px inteiros no desktop; abaixo
+   disso, volta a margem da página para o conteúdo não encostar na borda. */
+@media (max-width: 1128px){ .tool-shell{ padding-left:24px; padding-right:24px; } }
 .tool-header{ display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:20px; margin-bottom:22px; padding-bottom:22px; border-bottom:2px solid var(--accent-line); }
 .tool-title-field{ flex:1 1 300px; min-width:0; }
 .tool-title-field input{
@@ -458,6 +458,25 @@ table{ border-collapse:collapse; }
 .support-wrap li{ font-size:0.84rem; color: var(--muted); padding-left:16px; position:relative; }
 .support-wrap li::before{ content:"·"; position:absolute; left:2px; color: var(--accent); font-weight:700; }
 .methodology-link{ font-size:0.82rem; }
+/* A ajuda fica no topo da coluna da lista, fora do painel que cresce com os
+   gráficos; o aviso dos materiais complementares fica sempre à vista. */
+.tool-grid > div > .support-wrap{ margin-bottom:16px; }
+.support-note{ padding:13px 20px; border-top:1px solid var(--border); font-size:0.84rem; color: var(--ink-soft); }
+.target-note{ margin-top:7px; max-width:34ch; font-size:0.78rem; font-weight:600; color: var(--status-warning); }
+.readout-note{ margin-top:12px; font-size:0.78rem; color: var(--muted); }
+.link-btn{ appearance:none; padding:0; border:0; background:none; font-size:inherit; font-weight:600; color: var(--accent-deep); text-decoration:underline; text-underline-offset:3px; }
+.link-btn:hover{ color: var(--accent); }
+/* O que mais pesa: as cinco atividades mais longas, com a parte de cada uma no total. */
+.top-list{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:7px; }
+.top-item{ display:flex; align-items:center; gap:8px; font-size:0.8rem; }
+.top-item .t-swatch{ width:8px; height:8px; flex:none; border-radius:2px; background: var(--cat); }
+.top-item .t-name{ flex:1; min-width:0; color: var(--ink-soft); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.top-item .t-val{ flex:none; color: var(--muted); white-space:nowrap; font-variant-numeric: tabular-nums; }
+/* Alerta de valor acima do esperado: informa, nunca bloqueia. */
+.field-warn{ margin-top:8px; padding:8px 11px; border-radius: var(--radius-s); background: var(--status-warning-soft); color: var(--status-warning); font-size:0.8rem; font-weight:600; }
+.a-warn{ display:flex; align-items:center; gap:5px; margin-top:4px; font-size:0.78rem; font-weight:600; color: var(--status-warning); }
+.a-warn svg{ width:13px; height:13px; flex:none; }
+.print-head{ display:none; }
 
 /* ============ MODAL ============ */
 .modal-backdrop{ position:fixed; inset:0; background: var(--scrim); display:flex; align-items:flex-start; justify-content:center; padding: 5vh 16px; overflow-y:auto; z-index:100; }
@@ -521,6 +540,27 @@ table{ border-collapse:collapse; }
 .word-counter-result strong{ color:var(--accent-deep); font-family:var(--font-display); font-size:1.35rem; font-weight:600; font-variant-numeric:tabular-nums; white-space:nowrap; }
 .word-counter-privacy{ color:var(--muted); font-size:0.78rem; }
 
+/* ============ PRINT (Salvar em PDF) ============ */
+/* A versão de impressão é a análise do curso: cabeçalho com curso, meta e data,
+   o painel de resultados e a lista de atividades. Controles e ajuda saem. */
+@media print{
+  @page{ margin:14mm; }
+  body{ background:#FFFFFF; font-size:11pt; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .topbar, .site-footer, .toolbar, .tool-header, .support-wrap, .modal-backdrop, .toast,
+  .drag-handle, .move-btns, .activity-actions, .module-head .m-actions, .link-btn{ display:none !important; }
+  .tool-shell{ padding:0; }
+  .print-head{ display:block; margin-bottom:18px; padding-bottom:12px; border-bottom:2px solid var(--accent-line); }
+  .print-head .ph-tool{ font-size:0.8rem; color: var(--muted); }
+  .print-head .ph-course{ margin-top:4px; font-family: var(--font-display); font-weight:400; font-size:1.6rem; letter-spacing:-0.02em; }
+  .print-head .ph-meta{ margin-top:4px; font-size:0.86rem; color: var(--ink-soft); }
+  .tool-grid{ display:flex; flex-direction:column; align-items:stretch; gap:18px; }
+  .results-panel{ position:static; order:-1; }
+  .results-card, .activity-row, .module-head{ break-inside:avoid; }
+  .gauge-fill{ transition:none; }
+  .activity-row{ padding:8px 12px; cursor:auto; }
+  .module-head .m-name{ border:none; padding:0; margin:0; }
+}
+
 /* ============ RESPONSIVE ============ */
 @media (max-width: 720px){
   /* Empilhado, as divisorias nao separam mais nada e o estado precisa da linha inteira. */
@@ -574,7 +614,7 @@ table{ border-collapse:collapse; }
     <button class="brand-lockup" data-nav="home" aria-label="Ir para a página inicial">
       <img class="brand-logo" src="assets/cefor-horizontal-cor-web.png" alt="Cefor">
       <span class="brand-separator" aria-hidden="true">|</span>
-      <span class="brand-title">Estimador de Carga Horária de Curso EaD</span>
+      <span class="brand-title">Estimador de Carga Horária de Curso MOOC EaD</span>
       <div class="if-mark" aria-hidden="true">
         <span class="dot"></span><span></span><span></span>
         <span></span><span></span><span class="empty"></span>
@@ -599,13 +639,13 @@ table{ border-collapse:collapse; }
   <section class="opening">
     <div class="container opening-grid">
       <div>
-        <h1 class="h-display">Quanto tempo o seu curso <em>realmente</em> pede do estudante?</h1>
-        <p class="lede">Planejar um curso a distância não vem com nenhum parâmetro de quanto tempo cada recurso exige do estudante. Esta ferramenta usa literatura internacional sobre carga de estudo online para dar esse parâmetro, atividade por atividade.</p>
+        <h1 class="h-display">Quanto tempo o seu curso realmente demanda do estudante?</h1>
+        <p class="lede">Planejar um curso a distância não costuma vir com parâmetros claros de quanto tempo cada atividade exige do estudante. Esta ferramenta traz essa referência, atividade por atividade, a partir de literatura internacional sobre carga de estudo em cursos on-line, adaptada ao contexto do Ifes.</p>
         <div class="opening-cta">
           <button class="btn btn-primary" data-nav="tool">Abrir o estimador</button>
           <button class="btn btn-secondary" data-scroll="metodologia">Ver a metodologia</button>
         </div>
-        <p class="byline">Uma proposta de carga horária baseada em evidências, da pesquisa de doutorado de <b>Aline Pinto Amorim</b> (Ifes/Cefor) em design de aprendizagem para MOOCs, com orientação de <b>Vanessa Battestin</b> e coorientação de <b>Marize Lyra Silva Passos</b>.</p>
+        <p class="byline">O Estimador foi baseado na pesquisa de doutorado de <b>Aline Pinto Amorim</b>, em Design de Aprendizagem de MOOCs, com orientação de <b>Vanessa Battestin</b> e coorientação de <b>Marize Lyra Silva Passos</b>. O desenvolvimento técnico foi realizado por <b>Elton Silva</b> e <b>Marcos Accioly</b>.</p>
       </div>
       <div>
         <figure class="measure-fig">
@@ -615,7 +655,7 @@ table{ border-collapse:collapse; }
               <span class="mh-val">20 h · medidas</span>
             </div>
             <svg class="measure" viewBox="0 14 300 446" role="img" aria-labelledby="measure-title measure-desc">
-              <title id="measure-title">Um MOOC de 20 horas, medido atividade por atividade</title>
+              <title id="measure-title">Um curso híbrido de 20 horas, medido atividade por atividade</title>
               <desc id="measure-desc">Uma régua vertical de zero a vinte horas. Sobre ela, o curso de exemplo aparece empilhado faixa por faixa, uma faixa por atividade, agrupadas em quatro módulos: a altura da faixa é o tempo que aquela atividade pede do estudante, e a cor e a largura dizem qual dos sete tipos de aprendizagem ela é. Aquisição e prática somam cerca de dois terços do curso; produção, discussão, investigação, colaboração e o encontro síncrono ocupam o terço restante. A pilha fecha exatamente na marca das vinte horas declaradas.</desc>
               <g id="measure-rule"></g>
               <g id="measure-bands"></g>
@@ -631,30 +671,30 @@ table{ border-collapse:collapse; }
 
   <section class="section">
     <div class="container-narrow">
-      <h2 class="h-section">Ninguém ensina o professor a estimar isso</h2>
+      <h2 class="h-section">Estimar a carga horária não deveria depender de intuição</h2>
       <div class="prose" style="margin-top:18px;">
-        <p>Quando um professor propõe um curso a distância, ele precisa declarar de antemão se o curso terá 20, 40 ou 60 horas. Mas, na etapa de planejamento, não existe nenhum parâmetro institucional que ajude a traduzir "quantos vídeos, textos e atividades" em "quantas horas de estudo". A decisão fica na intuição.</p>
-        <p>O resultado, segundo os relatos levantados na pesquisa: cursos que saem muito além da carga prevista, estudantes que reclamam do volume de trabalho, e nenhuma forma objetiva de confirmar se a reclamação é falta de dedicação ou um planejamento realmente superestimado. Sem um parâmetro, o professor lança recursos e atividades sem contabilizar o esforço que exigem, e só descobre a discrepância quando o curso já está no ar.</p>
-        <p>Esta ferramenta nasce para preencher exatamente essa lacuna: dar ao professor um parâmetro, baseado em literatura internacional sobre <em>student workload</em>, para estimar a carga horária de cada recurso e atividade, antes de produzir o curso, e não depois.</p>
+        <p>Ao propor um curso a distância, o professor já precisa declarar de antemão quantas horas o curso terá. Mas no planejamento raramente existe uma referência que traduza "quantos vídeos, textos e atividades" em "quantas horas de estudo": a decisão fica por conta da intuição.</p>
+        <p>O resultado, segundo relatos levantados na pesquisa: cursos que ultrapassam muito a carga prevista, estudantes que reclamam do volume de trabalho, e nenhuma forma objetiva de saber se a reclamação é falta de dedicação ou planejamento superestimado.</p>
+        <p>Esta ferramenta nasce para preencher essa lacuna: ela usa literatura internacional sobre carga de trabalho discente (student workload) para estimar, atividade por atividade, o tempo que o curso realmente vai demandar do estudante, antes mesmo de ele ser produzido.</p>
       </div>
     </div>
   </section>
 
   <section class="section section-quiet">
     <div class="container-narrow">
-      <h2 class="h-section">Três momentos em que a ferramenta entra no seu processo</h2>
+      <h2 class="h-section">Três momentos em que a ferramenta apoia o seu processo de elaboração de curso MOOC</h2>
       <div class="moments" style="margin-top:28px;">
         <div class="moment">
           <div class="m-num">1</div>
-          <div><h3>Abertura do processo</h3><p>Ao submeter a proposta do curso, o professor já escolhe entre 20, 40 ou 60 horas. É a primeira decisão, ainda sem detalhe de conteúdo.</p></div>
+          <div><h3>Abertura do processo</h3><p>Ao submeter a proposta do curso, o professor já escolhe a carga horária pretendida, com limite de 60 horas. É a primeira decisão, ainda sem detalhe de conteúdo.</p></div>
         </div>
         <div class="moment">
           <div class="m-num">2</div>
-          <div><h3>Planejamento do curso (etapa design)</h3><p>Ao montar o mapa de aprendizagem, o professor usa o estimador atividade por atividade: escolhe o tipo, a complexidade e os parâmetros de cada recurso, e acompanha o total em tempo real. É o uso principal da ferramenta.</p></div>
+          <div><h3>Planejamento do curso (etapa design)</h3><p>Ao elaborar o mapa de aprendizagem, o professor usa o estimador atividade por atividade: escolhe o tipo e a complexidade, e a ferramenta calcula o tempo automaticamente a partir dos parâmetros de cada atividade. O professor acompanha em tempo real o somatório da carga horária estimada. É o uso principal da ferramenta.</p></div>
         </div>
         <div class="moment">
           <div class="m-num">3</div>
-          <div><h3>Sala pronta · conferência final</h3><p>Depois de produzir o material, o professor pode reestimar com os números reais (duração final dos vídeos, tamanho real dos textos) para checar se a carga horária ficou coerente com o previsto.</p></div>
+          <div><h3>Sala pronta (conferência final)</h3><p>Depois de produzir o material, o professor pode reestimar com os números reais (duração final dos vídeos, tamanho real dos textos) para conferir se a carga horária ficou coerente com o previsto.</p></div>
         </div>
       </div>
     </div>
@@ -662,8 +702,11 @@ table{ border-collapse:collapse; }
 
   <section class="section" id="metodologia">
     <div class="container">
-      <h2 class="h-section">Parâmetros com base em evidências, não em intuição</h2>
-      <p class="lede" style="margin-top:14px; margin-bottom:32px; font-size:1.02rem;">Os tempos abaixo vêm de uma revisão de literatura internacional sobre carga horária de estudo online, adaptados para o contexto educacional e organizados segundo os tipos de aprendizagem do Conversational Framework de Laurillard (2012).</p>
+      <h2 class="h-section">Parâmetros fundamentados em revisão de literatura, não em intuição</h2>
+      <div class="prose" style="margin-top:18px; margin-bottom:32px;">
+        <p>Os parâmetros seguem a classificação em tipos de aprendizagem do Conversational Framework de Laurillard (2012): aquisição, prática, produção, discussão, investigação e colaboração. Eles foram reunidos a partir de trabalhos sobre carga de trabalho discente (student workload) em cursos on-line, localizados no Portal de Periódicos da CAPES e no Google Acadêmico, e adaptados ao contexto de planejamento de MOOCs no Ifes.</p>
+        <p>O resumo com a proposta do estimador pode ser lido em <a href="https://docs.google.com/document/d/1ViAMjrAfjyjWvYBa8hL8yW91ot-4sRiotCTge_UJd9M/edit?usp=sharing" target="_blank" rel="noopener">Como Calcular a Carga Horária de Cursos a Distância: Estimador para MOOCs do Ifes</a>. Um artigo completo está em preparação para submissão; assim que publicado, a referência definitiva substitui este link.</p>
+      </div>
       <div class="tax-table-wrap">
         <table class="tax-table" id="tax-table"></table>
       </div>
@@ -694,12 +737,11 @@ table{ border-collapse:collapse; }
     </div>
   </section>
 
-  <section class="section section-quiet">
+  <section class="section section-quiet" id="estimativa">
     <div class="container-narrow">
-      <h2 class="h-section">De onde vêm esses números</h2>
+      <h2 class="h-section">Uma estimativa, não uma medida exata</h2>
       <div class="prose" style="margin-top:18px;">
-        <p>Os parâmetros foram reunidos a partir de cinco trabalhos sobre <em>student workload</em> em cursos online, localizados no Portal de Periódicos da Capes e no Google Acadêmico: Beer (2019), Liu e Evans (2020), Divjak et al. (2022), McInnes et al. (2026) e Sargent et al. (2026). O Quadro 2 acima foi elaborado com base principalmente em McInnes et al. (2026), Liu e Evans (2020) e Beer (2019), adaptando as recomendações, em geral originadas na psicolinguística, para o contexto de planejamento educacional.</p>
-        <p>O artigo com a proposta completa da calculadora, de onde saem todos os parâmetros usados aqui, pode ser lido em <a href="https://docs.google.com/document/d/1ViAMjrAfjyjWvYBa8hL8yW91ot-4sRiotCTge_UJd9M/edit?usp=sharing" target="_blank" rel="noopener">Como estimar a carga horária de cursos a distância: proposta de calculadora para cursos MOOCs do Ifes</a>. Ele está em preparação para submissão; assim que publicado, a referência definitiva substitui este link.</p>
+        <p>O Estimador calcula um tempo médio esperado, e não um tempo exato que cada aluno vai gastar. É como o tempo de uma receita ou de um trajeto no GPS: dá uma referência confiável para planejar, mas cada pessoa pode levar um pouco mais ou um pouco menos, dependendo do seu ritmo e conhecimento prévio. Use o resultado para verificar se a carga horária proposta é realista, não como uma medida exata do tempo de cada estudante.</p>
       </div>
     </div>
   </section>
@@ -711,8 +753,9 @@ table{ border-collapse:collapse; }
           <span class="byline-item"><span class="brole">Pesquisa</span> · <span class="bname">Aline Pinto Amorim</span></span>
           <span class="byline-item"><span class="brole">Orientação</span> · <span class="bname">Vanessa Battestin</span></span>
           <span class="byline-item"><span class="brole">Coorientação</span> · <span class="bname">Marize Lyra Silva Passos</span></span>
+          <span class="byline-item"><span class="brole">Desenvolvimento técnico</span> · <span class="bname">Elton Silva e Marcos Accioly</span></span>
         </div>
-        <p class="prose">Esta ferramenta é um protótipo de pesquisa (v1), um <em>estimador</em>, não um analisador automático. Ela apoia o planejamento antes da produção do curso; conferir a carga horária de uma sala já publicada continua exigindo revisão manual, por enquanto. É de uso livre para o planejamento de MOOCs e de disciplinas presenciais no Ifes.</p>
+        <p class="prose">Esta ferramenta é um protótipo de pesquisa (v1), um <strong>estimador</strong>, não um analisador automático. Ela apoia o planejamento antes da produção do curso; conferir a carga horária de uma sala já publicada continua exigindo revisão manual, por enquanto. É de uso livre para o planejamento de MOOCs e de disciplinas presenciais no Ifes.</p>
         <div class="byline-close">
           <button class="btn btn-primary" data-nav="tool">Abrir o estimador</button>
         </div>
@@ -725,6 +768,12 @@ table{ border-collapse:collapse; }
 <!-- ================= TOOL ================= -->
 <main id="view-tool" class="hidden">
   <div class="container tool-shell">
+
+    <div class="print-head" id="print-head">
+      <p class="ph-tool">Estimador de Carga Horária de Curso MOOC EaD · Ifes / Cefor</p>
+      <h1 class="ph-course" id="ph-course"></h1>
+      <p class="ph-meta" id="ph-meta"></p>
+    </div>
 
     <div class="tool-header">
       <div class="tool-title-field">
@@ -744,6 +793,7 @@ table{ border-collapse:collapse; }
             <span aria-hidden="true">h</span>
           </div>
         </div>
+        <p class="target-note hidden" id="target-note" role="status">Acima de 60 h: o limite para a proposta de curso MOOC no Ifes é de 60 horas.</p>
       </div>
     </div>
 
@@ -753,22 +803,36 @@ table{ border-collapse:collapse; }
       <span class="toolbar-sep" aria-hidden="true"></span>
       <select class="tpl-select" id="template-select">
         <option value="">Carregar um curso de exemplo…</option>
-        <option value="hibrido20">Exemplo · Curso híbrido de 20 horas (7 tipos)</option>
-        <option value="20">Exemplo · MOOC de 20 horas</option>
-        <option value="40">Exemplo · MOOC de 40 horas</option>
-        <option value="60">Exemplo · MOOC de 60 horas</option>
+        <option value="hibrido20">Híbrido de 20 horas (7 tipos)</option>
+        <option value="20">MOOC de 20 horas</option>
+        <option value="40">MOOC de 40 horas</option>
+        <option value="60">MOOC de 60 horas</option>
       </select>
       <span class="toolbar-sep" aria-hidden="true"></span>
       <button class="btn btn-secondary btn-sm" id="btn-save" title="Baixar este curso como arquivo .json">Salvar</button>
       <button class="btn btn-secondary btn-sm" id="btn-restore" title="Abrir um curso salvo em arquivo .json">Restaurar</button>
+      <button class="btn btn-secondary btn-sm" id="btn-print" aria-label="Salvar a análise em PDF" title="Salvar a análise do curso em PDF, pela janela de impressão">PDF</button>
       <button class="btn btn-ghost btn-sm" id="btn-clear" disabled>Limpar</button>
       <input type="file" id="file-input" class="hidden" accept=".json,application/json" tabindex="-1" aria-hidden="true">
       <span class="toolbar-sep" aria-hidden="true"></span>
-      <a class="btn btn-ghost btn-sm methodology-link" data-nav="home" data-scroll="metodologia">Ver metodologia</a>
+      <button type="button" class="btn btn-ghost btn-sm methodology-link" data-nav="home" data-scroll="metodologia">Ver metodologia</button>
     </div>
 
     <div class="tool-grid">
       <div>
+        <div class="support-wrap">
+          <details>
+            <summary>Ainda não tenho o material pronto: como estimo?</summary>
+            <ul>
+              <li>Uma página de texto padrão (fonte 12, espaçamento simples) tem, em média, 250 a 300 palavras; use isso para estimar leituras sem contar palavra por palavra.</li>
+              <li>Sem o vídeo gravado? Use a duração do roteiro/script como referência para "duração da mídia".</li>
+              <li>Para artefatos e investigações, pense no tempo que você mesmo levaria para concluir a tarefa com a experiência de um estudante; depois ajuste para mais, considerando a curva de aprendizagem dele.</li>
+              <li>Estimativas em questionários mistos: informe quantas questões fáceis e quantas difíceis compõem o mesmo questionário; não é preciso duplicar a atividade.</li>
+              <li>Material que mistura texto com vídeos e links incorporados, como um livro ou uma página do Moodle, dificulta a estimativa: lance a leitura e cada vídeo como atividades separadas. Para MOOC, prefira materiais separados por tipo ou conteúdo interativo em H5P.</li>
+            </ul>
+          </details>
+          <p class="support-note"><strong>Os materiais complementares não devem ser incluídos no cômputo da carga horária do curso.</strong> Eles são opcionais para o aluno, e seu conteúdo não pode ser cobrado nas avaliações.</p>
+        </div>
         <div id="activity-list" class="activity-table"></div>
       </div>
 
@@ -778,6 +842,7 @@ table{ border-collapse:collapse; }
             <div class="readout-value mono-num" id="stat-total">0min</div>
             <div class="readout-label">carga horária estimada do estudante</div>
             <div id="stat-status"></div>
+            <p class="readout-note">Tempo médio esperado, não uma medida exata. <button type="button" class="link-btn" data-nav="home" data-scroll="estimativa">Entenda por quê</button></p>
           </div>
 
           <div class="result-block">
@@ -800,18 +865,11 @@ table{ border-collapse:collapse; }
             <h4>Equilíbrio por módulo</h4>
             <div id="module-chart"></div>
           </div>
-        </div>
 
-        <div class="support-wrap">
-          <details>
-            <summary>Ainda não tenho o material pronto: como estimo?</summary>
-            <ul>
-              <li>Uma página de texto padrão (fonte 12, espaçamento simples) tem, em média, 250 a 300 palavras; use isso para estimar leituras sem contar palavra por palavra.</li>
-              <li>Sem o vídeo gravado? Use a duração do roteiro/script como referência para "duração da mídia".</li>
-              <li>Para artefatos e investigações, pense no tempo que você mesmo levaria para concluir a tarefa com a experiência de um estudante; depois ajuste para mais, considerando a curva de aprendizagem dele.</li>
-              <li>Estimativas em questionários mistos: informe quantas questões fáceis e quantas difíceis compõem o mesmo questionário; não é preciso duplicar a atividade.</li>
-            </ul>
-          </details>
+          <div class="result-block hidden" id="top-block">
+            <h4>Atividades que mais pesam</h4>
+            <ol class="top-list" id="top-list"></ol>
+          </div>
         </div>
       </aside>
     </div>
@@ -904,7 +962,8 @@ var ICONS = {
   trash: '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 6h12M8 6V4.6c0-.6.5-1.1 1.1-1.1h1.8c.6 0 1.1.5 1.1 1.1V6m-6.4 0l.6 9.5c0 .6.5 1 1.1 1h4.6c.6 0 1-.4 1.1-1L15.4 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   grip: '<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><circle cx="7.5" cy="5" r="1.25"/><circle cx="12.5" cy="5" r="1.25"/><circle cx="7.5" cy="10" r="1.25"/><circle cx="12.5" cy="10" r="1.25"/><circle cx="7.5" cy="15" r="1.25"/><circle cx="12.5" cy="15" r="1.25"/></svg>',
   up: '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.5 12.5L10 8l4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
-  down: '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.5 7.5L10 12l4.5-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  down: '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.5 7.5L10 12l4.5-4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  warn: '<svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2.5l8.5 15H1.5L10 2.5z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M10 8v4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="10" cy="14.5" r="0.9" fill="currentColor"/></svg>'
 };
 
 /* ============ DATA MODEL ============ */
@@ -1137,6 +1196,20 @@ function detailText(a){
   if(task.inputMode==="writing") bits.push(formatQty(parseQty(p.words))+" palavras");
   if(task.inputMode==="manual" && a.taskId!=="artefato" && a.taskId!=="investigacao") bits.push("definido pelo professor");
   return bits.join(" · ");
+}
+
+/* Alerta de valor acima do esperado (C3), com os limites definidos com a
+   Vanessa: mídia com mais de 20 min de duração e leitura com mais de 1 h de
+   tempo estimado. Não há limite inferior, e o alerta nunca impede de salvar. */
+var ALERT_MEDIA_MIN = 20, ALERT_READING_MIN = 60;
+function sizeAlert(a){
+  var task = getTask(a.typeId, a.taskId);
+  if(!task) return "";
+  if(task.inputMode==="media" && parseQty((a.params||{}).mediaMinutes) > ALERT_MEDIA_MIN)
+    return "Mais de 20 min de mídia: acima do esperado para um único vídeo ou áudio. Confira a duração informada.";
+  if(task.inputMode==="reading" && computeMinutes(a) > ALERT_READING_MIN)
+    return "Leitura estimada em mais de 1 h: acima do esperado para uma única leitura. Confira o número de palavras e a complexidade.";
+  return "";
 }
 
 /* ============ TEMPLATES ============ */
@@ -1708,6 +1781,7 @@ function activityRowHtml(a, idx, count, moduleName){
   var task = getTask(a.typeId, a.taskId);
   var mins = computeMinutes(a);
   var name = a.label || defaultLabel(a);
+  var warnText = sizeAlert(a);
   return '<div class="activity-row" data-id="'+a.id+'" draggable="true">' +
     '<button type="button" class="drag-handle" data-handle="'+a.id+'" title="Arraste para reordenar" aria-label="Reordenar '+escapeHtml(name)+'. Posição '+(idx+1)+' de '+count+(moduleName?', no módulo '+escapeHtml(moduleName):'')+'. Use as setas para cima e para baixo.">'+ICONS.grip+'</button>' +
     '<div class="move-btns">' +
@@ -1717,6 +1791,7 @@ function activityRowHtml(a, idx, count, moduleName){
     '<div class="activity-main">' +
       '<div class="a-name">'+escapeHtml(name)+'</div>' +
       '<div class="a-detail" style="'+catVars(type.color)+'"><span class="a-chip">'+escapeHtml(type.label)+'</span><span class="a-task">'+escapeHtml(task ? task.label : "Tarefa")+'</span>' + (detailText(a) ? ' · '+escapeHtml(detailText(a)) : '') + '</div>' +
+      (warnText ? '<div class="a-warn">'+ICONS.warn+'<span>'+escapeHtml(warnText)+'</span></div>' : '') +
     '</div>' +
     '<div class="activity-time mono-num">'+formatMinutes(mins)+'</div>' +
     '<div class="activity-actions">' +
@@ -1821,8 +1896,39 @@ function renderResults(){
   document.getElementById("gauge-cur-label").textContent = formatMinutes(totalMin);
   document.getElementById("gauge-target-label").textContent = state.targetHours + "h";
 
+  /* A proposta de MOOC tem limite de 60 h; o campo fica livre porque a
+     ferramenta também serve a disciplinas. */
+  document.getElementById("target-note").classList.toggle("hidden", !(Number(state.targetHours) > 60));
+
   renderBalanceChart(totalMin);
   renderModuleChart(totalMin);
+  renderTopActivities(totalMin);
+}
+
+/* O que mais pesa no resultado: as cinco atividades mais longas, com a parte de
+   cada uma no total. A cor repete a do tipo; o nome do tipo vai no title. */
+function renderTopActivities(totalMin){
+  var block = document.getElementById("top-block");
+  var list = document.getElementById("top-list");
+  if(totalMin<=0 || state.activities.length<2){
+    block.classList.add("hidden");
+    list.innerHTML = "";
+    return;
+  }
+  block.classList.remove("hidden");
+  var ranked = state.activities.map(function(a){ return { a:a, min:computeMinutes(a) }; })
+    .filter(function(x){ return x.min>0; })
+    .sort(function(x, y){ return y.min - x.min; })
+    .slice(0, 5);
+  list.innerHTML = ranked.map(function(x){
+    var type = getType(x.a.typeId);
+    var name = x.a.label || defaultLabel(x.a);
+    return '<li class="top-item" style="--cat:var(--cat-' + type.color + ')" title="' + escapeHtml(type.label + ": " + name) + '">' +
+      '<span class="t-swatch" aria-hidden="true"></span>' +
+      '<span class="t-name">' + escapeHtml(name) + '</span>' +
+      '<span class="t-val">' + formatMinutes(x.min) + ' · ' + Math.round(x.min/totalMin*100) + '%</span>' +
+    '</li>';
+  }).join("");
 }
 
 function renderBalanceChart(totalMin){
@@ -2313,6 +2419,34 @@ document.getElementById("btn-clear").addEventListener("click", function(){
 });
 
 
+/* ============ SALVAR EM PDF ============ */
+/* Sem biblioteca: a versão de impressão (CSS @media print) é a análise do curso,
+   e o diálogo do navegador salva em PDF. O cabeçalho é preenchido também no
+   Ctrl+P, e o título da página vira o nome sugerido do arquivo. */
+var titleBeforePrint = null;
+function fillPrintHead(){
+  var name = (state.courseName || "").trim();
+  document.getElementById("ph-course").textContent = name || "Curso sem nome";
+  document.getElementById("ph-meta").textContent =
+    "Carga horária pretendida: " + formatQty(Number(state.targetHours)||0) + " h · " +
+    plural(state.activities.length, "atividade", "atividades") + " · Gerado em " +
+    new Date().toLocaleDateString("pt-BR");
+  if(titleBeforePrint===null) titleBeforePrint = document.title;
+  document.title = "Estimativa de carga horária - " + (name || "curso");
+}
+window.addEventListener("beforeprint", fillPrintHead);
+window.addEventListener("afterprint", function(){
+  if(titleBeforePrint!==null){ document.title = titleBeforePrint; titleBeforePrint = null; }
+});
+document.getElementById("btn-print").addEventListener("click", function(){
+  if(!state.activities.length){
+    actionNote("Adicione atividades antes de gerar o PDF da análise.", true);
+    return;
+  }
+  fillPrintHead();
+  window.print();
+});
+
 /* ============ ADD/EDIT ACTIVITY MODAL ============ */
 var draft = null;
 function openActivityModal(activityId){
@@ -2394,6 +2528,12 @@ function refreshModalLive(){
     msg.textContent = m.text;
     msg.classList.toggle("is-error", m.error);
     msg.classList.toggle("hidden", !m.text);
+  }
+  var warn = document.getElementById("param-warn");
+  if(warn){
+    var w = draftStructureValid() ? sizeAlert(draft) : "";
+    warn.textContent = w;
+    warn.classList.toggle("hidden", !w);
   }
   document.getElementById("modal-activity-confirm").disabled = !draftValid();
 }
@@ -2523,7 +2663,9 @@ function renderParamFields(task){
       '<div class="field-group"><label for="p-minutes">Minutos</label>'+qtyInput("p-minutes", p.manualMinutes)+'</div>' +
     '</div>';
   }
-  html += paramMessageHtml(task) + after;
+  var warn = draftStructureValid() ? sizeAlert(draft) : "";
+  html += paramMessageHtml(task) +
+    '<p class="field-warn'+(warn?'':' hidden')+'" id="param-warn" aria-live="polite">'+escapeHtml(warn)+'</p>' + after;
   html += '</div>';
   return html;
 }
