@@ -29,7 +29,7 @@ Coluna *Decisão*: **Aprovado** (por Aline e Vanessa) · **Se viável** (aprovad
 | T1 | Trocar itálico por negrito em todos os destaques | Aline | Aprovado |
 | T2 | Título passa a "Estimador de Carga Horária de Curso MOOC EaD" | Aline | Aprovado |
 | T3 | Abertura: "Quanto tempo o seu curso realmente demanda do estudante?", com parágrafo novo que cita a adaptação ao Ifes | Aline | Aprovado |
-| T4 | Crédito reescrito, incluindo o desenvolvimento técnico de Elton Silva e Marcos Accioly | Aline | Aprovado |
+| T4 | Crédito reescrito, incluindo o desenvolvimento técnico de Elton Vinicius Silva e Marcos Vinicius Forecchi Accioly | Aline | Aprovado |
 | T5 | "Ninguém ensina o professor a estimar isso" vira "Estimar a carga horária não deveria depender de intuição", com três parágrafos novos | Aline | Aprovado |
 | T6 | "Três momentos": CH pretendida com limite de 60 h, em vez de 20, 40 ou 60 h; o momento 2 destaca o cálculo automático | Aline | Aprovado |
 | T7 | Juntar "Parâmetros com base em evidências" e "De onde vêm esses números" em "Parâmetros fundamentados em revisão de literatura, não em intuição" | Aline, Rutinelli | Aprovado |
@@ -245,7 +245,9 @@ Transcritos do documento da Aline, prontos para colar. "Hoje" é o que está no 
 - **Hoje:** Uma proposta de carga horária baseada em evidências, da pesquisa de doutorado de Aline Pinto Amorim (Ifes/Cefor) em design de aprendizagem para MOOCs, com orientação de Vanessa Battestin e coorientação de Marize Lyra Silva Passos.
 - **Novo:**
 
-> O Estimador foi baseado na pesquisa de doutorado de Aline Pinto Amorim, em Design de Aprendizagem de MOOCs, com orientação de Vanessa Battestin e coorientação de Marize Lyra Silva Passos. O desenvolvimento técnico foi realizado por Elton Silva e Marcos Accioly.
+> O Estimador foi baseado na pesquisa de doutorado de Aline Pinto Amorim, em Design de Aprendizagem de MOOCs, com orientação de Vanessa Battestin e coorientação de Marize Lyra Silva Passos. O desenvolvimento técnico foi realizado por Elton Vinicius Silva e Marcos Vinicius Forecchi Accioly.
+
+Nomes completos corrigidos em 30/09/2026; o texto da Aline trazia "Elton Silva e Marcos Accioly".
 
 ### T5 — Seção do problema
 
