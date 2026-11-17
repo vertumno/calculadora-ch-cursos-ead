@@ -1,6 +1,6 @@
 # Estado do projeto e próximos passos — Calculadora de CH MOOC (CEFOR/IFES)
 
-> Documento de retomada. Resume **o que existe**, **o que foi feito**, **as decisões tomadas** e **o que falta**. Última atualização: **2026-09-30**.
+> Documento de retomada. Resume **o que existe**, **o que foi feito**, **as decisões tomadas** e **o que falta**. Última atualização: **2026-11-17**.
 
 ---
 
@@ -144,6 +144,8 @@ Sintaxe JS validada via `vm.Script` (Node); fidelidade ao Quadro 2 — 16/16 tes
 
 > **2026-09-30 — Fases 3 e 4 do plano aplicadas na Opção A, antes da reunião.** Fase 3: textos da página inicial do Anexo A (T2 a T7, com as duas seções de metodologia fundidas e o desenvolvimento técnico no crédito), destaques em negrito no lugar de itálico (T1), bloco "Uma estimativa, não uma medida exata" na página inicial e uma linha sob o resultado com link para ele (T8), quadro "Ainda não tenho o material pronto" no topo da coluna da lista (E1), item sobre materiais mistos (E2) e aviso fixo sobre materiais complementares (E3). Fase 4: alerta que não bloqueia para mídia acima de 20 min e leitura acima de 1 h, no modal e na lista (C3); lista das cinco atividades que mais pesam (D4); botão "PDF" com versão de impressão da análise (D5); aviso quando a meta passa de 60 h (T6). Seguiram a proposta do plano, a confirmar: T8 (local), E2, T7 (nome novo do documento), T6 (campo livre com aviso) e D4 (só a lista; o gráfico individual × social espera a Aline). Ficaram de fora por falta de insumo: **D3** (definir o que conta como avaliação), **F1** (dados de um curso real) e **F2** (formulário e e-mail).
 
+> **2026-11-17 — Opção A testada e publicada para a revisão da Aline.** Teste no navegador, servido por HTTP local: digitar "1200" no campo de palavras mantém o valor e o foco (C2); botão de adicionar desativado com o campo vazio (C1); vírgula decimal aceita ("7,5" min de vídeo baixa = 15 min); enquete = 15 min; alerta de mídia aparece com 21 min e não com 20, e o de leitura acima de 1 h; os oito vereditos com os rótulos de D1; os quatro exemplos carregam sem atividade desconhecida. Um JSON no formato da versão de 22/09 (com `moocMode` e as tarefas antigas) foi restaurado sem descartes, e o total (10h 30min) conferiu com a conta manual. A versão de impressão sai com cabeçalho, resultado, gráficos, lista das que mais pesam e alertas. Em 390 px não há rolagem horizontal. Único erro de console: `favicon.ico` 404, já conhecido. Os commits locais de 23/09 a 30/09 foram enviados ao `origin/main` neste dia. A reunião de confirmação das propostas (§5 do plano) segue pendente; a entrega à Aline faz as vezes de revisão.
+
 1. Enviar o link de `index-cefor-v2.html` para a Aline testar e detalhar feedback (visual, nomenclatura, interação) — combinado em 26/08, ainda não enviado.
 2. Aline + Rute vão rodar o teste de usabilidade assim que o link for enviado.
 3. Confirmar com a Aline os pontos herdados da sessão anterior: nível "Média" ausente em vídeo/quiz/interativa/discussão (D3) e conversão palavra ↔ página.
@@ -178,6 +180,6 @@ Links enviados à Aline para escolha entre as duas direções visuais.
 ## 6. Como retomar (resumo de 30s)
 
 1. O **site no ar** são os dois estimadores da raiz: `estimador-carga-horaria-a.html` e `-b.html` (§5.5). A Opção A é a que recebe os ajustes da rodada de testes.
-2. O **plano em andamento** é `docs/2026-09-22-ANALISE-CONTRIBUICOES-E-PLANO.md`: fases 1 a 4 aplicadas na Opção A; faltam D3, F1 e F2 e a reunião com a Aline (§5 do plano), que confirma as propostas adotadas.
+2. O **plano em andamento** é `docs/2026-09-22-ANALISE-CONTRIBUICOES-E-PLANO.md`: fases 1 a 4 aplicadas na Opção A e publicadas em 17/11/2026; faltam D3, F1 e F2 e a confirmação da Aline sobre as propostas adotadas (§5 do plano).
 3. Os **valores** vêm do Quadro 3, no Google Doc de parâmetros (link no §7 do plano).
 4. Tudo o que não é a versão ativa está em `arquivo/`, ver `arquivo/README.md`.

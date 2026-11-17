@@ -15,6 +15,22 @@ Duas versões oficiais, ambas na raiz do repositório e ambas publicadas no GitH
 
 Para o estado atual do projeto e os próximos passos, ver **`docs/ESTADO-E-PROXIMOS-PASSOS.md`**.
 
+## Novidades da Opção A — ajustes da rodada de testes (setembro de 2026)
+
+A **Opção A** recebeu os ajustes pedidos na rodada de testes de 22/09/2026 (Aline, Rutinelli, Mariella e Bruno) e passou a seguir o **Quadro 3**. A **Opção B** continua como estava em 02/09. O plano completo, com as 32 contribuições, está em `docs/2026-09-22-ANALISE-CONTRIBUICOES-E-PLANO.md`.
+
+**O que mudou:**
+
+- **Correções:** os campos de quantidade aceitam a digitação inteira (antes, "1200" virava "1") e vírgula decimal ("7,5"). A atividade só pode ser adicionada com quantidade maior que zero. O veredito agora fala da carga declarada: abaixo da meta, "superestimada"; acima, "subestimada". Prática ganhou cor própria.
+- **Quadro 3:** tarefas novas "Outros materiais" (Aquisição), "Enquete ou escolha" (Prática, 15 min) e "Outras práticas" (Prática). O interruptor "Curso MOOC" saiu: os sete tipos ficam sempre disponíveis, com aviso no modal para discussão, colaboração e síncrona. O modal mostra a fonte de cada tempo.
+- **Textos:** página inicial com os textos revisados, metodologia em uma seção só, crédito do desenvolvimento técnico e o bloco "Uma estimativa, não uma medida exata".
+- **Orientação:** o quadro "Ainda não tenho o material pronto" fica no topo da lista, com itens sobre materiais mistos e materiais complementares.
+- **Recursos novos:** alerta (que não bloqueia) para mídia acima de 20 min e leitura acima de 1 h, lista das cinco atividades que mais pesam, aviso quando a meta passa de 60 h e botão **PDF** com a versão de impressão da análise.
+
+**A confirmar com a equipe:** onde havia dúvida, valeu a proposta do plano (§5): enquete com 15 min fixos, síncrona liberada com aviso, vídeo e atividade interativa só com "Baixa" e "Alta", critério do H5P, local do bloco da estimativa, campo de meta livre com aviso acima de 60 h, e só a lista no lugar do gráfico individual × social.
+
+**Ainda não feito, por depender de insumo da equipe:** separar o tempo em conteúdo, prática e avaliação (falta definir o que conta como avaliação); trocar os cursos de exemplo, montados no desenvolvimento, por um curso real (faltam os dados); e o formulário "Dúvidas e dificuldades" (falta criar o formulário e definir o e-mail que recebe as respostas).
+
 ---
 
 ## 1. O que é / para quem
@@ -160,8 +176,9 @@ calculadora-ch-cursos-ead/
 
 ## 10. Próximos passos sugeridos
 
-- [ ] Escolher uma das duas direções visuais como versão única.
-- [ ] Teste de usabilidade (combinado com a Rute).
+- [ ] Confirmar a Opção A como versão única e arquivar a Opção B.
+- [x] Rodada de testes com a equipe (22/09/2026) e ajustes na Opção A.
+- [ ] Confirmar as propostas adotadas e trazer os insumos que faltam (curso real, critério de avaliação, formulário).
 - [ ] Empacotar fontes para funcionamento 100% offline.
 - [ ] Gerar `<iframe>` para o Moodle/AVA a partir da URL publicada.
 
