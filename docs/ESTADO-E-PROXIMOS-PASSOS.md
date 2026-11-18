@@ -175,11 +175,13 @@ Nas duas: logo carrega, pdf.js carrega no `<script>` clássico e no `import()` E
 
 Links enviados à Aline para escolha entre as duas direções visuais.
 
+**Link oficial (desde 18/11/2026):** <https://links.ifes.edu.br/estimador-cefor>. É o link enviado à Aline e à equipe: um encurtador do Ifes que redireciona (302) para a Opção A no Pages. O destino é configurado no links.ifes.edu.br, fora deste repositório. Se `estimador-carga-horaria-a.html` mudar de nome ou de lugar, o redirecionamento precisa ser atualizado lá.
+
 ---
 
 ## 6. Como retomar (resumo de 30s)
 
-1. O **site no ar** são os dois estimadores da raiz: `estimador-carga-horaria-a.html` e `-b.html` (§5.5). A Opção A é a que recebe os ajustes da rodada de testes.
+1. O **site no ar** são os dois estimadores da raiz: `estimador-carga-horaria-a.html` e `-b.html` (§5.5). A Opção A é a que recebe os ajustes da rodada de testes. O **link oficial** a divulgar é <https://links.ifes.edu.br/estimador-cefor>, que leva à Opção A.
 2. O **plano em andamento** é `docs/2026-09-22-ANALISE-CONTRIBUICOES-E-PLANO.md`: fases 1 a 4 aplicadas na Opção A e publicadas em 17/11/2026; faltam D3, F1 e F2 e a confirmação da Aline sobre as propostas adotadas (§5 do plano).
 3. Os **valores** vêm do Quadro 3, no Google Doc de parâmetros (link no §7 do plano).
 4. Tudo o que não é a versão ativa está em `arquivo/`, ver `arquivo/README.md`.

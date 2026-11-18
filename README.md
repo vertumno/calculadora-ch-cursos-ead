@@ -4,6 +4,8 @@ Ferramenta web que estima **quanto tempo um curso a distância realmente exige d
 
 ## Versões publicadas
 
+**Link oficial: <https://links.ifes.edu.br/estimador-cefor>** — leva à Opção A. É o link a divulgar.
+
 Duas versões oficiais, ambas na raiz do repositório e ambas publicadas no GitHub Pages:
 
 | Arquivo | O que é | URL |
