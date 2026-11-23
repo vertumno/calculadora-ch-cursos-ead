@@ -499,6 +499,14 @@ table{ border-collapse:collapse; }
 .modal-body{ padding:20px 22px; display:flex; flex-direction:column; gap:18px; max-height:66vh; overflow-y:auto; }
 .modal-foot{ display:flex; justify-content:flex-end; gap:10px; padding:16px 22px; border-top:1px solid var(--border); }
 .modal-sm{ max-width:460px; }
+/* Tutorial em vídeo: o iframe só é criado ao abrir e é removido ao fechar,
+   para não carregar o YouTube na entrada nem deixar o vídeo tocando. */
+.modal-video{ max-width:880px; }
+.video-frame{ position:relative; width:100%; aspect-ratio:16 / 9; background: var(--ink); border-radius: var(--radius-s); overflow:hidden; }
+.video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.video-foot{ font-size:0.84rem; color: var(--muted); }
+.video-foot a{ color: var(--accent-deep); font-weight:600; }
+.btn-video svg{ width:14px; height:14px; flex:none; }
 .confirm-msg{ font-size:0.92rem; color: var(--ink-soft); }
 .field-group label{ display:block; font-size:0.78rem; font-weight:600; color: var(--ink-soft); margin-bottom:8px; }
 .field-row{ display:flex; gap:12px; align-items:flex-end; }
@@ -657,6 +665,7 @@ table{ border-collapse:collapse; }
         <div class="opening-cta">
           <button class="btn btn-primary" data-nav="tool">Abrir o estimador</button>
           <button class="btn btn-secondary" data-scroll="metodologia">Ver a metodologia</button>
+          <button type="button" class="btn btn-ghost btn-video" data-video="tutorial"><svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M4 2.5v11l9-5.5z" fill="currentColor"/></svg>Ver tutorial em vídeo</button>
         </div>
       </div>
       <div>
@@ -868,7 +877,7 @@ table{ border-collapse:collapse; }
             </ul>
           </details>
           <p class="support-note"><strong>Os materiais complementares não devem ser incluídos no cômputo da carga horária do curso.</strong> Eles são opcionais para o aluno, e seu conteúdo não pode ser cobrado nas avaliações.</p>
-          <p class="support-note">Dúvidas ou dificuldades com o estimador? <a href="https://forms.gle/39MT6RAxNJnEZCSU7" target="_blank" rel="noopener">Responda ao formulário de dúvidas e dificuldades</a> (abre em nova aba).</p>
+          <p class="support-note">Primeira vez por aqui? <button type="button" class="link-btn" data-video="tutorial">Veja o tutorial em vídeo</button>. Dúvidas ou dificuldades com o estimador? <a href="https://forms.gle/39MT6RAxNJnEZCSU7" target="_blank" rel="noopener">Responda ao formulário de dúvidas e dificuldades</a> (abre em nova aba).</p>
         </div>
         <div id="activity-list" class="activity-table"></div>
       </div>
@@ -976,6 +985,20 @@ table{ border-collapse:collapse; }
 <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 
 <!-- ================= MODAL: CONFIRMAÇÃO ================= -->
+<!-- ================= MODAL: TUTORIAL EM VÍDEO ================= -->
+<div class="modal-backdrop hidden" id="modal-video-backdrop">
+  <div class="modal modal-video" role="dialog" aria-modal="true" aria-labelledby="modal-video-title">
+    <div class="modal-head">
+      <h3 id="modal-video-title">Tutorial em vídeo</h3>
+      <button class="icon-btn" id="modal-video-close" aria-label="Fechar o tutorial"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="video-frame" id="video-frame"></div>
+      <p class="video-foot">Para ativar as legendas, use o botão <strong>CC</strong> do player. <a id="video-external" href="#" target="_blank" rel="noopener">Abrir no YouTube<span class="sr-only"> (abre em nova aba)</span></a></p>
+    </div>
+  </div>
+</div>
+
 <div class="modal-backdrop hidden" id="modal-confirm-backdrop">
   <div class="modal modal-sm" role="dialog" aria-modal="true" aria-labelledby="modal-confirm-title">
     <div class="modal-head">
@@ -2127,6 +2150,46 @@ document.addEventListener("click", function(e){
   }
 });
 
+/* ============ TUTORIAL EM VÍDEO ============ */
+/* PROVISÓRIO: vídeo de referência até a Aline gravar o tutorial genérico.
+   Para trocar, basta mudar o ID abaixo (o trecho depois de "watch?v=" no YouTube). */
+var TUTORIAL_VIDEO_ID = "6bMNNj59Eqg";
+var videoOpener = null;
+function openVideo(opener){
+  videoOpener = opener || document.activeElement;
+  var frame = document.getElementById("video-frame");
+  var iframe = document.createElement("iframe");
+  iframe.src = "https://www.youtube-nocookie.com/embed/" + TUTORIAL_VIDEO_ID + "?autoplay=1&rel=0&hl=pt-BR&cc_lang_pref=pt";
+  iframe.title = "Tutorial em vídeo do Estimador de Carga Horária";
+  iframe.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+  iframe.allowFullscreen = true;
+  frame.innerHTML = ""; frame.appendChild(iframe);
+  document.getElementById("video-external").href = "https://www.youtube.com/watch?v=" + TUTORIAL_VIDEO_ID;
+  document.getElementById("modal-video-backdrop").classList.remove("hidden");
+  document.getElementById("modal-video-close").focus();
+}
+function closeVideo(){
+  document.getElementById("modal-video-backdrop").classList.add("hidden");
+  document.getElementById("video-frame").innerHTML = "";   /* para o vídeo */
+  if(videoOpener && document.contains(videoOpener)) videoOpener.focus();
+  videoOpener = null;
+}
+document.addEventListener("click", function(e){
+  var btn = e.target.closest("[data-video]");
+  if(btn) openVideo(btn);
+});
+document.getElementById("modal-video-close").addEventListener("click", closeVideo);
+document.getElementById("modal-video-backdrop").addEventListener("click", function(e){ if(e.target===this) closeVideo(); });
+/* Tab fica dentro do diálogo: fechar, o player e "Abrir no YouTube". */
+document.getElementById("modal-video-backdrop").addEventListener("keydown", function(e){
+  if(e.key!=="Tab") return;
+  var items = Array.prototype.slice.call(this.querySelectorAll("button, a[href], iframe"));
+  if(!items.length) return;
+  var first = items[0], last = items[items.length-1];
+  if(e.shiftKey && document.activeElement===first){ e.preventDefault(); last.focus(); }
+  else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
+});
+
 /* ============ COMO CITAR: copiar a citação ============ */
 /* Copia em HTML (o título fica em negrito ao colar no editor de texto) e em texto
    puro. Sem a API de área de transferência (página fora de HTTPS), usa a seleção. */
@@ -2976,6 +3039,7 @@ document.getElementById("modal-activity-confirm").addEventListener("click", func
 
 document.addEventListener("keydown", function(e){
   if(e.key==="Escape"){
+    if(!document.getElementById("modal-video-backdrop").classList.contains("hidden")){ closeVideo(); return; }
     if(!document.getElementById("modal-word-counter-backdrop").classList.contains("hidden")){ closeWordCounter(); return; }
     if(!document.getElementById("modal-confirm-backdrop").classList.contains("hidden")){ closeConfirm(false); return; }
     if(!document.getElementById("modal-activity-backdrop").classList.contains("hidden")) closeActivityModal();
