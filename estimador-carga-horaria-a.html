@@ -1,4 +1,9 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F6F9F4">
 <title>Estimador de Carga Horária de Curso MOOC EaD</title>
 <link rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/deed.pt-br">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,6 +118,7 @@ verdict, and DESIGN.md.
 /* ============ RESET ============ */
 *, *::before, *::after{ box-sizing: border-box; }
 html, body{ margin:0; padding:0; }
+html{ -webkit-text-size-adjust: 100%; overflow-x: clip; }
 body{
   background: var(--paper);
   color: var(--ink);
@@ -121,9 +127,15 @@ body{
   line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   min-height: 100%;
+  overflow-x: clip;
 }
+body.modal-open{ overflow: hidden; }
 img{ max-width:100%; display:block; }
 button, input, select, textarea{ font: inherit; color: inherit; }
+button, a, input, select, textarea, summary, .activity-row{
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(31,112,39,0.14);
+}
 button{ cursor:pointer; }
 a{ color: var(--accent); text-underline-offset: 3px; }
 /* Destaque é negrito na própria família, sem itálico: pedido da equipe de
@@ -132,6 +144,7 @@ strong{ font-weight:600; color: var(--ink); }
 h1,h2,h3,h4,p,figure{ margin:0; }
 ul{ margin:0; padding:0; list-style:none; }
 table{ border-collapse:collapse; }
+section[id], aside[id]{ scroll-margin-top: 76px; }
 :focus-visible{ outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
 .hidden{ display:none !important; }
 .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
@@ -189,6 +202,7 @@ table{ border-collapse:collapse; }
 .topnav .navlink.is-active{ background: var(--accent); color: var(--accent-ink); }
 .topnav .navlink:hover{ color: var(--ink); background: var(--surface-quiet); }
 .topnav .navlink.is-active:hover{ background: var(--accent-deep); color: var(--accent-ink); }
+.nav-label-short{ display:none; }
 
 /* ============ BUTTONS ============ */
 .btn{
@@ -278,7 +292,27 @@ table{ border-collapse:collapse; }
 .moment p{ color: var(--muted); font-size:0.94rem; max-width:62ch; }
 
 /* ============ QUADRO 2 TABLE ============ */
-.tax-table-wrap{ overflow-x:auto; border:1px solid var(--border-strong); border-radius: var(--radius-m); }
+.table-scroll-hint{
+  display:none; align-items:center; gap:6px;
+  margin-bottom:8px; font-size:0.8rem; font-weight:500; color: var(--muted);
+}
+.table-scroll-hint svg{ width:14px; height:14px; flex:none; color: var(--accent); }
+.tax-table-outer{ position:relative; border-radius: var(--radius-m); }
+.tax-table-outer::before, .tax-table-outer::after{
+  content:""; position:absolute; top:1px; bottom:1px; width:26px;
+  pointer-events:none; opacity:0; transition: opacity .18s ease; z-index:2;
+}
+.tax-table-outer::before{
+  left:1px; border-radius: var(--radius-m) 0 0 var(--radius-m);
+  background: linear-gradient(to right, rgba(40,54,47,0.12), transparent);
+}
+.tax-table-outer::after{
+  right:1px; border-radius: 0 var(--radius-m) var(--radius-m) 0;
+  background: linear-gradient(to left, rgba(40,54,47,0.14), transparent);
+}
+.tax-table-outer.has-left::before{ opacity:1; }
+.tax-table-outer.has-right::after{ opacity:1; }
+.tax-table-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; overscroll-behavior-x:contain; border:1px solid var(--border-strong); border-radius: var(--radius-m); background: var(--surface); }
 .tax-table{ width:100%; font-size:0.88rem; min-width:640px; }
 .tax-table th, .tax-table td{ padding:11px 16px; border-bottom:1px solid var(--border); text-align:left; vertical-align:top; }
 .tax-table thead th{ font-size:0.7rem; letter-spacing:0.09em; text-transform:uppercase; color: var(--ink-soft); font-weight:600; background: var(--surface-quiet); border-bottom:2px solid var(--accent-line); }
@@ -358,19 +392,27 @@ table{ border-collapse:collapse; }
 .target-input:focus{ outline:none; }
 
 .toolbar{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:20px; }
-.toolbar select.tpl-select{ padding:9px 12px; border-radius:var(--radius-s); border:1px solid var(--border-strong); background: var(--surface); font-weight:600; font-size:0.84rem; color: var(--ink); }
+.toolbar-primary, .toolbar-files{ display:contents; }
+.toolbar select.tpl-select{ padding:9px 12px; border-radius:var(--radius-s); border:1px solid var(--border-strong); background: var(--surface); font-weight:600; font-size:0.84rem; color: var(--ink); max-width:100%; }
 .toolbar-sep{ width:1px; align-self:stretch; min-height:26px; background: var(--border); }
 /* Aviso de ação aparece só quando há o que dizer, e some sozinho. */
 .toast{
-  position:fixed; left:50%; bottom:26px; transform:translateX(-50%);
+  position:fixed; left:50%; bottom:calc(26px + env(safe-area-inset-bottom)); transform:translateX(-50%);
   max-width:min(540px, calc(100vw - 32px));
-  display:flex; align-items:center; gap:10px;
-  padding:13px 17px; border-radius: var(--radius-m);
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:12px 16px; border-radius: var(--radius-m);
   background: var(--surface); color: var(--ink-soft);
   border:1px solid var(--border-strong); box-shadow: var(--shadow-modal);
   font-size:0.86rem; z-index:120;
   animation: toast-in .28s cubic-bezier(0.16,1,0.3,1);
 }
+.toast-msg{ min-width:0; }
+.toast-action{
+  flex:none; appearance:none; border:1px solid var(--accent-line); background: var(--accent-quiet);
+  color: var(--accent-deep); font-weight:600; font-size:0.84rem;
+  padding:6px 12px; border-radius: var(--radius-s); white-space:nowrap;
+}
+.toast-action:hover{ background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
 .toast.is-error{ background: var(--status-critical-soft); border-color: var(--status-critical); color: var(--status-critical); font-weight:600; }
 @keyframes toast-in{ from{ opacity:0; transform:translate(-50%, 12px); } to{ opacity:1; transform:translate(-50%, 0); } }
 
@@ -494,18 +536,77 @@ table{ border-collapse:collapse; }
 .a-warn svg{ width:13px; height:13px; flex:none; }
 .print-head{ display:none; }
 
+/* ============ MOBILE LIVE-READOUT DOCK (<=900px) ============ */
+/* Em telas de coluna única, o painel de resultados fica abaixo da lista.
+   Esta faixa fixa no rodapé espelha o bloco de leitura do instrumento e se
+   recolhe sozinha quando o painel completo entra em tela. */
+.mobile-readout{
+  display:none;
+  position:fixed; left:0; right:0; bottom:0; z-index:45;
+  background: var(--accent-quiet);
+  border-top: 1px solid var(--border-strong);
+  transition: transform .22s cubic-bezier(0.16,1,0.3,1), opacity .18s ease;
+}
+.mobile-readout.is-hidden-by-panel{
+  transform: translateY(105%);
+  opacity: 0;
+  pointer-events: none;
+}
+.mr-gauge{
+  position:relative; height:5px; background: var(--well); width:100%;
+  border-bottom: 1px solid var(--accent-line); overflow:hidden;
+}
+.mr-gauge-fill{
+  position:absolute; inset:0; width:100%;
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path .45s cubic-bezier(0.16,1,0.3,1), background-color .2s ease;
+}
+.mr-gauge-target{
+  position:absolute; top:0; bottom:0; width:2px; background: var(--ink);
+}
+.mr-inner{
+  max-width:1080px; margin:0 auto;
+  padding: 9px max(16px, env(safe-area-inset-right)) calc(9px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+}
+.mr-summary{
+  flex:1; min-width:0; text-align:left; background:none; border:none; padding:0;
+  display:flex; flex-direction:column; gap:3px;
+}
+.mr-top{ display:flex; align-items:baseline; gap:7px; flex-wrap:wrap; }
+.mr-total{
+  font-family: var(--font-display); font-weight:600; font-size:1.28rem;
+  line-height:1.05; letter-spacing:-0.024em; color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.mr-meta{ font-size:0.8rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.mr-status{
+  display:inline-flex; align-items:center; gap:5px; align-self:flex-start;
+  max-width:100%; padding:2px 8px; border-radius:999px;
+  font-size:0.76rem; font-weight:600; line-height:1.25;
+}
+.mr-status svg{ width:12px; height:12px; flex:none; }
+.mr-status span{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.mr-jump{
+  flex:none; display:inline-flex; align-items:center; gap:5px;
+  min-height:40px; padding:8px 13px; border-radius: var(--radius-s);
+  background: var(--surface); border:1px solid var(--accent-line);
+  color: var(--accent-deep); font-weight:600; font-size:0.84rem; white-space:nowrap;
+}
+.mr-jump svg{ width:14px; height:14px; flex:none; }
+.mr-jump:hover, .mr-jump:active{ background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+
 /* ============ MODAL ============ */
-.modal-backdrop{ position:fixed; inset:0; background: var(--scrim); display:flex; align-items:flex-start; justify-content:center; padding: 5vh 16px; overflow-y:auto; z-index:100; }
-.modal{ background: var(--surface); border:1px solid var(--border-strong); border-radius: var(--radius-l); box-shadow: var(--shadow-modal); width:100%; max-width:560px; margin-bottom:5vh; }
-.modal-head{ display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--border); }
+.modal-backdrop{ position:fixed; inset:0; background: var(--scrim); display:flex; align-items:flex-start; justify-content:center; padding: 5vh 16px; overflow-y:auto; overscroll-behavior:contain; z-index:100; }
+.modal{ background: var(--surface); border:1px solid var(--border-strong); border-radius: var(--radius-l); box-shadow: var(--shadow-modal); width:100%; max-width:560px; max-height:88vh; max-height:88dvh; margin-bottom:5vh; display:flex; flex-direction:column; overflow:hidden; }
+.modal-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:18px 22px; border-bottom:1px solid var(--border); flex:none; }
 .modal-head h3{ font-family: var(--font-display); font-weight:400; font-size:1.2rem; letter-spacing:-0.02em; }
-.modal-body{ padding:20px 22px; display:flex; flex-direction:column; gap:18px; max-height:66vh; overflow-y:auto; }
-.modal-foot{ display:flex; justify-content:flex-end; gap:10px; padding:16px 22px; border-top:1px solid var(--border); }
+.modal-body{ padding:20px 22px; display:flex; flex-direction:column; gap:18px; flex:1 1 auto; min-height:0; overflow-y:auto; -webkit-overflow-scrolling:touch; overscroll-behavior:contain; }
+.modal-foot{ display:flex; justify-content:flex-end; gap:10px; padding:16px 22px; border-top:1px solid var(--border); flex:none; }
 .modal-sm{ max-width:460px; }
 /* Tutorial em vídeo: o iframe só é criado ao abrir e é removido ao fechar,
    para não carregar o YouTube na entrada nem deixar o vídeo tocando. */
 .modal-video{ max-width:880px; }
-.video-frame{ position:relative; width:100%; aspect-ratio:16 / 9; background: var(--ink); border-radius: var(--radius-s); overflow:hidden; }
+.video-frame{ position:relative; width:100%; max-width:min(100%, calc((100dvh - 180px) * 16 / 9)); margin:0 auto; aspect-ratio:16 / 9; background: var(--ink); border-radius: var(--radius-s); overflow:hidden; }
 .video-frame iframe{ position:absolute; inset:0; width:100%; height:100%; border:0; }
 .video-foot{ font-size:0.84rem; color: var(--muted); }
 .video-foot a{ color: var(--accent-deep); font-weight:600; }
@@ -530,7 +631,7 @@ table{ border-collapse:collapse; }
 .pick-list{ display:flex; flex-direction:column; gap:6px; }
 .pick-opt{ text-align:left; padding:10px 13px; border-radius:var(--radius-s); border:1px solid var(--border-strong); background: var(--surface); display:flex; justify-content:space-between; gap:10px; align-items:center; }
 .pick-opt b{ font-size:0.9rem; }
-.pick-opt .rate{ font-size:0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.pick-opt .rate{ font-size:0.78rem; color: var(--muted); font-variant-numeric: tabular-nums; flex:none; }
 .pick-opt:hover:not(.is-selected){ border-color: var(--ink-soft); }
 .pick-opt.is-selected{ border-color: var(--accent); background: var(--accent-quiet); box-shadow: inset 0 0 0 1px var(--accent); }
 .pick-opt small{ display:block; color:var(--muted); font-weight:400; font-size:0.78rem; margin-top:2px; }
@@ -571,6 +672,7 @@ table{ border-collapse:collapse; }
   @page{ margin:14mm; }
   body{ background:#FFFFFF; font-size:11pt; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
   .topbar, .site-footer, .toolbar, .tool-header, .support-wrap, .modal-backdrop, .toast,
+  .mobile-readout, .table-scroll-hint,
   .drag-handle, .move-btns, .activity-actions, .module-head .m-actions, .link-btn{ display:none !important; }
   .tool-shell{ padding:0; }
   .print-head{ display:block; margin-bottom:18px; padding-bottom:12px; border-bottom:2px solid var(--accent-line); }
@@ -585,43 +687,316 @@ table{ border-collapse:collapse; }
   .module-head .m-name{ border:none; padding:0; margin:0; }
 }
 
-/* ============ RESPONSIVE ============ */
-@media (max-width: 720px){
-  /* Empilhado, as divisorias nao separam mais nada e o estado precisa da linha inteira. */
+/* ============ RESPONSIVE: TABLET LANDSCAPE (<=1080px) ============ */
+@media (max-width: 1080px){
+  .topbar-inner{ padding: 10px 20px; gap: 12px; }
+  .brand-lockup{ min-height: 44px; }
+  .brand-logo{ width: 132px; }
+  .brand-title{ font-size: 1.02rem; line-height: 1.2; }
+  /* Quando a barra quebra linha em tablets, divisórias verticais ficam órfãs. */
   .toolbar-sep{ display:none; }
-  .word-counter-result{ align-items:flex-start; flex-direction:column; gap:3px; }
+  .toolbar{ gap: 8px; }
+  .toolbar-primary{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .toolbar-files{ display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+  .toolbar .btn-add{ padding: 10px 15px; font-size: 0.94rem; }
+  .toolbar .btn-sm{ padding: 7px 10px; }
+  .toolbar select.tpl-select{ flex: 0 1 258px; min-width: 0; padding: 8px 10px; }
+  .tool-grid{ grid-template-columns: minmax(0, 1fr) 320px; gap: 20px; }
+  .result-block{ padding: 18px 18px; }
+  .bal-row.is-module .bal-label{ width: 82px; }
+  .bal-val{ width: 86px; }
+  /* Detalhes legíveis em tablet sem cortar a duração das mídias */
+  .activity-main .a-name, .activity-main .a-detail{ white-space: normal; }
+  .activity-main .a-detail{ line-height: 1.4; }
 }
-@media (max-width: 900px){
-  .opening-grid{ grid-template-columns:1fr; }
-  .laurillard{ grid-template-columns:1fr; }
-  .laurillard .lcol.individual{ border-right:none; border-bottom:1px solid var(--border); padding-bottom:24px; margin-bottom:24px; }
-  .laurillard .lcol{ padding:0; }
-  .tool-grid{ grid-template-columns: minmax(0,1fr); }
-  .results-panel{ position:static; }
+
+/* ============ RESPONSIVE: TOUCH / COARSE POINTER ============ */
+@media (hover: none), (pointer: coarse){
   /* Arrastar não funciona em toque: botões explícitos assumem o lugar da alça */
   .drag-handle{ display:none; }
   .move-btns{ display:flex; }
+  .brand-lockup{ min-height: 44px; }
+  .icon-btn{ width: 38px; height: 38px; }
+  .module-head .icon-btn{ width: 36px; height: 36px; }
+  .modal-head .icon-btn{ width: 40px; height: 40px; }
+  .topnav .navlink,
+  .segmented .chip,
+  .target-custom,
+  .toolbar .btn-sm,
+  .toolbar select.tpl-select{ min-height: 42px; }
+  /* Evita zoom automático do iOS Safari ao focar campos abaixo de 16px */
+  .target-input,
+  .toolbar select.tpl-select,
+  .module-head .m-name,
+  .modal-body input[type="text"],
+  .modal-body select,
+  .word-counter-field textarea{ font-size: 1rem; }
 }
-@media (hover: none){
+
+/* ============ RESPONSIVE: TABLET PORTRAIT (<=900px) ============ */
+@media (max-width: 900px){
+  .section{ padding: 52px 0; }
+  .opening{ padding: 38px 0 40px; }
+  .opening-grid{ grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.92fr); gap: 28px; }
+  .opening h1{ font-size: clamp(2rem, 4.4vw, 2.75rem); }
+  .laurillard .lcol{ padding: 0 20px; }
+  .laurillard .lcol.individual{ padding-left: 0; }
+  .laurillard .lcol.social{ padding-right: 0; }
+
+  .toolbar{ gap: 10px; }
+  .toolbar .btn-add{ padding: 11px 18px; font-size: 0.98rem; }
+  .toolbar .btn-sm{ padding: 8px 13px; }
+  .toolbar select.tpl-select{ flex: 1 1 220px; }
+  .methodology-link{ margin-left: auto; }
+
+  .tool-grid{ grid-template-columns: minmax(0, 1fr); }
+  .results-panel{ position: static; }
+  .results-card .result-block{ padding: 20px 22px; }
+  .bal-row.is-module .bal-label{ width: 132px; }
+  .bal-val{ width: 96px; }
+
   .drag-handle{ display:none; }
   .move-btns{ display:flex; }
+  .icon-btn{ width: 38px; height: 38px; }
+  .module-head .icon-btn{ width: 36px; height: 36px; }
+  .modal-head .icon-btn{ width: 40px; height: 40px; }
+
+  .topnav .navlink,
+  .segmented .chip,
+  .target-custom,
+  .toolbar .btn-sm,
+  .toolbar select.tpl-select{ min-height: 42px; }
+  .target-input,
+  .toolbar select.tpl-select,
+  .module-head .m-name,
+  .modal-body input[type="text"],
+  .modal-body select,
+  .word-counter-field textarea{ font-size: 1rem; }
+
+  .mobile-readout{ display: block; }
+  .tool-shell{ padding-bottom: calc(96px + env(safe-area-inset-bottom)); }
+  body.has-mobile-dock .toast{ bottom: calc(84px + env(safe-area-inset-bottom)); }
+  body.has-mobile-dock .site-footer{ padding-bottom: calc(92px + env(safe-area-inset-bottom)); }
 }
-@media (max-width: 560px){
-  .btn-add{ width:100%; }
-  .opening{ padding-top:32px; }
-  .section{ padding: 48px 0; }
-  .topnav [data-nav="home"]{ display:none; }
-  .brand-lockup{ gap:8px; }
-  .brand-logo{ width:116px; }
+
+/* ============ RESPONSIVE: SMALL TABLET / LARGE PHONE (<=759px) ============ */
+@media (max-width: 759px){
+  .opening-grid{ grid-template-columns: 1fr; gap: 28px; }
+  .opening h1{ font-size: clamp(1.9rem, 6.8vw, 2.55rem); line-height: 1.1; }
+  .measure-fig{ max-width: 440px; width: 100%; margin: 0 auto; }
+  .laurillard{ grid-template-columns: 1fr; }
+  .laurillard .lcol.individual{ border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 24px; margin-bottom: 24px; }
+  .laurillard .lcol{ padding: 0; }
+  .table-scroll-hint{ display: flex; }
+  .word-counter-result{ align-items: flex-start; flex-direction: column; gap: 3px; }
+}
+
+/* ============ RESPONSIVE: SMARTPHONE (<=640px) ============ */
+@media (max-width: 640px){
+  section[id], aside[id]{ scroll-margin-top: 68px; }
+  .container, .container-narrow{
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  .topbar-inner{
+    padding: 10px max(16px, env(safe-area-inset-right)) 10px max(16px, env(safe-area-inset-left));
+    gap: 10px;
+  }
+  .brand-lockup{ gap: 8px; min-height: 40px; }
+  .brand-logo{ width: 106px; }
   /* Espremido, o nome da página quebrava uma palavra por linha: a marca sozinha
-     identifica o dono e o h1 logo abaixo diz o nome. */
+     identifica o dono, e as duas abas da navegação permanecem visíveis. */
   .brand-separator, .brand-title{ display:none; }
-  .moment{ grid-template-columns: 40px 1fr; gap:12px; }
-  /* Nome completo vale mais que uma linha só quando as setas ocupam espaço */
-  .activity-row{ gap:8px; padding:12px 12px; }
-  .module-head{ padding:7px 12px; }
-  .module-empty{ padding:12px; }
-  .activity-main .a-name, .activity-main .a-detail{ white-space:normal; }
+  .nav-label-full{ display:none; }
+  .nav-label-short{ display:inline; }
+  .topnav{ gap: 4px; }
+  .topnav .navlink{ min-height: 40px; padding: 8px 12px; font-size: 0.88rem; }
+
+  /* Home */
+  .opening{ padding: 26px 0 34px; }
+  .opening .lede{ font-size: 1rem; line-height: 1.52; margin-top: 14px; }
+  .opening-cta{ gap: 10px; margin-top: 22px; }
+  .opening-cta .btn-primary{ flex: 1 1 100%; min-height: 48px; }
+  .opening-cta .btn-secondary,
+  .opening-cta .btn-video{ flex: 1 1 148px; min-height: 44px; padding: 10px 12px; font-size: 0.9rem; }
+  .measure-frame{ padding: 14px 14px 12px; }
+  .measure{ max-height: 360px; }
+  .measure-key{ gap: 6px 14px; }
+  .section{ padding: 40px 0; }
+  .section-head{ margin-bottom: 24px; }
+  .moment{ grid-template-columns: 38px 1fr; gap: 12px; padding: 18px 0; }
+  .moment .m-num{ width: 36px; height: 36px; font-size: 1rem; }
+  .tax-table{ min-width: 580px; font-size: 0.84rem; }
+  .tax-table th, .tax-table td{ padding: 9px 11px; }
+  .credits{ gap: 40px; }
+  .cite-copy{ min-height: 44px; }
+  .byline-close .btn{ width: 100%; min-height: 46px; }
+
+  .site-footer{ padding: 24px 0 calc(24px + env(safe-area-inset-bottom)); }
+  .site-footer .container{ flex-direction: column; align-items: flex-start; gap: 8px; }
+  .site-footer p{ line-height: 1.9; }
+  .site-footer a, .footer-link{ padding: 6px 0; }
+
+  /* Tool shell & header */
+  .tool-shell{
+    padding: 18px max(16px, env(safe-area-inset-right)) calc(96px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+  }
+  .tool-header{ gap: 14px; margin-bottom: 18px; padding-bottom: 18px; }
+  .tool-title-field{ flex: 1 1 100%; }
+  .tool-title-field input{ font-size: 1.12rem; padding: 10px 12px; min-height: 44px; }
+  .target-field{ width: 100%; }
+  .target-controls{ width: 100%; flex-wrap: nowrap; gap: 8px; }
+  .segmented{ flex: 1; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .segmented .chip{ min-height: 44px; padding: 10px 6px; font-size: 0.94rem; }
+  .target-custom{ min-height: 44px; padding: 0 10px 0 8px; flex: none; }
+  .target-input{ width: 54px; padding: 9px 2px; font-size: 1rem; }
+  .target-note{ max-width: none; }
+
+  /* Toolbar estruturada em linhas equilibradas sem truncar o seletor de exemplos */
+  .toolbar{
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .toolbar-primary{ display: contents; }
+  #btn-add-activity{ grid-column: 1 / -1; grid-row: 1; width: 100%; min-height: 48px; }
+  #template-select{ grid-column: 1 / -1; grid-row: 2; width: 100%; min-width: 0; min-height: 44px; padding: 9px 12px; }
+  .toolbar-files{ grid-column: 1 / -1; grid-row: 3; display: flex; gap: 6px; flex-wrap: nowrap; }
+  .toolbar-files .btn-sm{ flex: 1 1 auto; min-height: 42px; padding: 8px 6px; font-size: 0.85rem; }
+  .toolbar-files #btn-clear{ border-color: var(--border); background: var(--surface); }
+  #btn-add-module{
+    grid-column: 1; grid-row: 4; justify-self: start; min-height: 42px; padding: 8px 14px;
+    border-color: var(--border-strong); background: var(--surface); color: var(--ink-soft);
+  }
+  .methodology-link{
+    grid-column: 2; grid-row: 4; justify-self: end; margin-left: 0;
+    min-height: 42px; padding: 8px 4px;
+    color: var(--accent-deep); text-decoration: underline; text-underline-offset: 3px;
+  }
+
+  /* Quadro de apoio */
+  .support-wrap details{ padding: 12px 14px; }
+  .support-wrap summary{ min-height: 38px; gap: 10px; line-height: 1.3; }
+  .support-note{ padding: 11px 14px; line-height: 1.5; }
+  .empty-state{ padding: 36px 18px; }
+  .empty-state .btn-add{ width: 100%; min-height: 46px; }
+
+  /* Lista de atividades: grade em 2 faixas para leitura plena e alvos confortáveis */
+  .activity-row{
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+    gap: 10px 12px;
+    padding: 14px 14px 12px;
+    align-items: start;
+  }
+  .activity-main{ grid-column: 1; grid-row: 1; }
+  .activity-main .a-name{ font-size: 1rem; line-height: 1.32; }
+  .activity-main .a-detail{ font-size: 0.84rem; margin-top: 6px; line-height: 1.45; }
+  .a-chip{ margin-bottom: 2px; }
+  .activity-time{ grid-column: 2; grid-row: 1; font-size: 1.02rem; padding-top: 1px; }
+  .move-btns{ grid-column: 1; grid-row: 2; justify-self: start; gap: 6px; }
+  .activity-actions{ grid-column: 2; grid-row: 2; justify-self: end; gap: 8px; }
+  .activity-row .icon-btn{
+    width: 42px; height: 38px;
+    border-color: var(--border); background: var(--paper);
+  }
+  .activity-row .icon-btn[data-remove]:hover,
+  .activity-row .icon-btn[data-remove]:active{
+    border-color: var(--status-critical); color: var(--status-critical); background: var(--status-critical-soft);
+  }
+
+  /* Faixa de módulo em 2 linhas no smartphone */
+  .module-head{ flex-wrap: wrap; gap: 8px 10px; padding: 10px 14px; }
+  .module-head .m-name{
+    flex: 1 0 100%; margin-left: 0; padding: 6px 9px; min-height: 38px;
+    font-size: 1rem; border-color: var(--border); background: var(--surface);
+  }
+  .module-head .m-static{ font-size: 0.92rem; }
+  .module-head .m-sum{ font-size: 0.84rem; font-weight: 600; color: var(--ink-soft); margin-right: auto; }
+  .module-head .m-actions{ gap: 6px; }
+  .module-head .icon-btn{
+    width: 38px; height: 36px;
+    border-color: var(--border); background: var(--surface);
+  }
+  .module-empty{ padding: 14px; font-size: 0.85rem; }
+
+  /* Painel de resultados no smartphone */
+  .results-card .result-block{ padding: 18px 16px; }
+  .readout-value{ font-size: 2.45rem; }
+  .readout-status{ border-radius: var(--radius-m); align-items: flex-start; line-height: 1.3; font-size: 0.88rem; }
+  .readout-status svg{ margin-top: 2px; }
+  .gauge-foot{ flex-wrap: wrap; gap: 4px 12px; font-size: 0.82rem; }
+  .balance-legend{ gap: 8px 16px; }
+  .balance-key{ font-size: 0.82rem; }
+  .bal-row.is-module{ flex-wrap: wrap; gap: 6px 10px; padding: 9px 0; }
+  .bal-row.is-module .bal-label{ order: 1; width: auto; flex: 1; white-space: normal; font-size: 0.86rem; font-weight: 500; }
+  .bal-row.is-module .bal-val{ order: 2; width: auto; font-size: 0.84rem; text-align: right; }
+  .bal-row.is-module .bal-stack{ order: 3; flex: 1 0 100%; height: 11px; }
+  .top-item{ font-size: 0.86rem; align-items: flex-start; gap: 8px; padding: 2px 0; }
+  .top-item .t-swatch{ margin-top: 6px; }
+  .top-item .t-name{ white-space: normal; line-height: 1.35; }
+
+  /* Modais de cadastro e contador em folha inferior (bottom sheet) */
+  #modal-activity-backdrop,
+  #modal-word-counter-backdrop{
+    padding: 0; align-items: flex-end;
+  }
+  #modal-activity-backdrop .modal,
+  #modal-word-counter-backdrop .modal{
+    max-width: 100%; margin: 0;
+    border-radius: 14px 14px 0 0;
+    border-bottom: none; border-left: none; border-right: none;
+    max-height: 92vh; max-height: 92dvh;
+  }
+  #modal-video-backdrop,
+  #modal-confirm-backdrop{
+    align-items: center; padding: 16px;
+  }
+  #modal-video-backdrop .modal,
+  #modal-confirm-backdrop .modal{
+    margin: auto; max-height: 92vh; max-height: 92dvh;
+  }
+  .modal-head{ padding: 14px 16px; }
+  .modal-head h3{ font-size: 1.12rem; }
+  .modal-body{ padding: 16px; gap: 16px; }
+  .modal-foot{
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+    gap: 8px; background: var(--surface);
+  }
+  .modal-foot .btn{ min-height: 44px; }
+  #modal-activity-confirm,
+  #modal-word-counter-use{
+    flex: 1; white-space: normal; text-align: center; line-height: 1.2;
+  }
+  #modal-confirm-backdrop .modal-foot{ flex-wrap: wrap-reverse; }
+  #modal-confirm-backdrop .modal-foot .btn{ flex: 1 1 130px; white-space: normal; }
+  .pick-grid{ grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .pick-card{ min-height: 48px; padding: 10px 12px; }
+  .pick-card:last-child:nth-child(odd){ grid-column: 1 / -1; }
+  .pick-opt{ min-height: 48px; padding: 11px 12px; align-items: flex-start; }
+  .pick-opt .rate{ white-space: nowrap; margin-top: 2px; }
+  .field-row:not(.field-row-pair){ flex-direction: column; align-items: stretch; gap: 14px; }
+  .modal-body input[type="text"],
+  .modal-body select{ min-height: 44px; padding: 10px 12px; font-size: 1rem; }
+  .word-counter-field textarea{ min-height: 132px; font-size: 1rem; }
+  #word-counter-pdf-select{ min-height: 44px; padding: 10px 14px; }
+  .toast{ width: calc(100vw - 24px); max-width: none; }
+}
+
+/* ============ RESPONSIVE: SMARTPHONE COMPACTO (<=380px) ============ */
+@media (max-width: 380px){
+  .brand-logo{ width: 94px; }
+  .topnav .navlink{ padding: 8px 10px; font-size: 0.84rem; }
+  .toolbar-files .btn-sm{ font-size: 0.82rem; padding: 8px 4px; }
+  .mr-total{ font-size: 1.15rem; }
+  .mr-jump{ padding: 8px 10px; font-size: 0.8rem; }
+}
+@media (max-width: 339px){
+  .toolbar-files{ flex-wrap: wrap; }
+  .toolbar-files .btn-sm{ flex: 1 1 calc(50% - 4px); }
 }
 </style>
 <script src="./assets/vendor/pdfjs/pdf.min.js?v=3"></script>
@@ -630,6 +1005,8 @@ table{ border-collapse:collapse; }
     document.write('<script src="./assets/vendor/pdfjs/pdf.worker.min.js?v=3"><\/script>');
   }
 </script>
+</head>
+<body>
 
 <div id="app">
 
@@ -652,7 +1029,7 @@ table{ border-collapse:collapse; }
     </button>
     <nav class="topnav">
       <button class="navlink" data-nav="home">Início</button>
-      <button class="navlink" data-nav="tool">Abrir a ferramenta</button>
+      <button class="navlink" data-nav="tool"><span class="nav-label-full">Abrir a ferramenta</span><span class="nav-label-short">Estimador</span></button>
     </nav>
   </div>
 </header>
@@ -731,8 +1108,11 @@ table{ border-collapse:collapse; }
         <p>Os parâmetros seguem a classificação em tipos de aprendizagem do Conversational Framework de Laurillard (2012): aquisição, prática, produção, discussão, investigação e colaboração. Eles foram reunidos a partir de trabalhos sobre carga de trabalho discente (student workload) em cursos on-line, localizados no Portal de Periódicos da CAPES e no Google Acadêmico, e adaptados ao contexto de planejamento de MOOCs no Ifes.</p>
         <p>O resumo com a proposta do estimador pode ser lido em <a href="https://docs.google.com/document/d/1ViAMjrAfjyjWvYBa8hL8yW91ot-4sRiotCTge_UJd9M/edit?usp=sharing" target="_blank" rel="noopener">Como Calcular a Carga Horária de Cursos a Distância: Estimador para MOOCs do Ifes</a>. Um artigo completo está em preparação para submissão; assim que publicado, a referência definitiva substitui este link.</p>
       </div>
-      <div class="tax-table-wrap">
-        <table class="tax-table" id="tax-table"></table>
+      <p class="table-scroll-hint" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9.5 4.5L13 8l-3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Deslize a tabela para o lado para ver todas as colunas</span></p>
+      <div class="tax-table-outer" id="tax-table-outer">
+        <div class="tax-table-wrap" id="tax-table-wrap">
+          <table class="tax-table" id="tax-table"></table>
+        </div>
       </div>
       <p class="tax-foot">* No Ifes, os MOOCs são totalmente assíncronos, sem tutoria, com atividades avaliativas autoinstrucionais. Admitem-se atividades de discussão ou colaborativas, desde que não sejam avaliativas. Quando o curso integra uma pesquisa em contexto restrito, admite-se também um planejamento híbrido; nesse caso, atividades síncronas/presenciais podem ser consideradas no cálculo da carga horária.</p>
     </div>
@@ -805,7 +1185,7 @@ table{ border-collapse:collapse; }
 
       <section id="como-citar" aria-labelledby="como-citar-titulo">
         <h2 id="como-citar-titulo" class="h-section">Como citar</h2>
-        <p class="credits-text" id="citacao">AMORIM, Aline Pinto; BATTESTIN, Vanessa; PASSOS, Marize Lyra Silva; SILVA, Elton Vinicius; ACCIOLY, Marcos Vinicius Forecchi. <strong>Estimador de carga horária de curso MOOC EaD</strong>. Vitória: Ifes/Cefor, 2026. Licenciado sob CC BY-NC 4.0. Disponível em: https://links.ifes.edu.br/estimador-cefor. Acesso em: dia mês ano.</p>
+        <p class="credits-text" id="citacao">AMORIM, Aline Pinto; BATTESTIN, Vanessa; PASSOS, Marize Lyra Silva; SILVA, Elton Vinicius; ACCIOLY, Marcos Vinicius Forecchi. <strong>Estimador de carga horária de curso MOOC EaD</strong>. Vitória: Ifes/Cefor, 2026. Licenciado sob CC BY-NC 4.0. Disponível em: https://links.ifes.edu.br/estimador-cefor. Acesso em: <span id="citacao-data">dia mês ano</span>.</p>
         <button type="button" class="btn btn-secondary btn-sm cite-copy" id="btn-copy-citation">Copiar citação</button>
       </section>
     </div>
@@ -846,10 +1226,12 @@ table{ border-collapse:collapse; }
     </div>
 
     <div class="toolbar">
-      <button class="btn btn-primary btn-add" id="btn-add-activity"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>Adicionar atividade</button>
-      <button class="btn btn-ghost btn-sm" id="btn-add-module" title="Agrupar as atividades em módulos ou unidades">Novo módulo</button>
+      <div class="toolbar-primary">
+        <button class="btn btn-primary btn-add" id="btn-add-activity"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>Adicionar atividade</button>
+        <button class="btn btn-ghost btn-sm" id="btn-add-module" title="Agrupar as atividades em módulos ou unidades">Novo módulo</button>
+      </div>
       <span class="toolbar-sep" aria-hidden="true"></span>
-      <select class="tpl-select" id="template-select">
+      <select class="tpl-select" id="template-select" aria-label="Carregar um curso de exemplo">
         <option value="">Carregar um curso de exemplo…</option>
         <option value="hibrido20">Híbrido de 20 horas (7 tipos)</option>
         <option value="20">MOOC de 20 horas</option>
@@ -857,11 +1239,13 @@ table{ border-collapse:collapse; }
         <option value="60">MOOC de 60 horas</option>
       </select>
       <span class="toolbar-sep" aria-hidden="true"></span>
-      <button class="btn btn-secondary btn-sm" id="btn-save" title="Baixar este curso como arquivo .json">Salvar</button>
-      <button class="btn btn-secondary btn-sm" id="btn-restore" title="Abrir um curso salvo em arquivo .json">Restaurar</button>
-      <button class="btn btn-secondary btn-sm" id="btn-print" aria-label="Salvar a análise em PDF" title="Salvar a análise do curso em PDF, pela janela de impressão">PDF</button>
-      <button class="btn btn-ghost btn-sm" id="btn-clear" disabled>Limpar</button>
-      <input type="file" id="file-input" class="hidden" accept=".json,application/json" tabindex="-1" aria-hidden="true">
+      <div class="toolbar-files">
+        <button class="btn btn-secondary btn-sm" id="btn-save" title="Baixar este curso como arquivo .json">Salvar</button>
+        <button class="btn btn-secondary btn-sm" id="btn-restore" title="Abrir um curso salvo em arquivo .json">Restaurar</button>
+        <button class="btn btn-secondary btn-sm" id="btn-print" aria-label="Salvar a análise em PDF" title="Salvar a análise do curso em PDF, pela janela de impressão">PDF</button>
+        <button class="btn btn-ghost btn-sm" id="btn-clear" disabled>Limpar</button>
+        <input type="file" id="file-input" class="hidden" accept=".json,application/json" tabindex="-1" aria-hidden="true">
+      </div>
       <span class="toolbar-sep" aria-hidden="true"></span>
       <button type="button" class="btn btn-ghost btn-sm methodology-link" data-nav="home" data-scroll="metodologia">Ver metodologia</button>
     </div>
@@ -885,7 +1269,7 @@ table{ border-collapse:collapse; }
         <div id="activity-list" class="activity-table"></div>
       </div>
 
-      <aside class="results-panel">
+      <aside class="results-panel" id="results-panel">
         <div class="results-card">
           <div class="result-block">
             <div class="readout-value mono-num" id="stat-total">0min</div>
@@ -923,6 +1307,26 @@ table{ border-collapse:collapse; }
       </aside>
     </div>
   </div>
+
+  <div class="mobile-readout" id="mobile-readout-bar" role="region" aria-label="Resumo da carga horária estimada">
+    <div class="mr-gauge" aria-hidden="true">
+      <div class="mr-gauge-fill" id="mr-gauge-fill"></div>
+      <div class="mr-gauge-target" id="mr-gauge-target"></div>
+    </div>
+    <div class="mr-inner">
+      <button type="button" class="mr-summary" data-scroll="results-panel" aria-label="Ir para o painel completo de análise">
+        <span class="mr-top">
+          <span class="mr-total mono-num" id="mr-total">0min</span>
+          <span class="mr-meta mono-num" id="mr-meta">Meta 40h</span>
+        </span>
+        <span class="mr-status" id="mr-status">Sem atividades</span>
+      </button>
+      <button type="button" class="mr-jump" data-scroll="results-panel">
+        <span>Análise</span>
+        <svg viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 3v10M4.5 9.5L8 13l3.5-3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
+  </div>
 </main>
 
 <footer class="site-footer">
@@ -940,7 +1344,7 @@ table{ border-collapse:collapse; }
 
 <!-- ================= MODAL: ADD/EDIT ACTIVITY ================= -->
 <div class="modal-backdrop hidden" id="modal-activity-backdrop">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-activity-title">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-activity-title" tabindex="-1">
     <div class="modal-head">
       <h3 id="modal-activity-title">Adicionar atividade</h3>
       <button class="icon-btn" id="modal-activity-close" aria-label="Fechar"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
@@ -955,7 +1359,7 @@ table{ border-collapse:collapse; }
 
 <!-- ================= MODAL: WORD COUNTER ================= -->
 <div class="modal-backdrop hidden" id="modal-word-counter-backdrop">
-  <div class="modal modal-word-counter" role="dialog" aria-modal="true" aria-labelledby="modal-word-counter-title">
+  <div class="modal modal-word-counter" role="dialog" aria-modal="true" aria-labelledby="modal-word-counter-title" tabindex="-1">
     <div class="modal-head">
       <h3 id="modal-word-counter-title">Contador de palavras</h3>
       <button class="icon-btn" id="modal-word-counter-close" aria-label="Fechar contador de palavras"><svg viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
@@ -1751,8 +2155,17 @@ function renderMeasure(){
    (sandbox sem allow-modals): devolvem false sem avisar e a ação morre em
    silêncio: era o que impedia "Carregar um curso de exemplo" de substituir
    uma lista já montada. Todo aviso passa por este diálogo. */
-var confirmState = { onConfirm:null, onCancel:null };
+function syncModalScrollLock(){
+  var anyOpen = !!document.querySelector(".modal-backdrop:not(.hidden)");
+  document.body.classList.toggle("modal-open", anyOpen);
+}
+function isCoarsePointer(){
+  return !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+}
+
+var confirmState = { onConfirm:null, onCancel:null, opener:null };
 function askConfirm(o){
+  confirmState.opener = document.activeElement;
   document.getElementById("modal-confirm-title").textContent = o.title;
   document.getElementById("modal-confirm-msg").textContent = o.message;
   var ok = document.getElementById("modal-confirm-ok");
@@ -1761,13 +2174,17 @@ function askConfirm(o){
   confirmState.onConfirm = o.onConfirm || null;
   confirmState.onCancel = o.onCancel || null;
   document.getElementById("modal-confirm-backdrop").classList.remove("hidden");
+  syncModalScrollLock();
   ok.focus();
 }
 function closeConfirm(run){
   document.getElementById("modal-confirm-backdrop").classList.add("hidden");
+  syncModalScrollLock();
   var cb = run ? confirmState.onConfirm : confirmState.onCancel;
-  confirmState.onConfirm = null; confirmState.onCancel = null;
+  var opener = confirmState.opener;
+  confirmState.onConfirm = null; confirmState.onCancel = null; confirmState.opener = null;
   if(cb) cb();
+  if(opener && document.contains(opener) && !document.querySelector(".modal-backdrop:not(.hidden)")) opener.focus();
 }
 document.getElementById("modal-confirm-ok").addEventListener("click", function(){ closeConfirm(true); });
 document.getElementById("modal-confirm-cancel").addEventListener("click", function(){ closeConfirm(false); });
@@ -1786,14 +2203,32 @@ function save(){
 }
 function plural(n, sing, plur){ return n + " " + (n === 1 ? sing : plur); }
 var toastTimer = null;
-function actionNote(msg, isError){
+function actionNote(msg, optsOrError){
+  var opts = (optsOrError && typeof optsOrError === "object") ? optsOrError : { error: !!optsOrError };
   var el = document.getElementById("toast");
-  el.textContent = msg;
-  el.classList.toggle("is-error", !!isError);
+  el.textContent = "";
+  var textSpan = document.createElement("span");
+  textSpan.className = "toast-msg";
+  textSpan.textContent = msg;
+  el.appendChild(textSpan);
+  if(opts.actionLabel && typeof opts.onAction === "function"){
+    var btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "toast-action";
+    btn.textContent = opts.actionLabel;
+    btn.addEventListener("click", function(){
+      clearTimeout(toastTimer);
+      el.classList.add("hidden");
+      opts.onAction();
+    });
+    el.appendChild(btn);
+  }
+  el.classList.toggle("is-error", !!opts.error);
   el.classList.remove("hidden");
   el.style.animation = "none"; void el.offsetWidth; el.style.animation = "";  /* reinicia a entrada quando um aviso substitui o outro */
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(function(){ el.classList.add("hidden"); }, isError ? 9000 : 5000);
+  var dur = opts.duration || (opts.error ? 9000 : 5000);
+  toastTimer = setTimeout(function(){ el.classList.add("hidden"); }, dur);
 }
 function renderSaveState(){
   document.getElementById("btn-clear").disabled = !state.activities.length && !state.modules.length;
@@ -1963,6 +2398,27 @@ function renderResults(){
   document.getElementById("gauge-cur-label").textContent = formatMinutes(totalMin);
   document.getElementById("gauge-target-label").textContent = state.targetHours + "h";
 
+  /* Sincroniza a faixa fixa inferior (mobile e tablet retrato). */
+  var mrTotal = document.getElementById("mr-total");
+  if(mrTotal){
+    mrTotal.textContent = formatMinutes(totalMin);
+    document.getElementById("mr-meta").textContent = "Meta " + state.targetHours + "h";
+    var mrStatus = document.getElementById("mr-status");
+    if(totalMin<=0){
+      mrStatus.style.color = "var(--ink-soft)";
+      mrStatus.style.background = "var(--surface-quiet)";
+      mrStatus.textContent = "Adicione atividades";
+    } else {
+      mrStatus.style.color = "var(--status-"+statusKey+")";
+      mrStatus.style.background = "var(--status-"+statusKey+"-soft)";
+      mrStatus.innerHTML = STATUS_ICONS[statusKey] + "<span>" + escapeHtml(st.label) + "</span>";
+    }
+    var mrFill = document.getElementById("mr-gauge-fill");
+    mrFill.style.clipPath = "inset(0 " + (100 - fillPct) + "% 0 0)";
+    mrFill.style.background = totalMin>0 ? "var(--status-"+statusKey+")" : "var(--muted-2)";
+    document.getElementById("mr-gauge-target").style.left = "calc(" + targetPct + "% - 1px)";
+  }
+
   /* A proposta de MOOC tem limite de 60 h; o campo fica livre porque a
      ferramenta também serve a disciplinas. */
   document.getElementById("target-note").classList.toggle("hidden", !(Number(state.targetHours) > 60));
@@ -2123,7 +2579,45 @@ function renderTaxTable(){
   });
   html += "</tbody>";
   wrap.innerHTML = html;
+  updateTaxTableShadows();
 }
+
+/* Indicadores sutis nas bordas da tabela quando ela transborda na horizontal. */
+function updateTaxTableShadows(){
+  var outer = document.getElementById("tax-table-outer");
+  var scroller = document.getElementById("tax-table-wrap");
+  if(!outer || !scroller) return;
+  var maxScroll = scroller.scrollWidth - scroller.clientWidth;
+  outer.classList.toggle("has-left", maxScroll > 2 && scroller.scrollLeft > 4);
+  outer.classList.toggle("has-right", maxScroll > 2 && scroller.scrollLeft < maxScroll - 4);
+}
+(function(){
+  var scroller = document.getElementById("tax-table-wrap");
+  if(scroller){
+    scroller.addEventListener("scroll", updateTaxTableShadows, { passive: true });
+    window.addEventListener("resize", updateTaxTableShadows, { passive: true });
+  }
+})();
+
+/* Faixa fixa inferior só ocupa o rodapé enquanto o painel completo não está em tela. */
+var resultsPanelVisible = false;
+function syncMobileDockState(){
+  var bar = document.getElementById("mobile-readout-bar");
+  var inTool = !document.getElementById("view-tool").classList.contains("hidden");
+  var hide = !inTool || resultsPanelVisible;
+  if(bar) bar.classList.toggle("is-hidden-by-panel", hide);
+  document.body.classList.toggle("has-mobile-dock", inTool && !resultsPanelVisible);
+}
+(function(){
+  var panel = document.getElementById("results-panel");
+  if(panel && "IntersectionObserver" in window){
+    var obs = new IntersectionObserver(function(entries){
+      resultsPanelVisible = entries.some(function(e){ return e.isIntersecting; });
+      syncMobileDockState();
+    }, { threshold: 0.12 });
+    obs.observe(panel);
+  }
+})();
 
 /* ============ NAVIGATION ============ */
 function showView(name){
@@ -2133,6 +2627,8 @@ function showView(name){
     b.classList.toggle("is-active", b.getAttribute("data-nav")===name);
   });
   window.scrollTo({top:0, behavior:"auto"});
+  syncMobileDockState();
+  if(name==="home") setTimeout(updateTaxTableShadows, 0);
 }
 document.addEventListener("click", function(e){
   var navBtn = e.target.closest("[data-nav]");
@@ -2170,10 +2666,12 @@ function openVideo(opener){
   frame.innerHTML = ""; frame.appendChild(iframe);
   document.getElementById("video-external").href = "https://www.youtube.com/watch?v=" + TUTORIAL_VIDEO_ID;
   document.getElementById("modal-video-backdrop").classList.remove("hidden");
+  syncModalScrollLock();
   document.getElementById("modal-video-close").focus();
 }
 function closeVideo(){
   document.getElementById("modal-video-backdrop").classList.add("hidden");
+  syncModalScrollLock();
   document.getElementById("video-frame").innerHTML = "";   /* para o vídeo */
   if(videoOpener && document.contains(videoOpener)) videoOpener.focus();
   videoOpener = null;
@@ -2194,13 +2692,24 @@ document.getElementById("modal-video-backdrop").addEventListener("keydown", func
   else if(!e.shiftKey && document.activeElement===last){ e.preventDefault(); first.focus(); }
 });
 
-/* ============ COMO CITAR: copiar a citação ============ */
+/* ============ COMO CITAR: data ABNT e copiar a citação ============ */
+/* Data no padrão ABNT NBR 6023: dia sem zero à esquerda, mês abreviado em 3 letras
+   com ponto (exceto "maio") e ano com 4 dígitos. Atualiza ao carregar e no clique. */
+function formatAbntDate(d){
+  var months = ["jan.","fev.","mar.","abr.","maio","jun.","jul.","ago.","set.","out.","nov.","dez."];
+  return d.getDate() + " " + months[d.getMonth()] + " " + d.getFullYear();
+}
+function updateCitationDate(){
+  var el = document.getElementById("citacao-data");
+  if(el) el.textContent = formatAbntDate(new Date());
+}
 /* Copia em HTML (o título fica em negrito ao colar no editor de texto) e em texto
    puro. Sem a API de área de transferência (página fora de HTTPS), usa a seleção. */
 document.getElementById("btn-copy-citation").addEventListener("click", function(){
+  updateCitationDate();
   var source = document.getElementById("citacao");
   var text = source.textContent.replace(/\s+/g, " ").trim();
-  var html = source.innerHTML.replace(/\s+/g, " ").trim();
+  var html = source.innerHTML.replace(/<\/?span[^>]*>/g, "").replace(/\s+/g, " ").trim();
   function done(){ actionNote("Citação copiada."); }
   function fallback(){
     var ta = document.createElement("textarea");
@@ -2289,8 +2798,19 @@ listEl.addEventListener("click", function(e){
   var rmBtn = e.target.closest("[data-remove]");
   if(rmBtn){
     var id = rmBtn.getAttribute("data-remove");
-    state.activities = state.activities.filter(function(a){return a.id!==id;});
-    renderActivityList(); renderResults(); save();
+    var rmIdx = indexOfId(id);
+    if(rmIdx < 0) return;
+    var removed = state.activities.splice(rmIdx, 1)[0];
+    renderActivityList(); renderResults(); renderSaveState(); save();
+    actionNote("Atividade removida.", {
+      actionLabel: "Desfazer",
+      duration: 7000,
+      onAction: function(){
+        var insertAt = Math.min(rmIdx, state.activities.length);
+        state.activities.splice(insertAt, 0, removed);
+        renderActivityList(); renderResults(); renderSaveState(); save();
+      }
+    });
     return;
   }
   var moveBtn = e.target.closest("[data-move]");
@@ -2589,7 +3109,9 @@ document.getElementById("btn-print").addEventListener("click", function(){
 
 /* ============ ADD/EDIT ACTIVITY MODAL ============ */
 var draft = null;
+var activityModalOpener = null;
 function openActivityModal(activityId){
+  activityModalOpener = document.activeElement;
   editingId = activityId || null;
   if(editingId){
     var existing = state.activities.filter(function(a){return a.id===editingId;})[0];
@@ -2600,12 +3122,21 @@ function openActivityModal(activityId){
   document.getElementById("modal-activity-title").textContent = editingId ? "Editar atividade" : "Adicionar atividade";
   document.getElementById("modal-activity-confirm").textContent = editingId ? "Salvar alterações" : "Adicionar atividade";
   renderModalBody();
-  document.getElementById("modal-activity-backdrop").classList.remove("hidden");
+  var body = document.getElementById("modal-activity-body");
+  if(body) body.scrollTop = 0;
+  var backdrop = document.getElementById("modal-activity-backdrop");
+  backdrop.classList.remove("hidden");
+  syncModalScrollLock();
+  var dialog = backdrop.querySelector(".modal");
+  if(dialog) dialog.focus();
 }
 function closeActivityModal(){
   closeWordCounter();
   document.getElementById("modal-activity-backdrop").classList.add("hidden");
+  syncModalScrollLock();
   draft = null; editingId = null;
+  if(activityModalOpener && document.contains(activityModalOpener)) activityModalOpener.focus();
+  activityModalOpener = null;
 }
 document.getElementById("btn-add-activity").addEventListener("click", function(){ openActivityModal(null); });
 document.getElementById("modal-activity-close").addEventListener("click", closeActivityModal);
@@ -2798,7 +3329,7 @@ function renderParamFields(task){
     '</div>';
     after = '<p class="helper-note">Se o questionário mistura os dois níveis, informe as duas quantidades aqui; não é preciso lançar como duas atividades.</p>';
   } else if(task.inputMode==="manual"){
-    html += '<div class="field-row">' +
+    html += '<div class="field-row field-row-pair">' +
       '<div class="field-group"><label for="p-hours">Horas</label>'+qtyInput("p-hours", p.manualHours)+'</div>' +
       '<div class="field-group"><label for="p-minutes">Minutos</label>'+qtyInput("p-minutes", p.manualMinutes)+'</div>' +
     '</div>';
@@ -2810,23 +3341,44 @@ function renderParamFields(task){
   return html;
 }
 
+/* Ao avançar nas etapas do cadastro em telas menores, traz o próximo passo
+   para a área visível do corpo rolável do modal. */
+function scrollModalStep(selectors){
+  var body = document.getElementById("modal-activity-body");
+  if(!body) return;
+  for(var i=0; i<selectors.length; i++){
+    var el = body.querySelector(selectors[i]);
+    if(el){
+      var group = el.closest(".field-group") || el;
+      group.scrollIntoView({ behavior:"smooth", block:"nearest" });
+      return;
+    }
+  }
+}
+
 document.getElementById("modal-activity-body").addEventListener("click", function(e){
   var typeBtn = e.target.closest("[data-type]");
   if(typeBtn){
     draft.typeId = typeBtn.getAttribute("data-type");
     draft.taskId = null; draft.complexityId = null; draft.params = {};
-    renderModalBody(); return;
+    renderModalBody();
+    scrollModalStep(["#pick-task", "#pick-complexity", "#param-fields"]);
+    return;
   }
   var taskBtn = e.target.closest("[data-task]");
   if(taskBtn){
     draft.taskId = taskBtn.getAttribute("data-task");
     draft.complexityId = null; draft.params = {};
-    renderModalBody(); return;
+    renderModalBody();
+    scrollModalStep(["#pick-complexity", "#param-fields", "#lp-val"]);
+    return;
   }
   var compBtn = e.target.closest("[data-complexity]");
   if(compBtn){
     draft.complexityId = compBtn.getAttribute("data-complexity");
-    renderModalBody(); return;
+    renderModalBody();
+    scrollModalStep(["#param-fields", "#lp-val"]);
+    return;
   }
   var wordCounterBtn = e.target.closest("#btn-open-word-counter");
   if(wordCounterBtn){
@@ -2964,13 +3516,25 @@ function openWordCounter(){
   text.value = "";
   updateWordCounter();
   document.querySelector("#modal-activity-backdrop .modal").setAttribute("aria-hidden", "true");
-  document.getElementById("modal-word-counter-backdrop").classList.remove("hidden");
-  setTimeout(function(){ text.focus(); }, 0);
+  var backdrop = document.getElementById("modal-word-counter-backdrop");
+  backdrop.classList.remove("hidden");
+  syncModalScrollLock();
+  /* Em telas de toque, focar a textarea logo na abertura levantaria o teclado
+     virtual por cima do botão "Selecionar PDF". */
+  setTimeout(function(){
+    if(isCoarsePointer()){
+      var dialog = backdrop.querySelector(".modal");
+      if(dialog) dialog.focus();
+    } else {
+      text.focus();
+    }
+  }, 0);
 }
 function closeWordCounter(){
   var backdrop = document.getElementById("modal-word-counter-backdrop");
   if(!backdrop || backdrop.classList.contains("hidden")) return;
   backdrop.classList.add("hidden");
+  syncModalScrollLock();
   discardPdfRead();
   document.getElementById("word-counter-text").value = "";
   updateWordCounter();
@@ -3054,8 +3618,11 @@ document.addEventListener("keydown", function(e){
 load();
 renderTaxTable();
 renderMeasure();
+updateCitationDate();
 renderAll();
 showView("home");   /* marca a aba ativa já na primeira pintura */
 
 })();
 </script>
+</body>
+</html>
