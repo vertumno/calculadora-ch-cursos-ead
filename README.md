@@ -38,8 +38,8 @@ A **Opção A** recebeu os ajustes pedidos na rodada de testes de 22/09/2026 (Al
 Depois da revisão da Aline Amorim em 19/11/2026, a **Opção A** virou a **v1.0**:
 
 - **Formulário "Dúvidas e dificuldades"**, no rodapé e logo abaixo do quadro de orientação da ferramenta.
-- **Autoria, licença e como citar** no fim da página inicial, com o texto da equipe de pesquisa. A citação usa o link oficial.
-- **Rodapé** com versão, licença CC BY-NC 4.0 e atalhos para autoria, citação e formulário. Os atalhos também funcionam a partir da tela da ferramenta.
+- **Autoria, licença e como citar** no fim da página inicial, com o texto da equipe de pesquisa. A citação usa o link oficial e tem um botão **Copiar citação**. O crédito da abertura saiu, para não repetir a autoria.
+- **Rodapé** com versão, licença CC BY-NC 4.0 e o link do formulário.
 
 ---
 
