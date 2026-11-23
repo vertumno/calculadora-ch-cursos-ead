@@ -31,7 +31,15 @@ A **Opção A** recebeu os ajustes pedidos na rodada de testes de 22/09/2026 (Al
 
 **A confirmar com a equipe:** onde havia dúvida, valeu a proposta do plano (§5): enquete com 15 min fixos, síncrona liberada com aviso, vídeo e atividade interativa só com "Baixa" e "Alta", critério do H5P, local do bloco da estimativa, campo de meta livre com aviso acima de 60 h, e só a lista no lugar do gráfico individual × social.
 
-**Ainda não feito, por depender de insumo da equipe:** separar o tempo em conteúdo, prática e avaliação (falta definir o que conta como avaliação); trocar os cursos de exemplo, montados no desenvolvimento, por um curso real (faltam os dados); e o formulário "Dúvidas e dificuldades" (falta criar o formulário e definir o e-mail que recebe as respostas).
+**Ainda não feito, por depender de insumo da equipe:** separar o tempo em conteúdo, prática e avaliação (falta definir o que conta como avaliação); e trocar os cursos de exemplo, montados no desenvolvimento, por um curso real (faltam os dados).
+
+## v1.0 — liberação (novembro de 2026)
+
+Depois da revisão da Aline Amorim em 19/11/2026, a **Opção A** virou a **v1.0**:
+
+- **Formulário "Dúvidas e dificuldades"**, no rodapé e logo abaixo do quadro de orientação da ferramenta.
+- **Autoria, licença e como citar** no fim da página inicial, com o texto da equipe de pesquisa. A citação usa o link oficial.
+- **Rodapé** com versão, licença CC BY-NC 4.0 e atalhos para autoria, citação e formulário. Os atalhos também funcionam a partir da tela da ferramenta.
 
 ---
 
@@ -180,7 +188,9 @@ calculadora-ch-cursos-ead/
 
 - [ ] Confirmar a Opção A como versão única e arquivar a Opção B.
 - [x] Rodada de testes com a equipe (22/09/2026) e ajustes na Opção A.
-- [ ] Confirmar as propostas adotadas e trazer os insumos que faltam (curso real, critério de avaliação, formulário).
+- [ ] Confirmar as propostas adotadas e trazer os insumos que faltam (curso real, critério de avaliação).
+- [x] Formulário "Dúvidas e dificuldades", autoria e licença CC BY-NC 4.0 na Opção A (v1.0, novembro de 2026).
+- [ ] Tutorial em vídeo, em versão genérica (a Aline grava; entra na página quando estiver pronto).
 - [ ] Empacotar fontes para funcionamento 100% offline.
 - [ ] Gerar `<iframe>` para o Moodle/AVA a partir da URL publicada.
 
@@ -190,4 +200,12 @@ Backlog detalhado em `docs/ESTADO-E-PROXIMOS-PASSOS.md` §5.
 
 ## Créditos e licença
 
-Lógica e taxas baseadas no **Course Workload Estimator** de Betsy Barre, Allen Brown e Justin Esarey (Wake Forest / Rice University), sob **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**. Versão em português adaptada ao contexto EAD/MOOC — IFES / CEFOR, uso interno de design instrucional.
+**Estimador oficial (Opção A, v1.0):** obra original do Ifes/Cefor. O modelo de cálculo vem da pesquisa de doutorado de Aline Pinto Amorim, em Design de Aprendizagem de MOOCs, e segue os tipos de aprendizagem de Laurillard (2012) e os parâmetros do Quadro 3.
+
+- **Pesquisa e concepção:** Aline Pinto Amorim, Vanessa Battestin e Marize Lyra Silva Passos.
+- **Desenvolvimento:** Elton Vinicius Silva e Marcos Vinicius Forecchi Accioly.
+- **Licença:** [Creative Commons Atribuição-NãoComercial 4.0 Internacional (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/deed.pt-br), conforme a seção "Autoria" da página.
+
+**Componentes de terceiros:** o pdf.js (`assets/vendor/pdfjs/`), usado para contar as palavras de um PDF, segue a própria licença Apache-2.0. O logo do Cefor é marca institucional.
+
+**Versão 1, arquivada:** `arquivo/calculadora-workload-estimator.html` e o código R/Shiny em `docs/source/` são um porte do **Course Workload Estimator** de Betsy Barre, Allen Brown e Justin Esarey (Wake Forest / Rice University), sob **[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/)**. Esse porte não faz parte do estimador oficial, que não usa código dele.
