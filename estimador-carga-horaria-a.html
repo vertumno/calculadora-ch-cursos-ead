@@ -321,6 +321,9 @@ table{ border-collapse:collapse; }
 .site-footer .container{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
 .site-footer a{ color: var(--accent-deep); }
 .site-footer a:hover{ color: var(--accent); }
+/* Abre o modal do tutorial, mas tem a aparência dos links ao lado. */
+.footer-link{ appearance:none; padding:0; border:0; background:none; font-size:inherit; color: var(--accent-deep); text-decoration:underline; text-underline-offset:3px; }
+.footer-link:hover{ color: var(--accent); }
 
 /* ============ TOOL SHELL ============ */
 .tool-shell{ padding: 28px 0 100px; }
@@ -927,6 +930,7 @@ table{ border-collapse:collapse; }
     <p>Estimador de Carga Horária de Curso MOOC EaD · Ifes / Cefor · v1.0</p>
     <p>
       <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/deed.pt-br">CC BY-NC 4.0</a> ·
+      <button type="button" class="footer-link" data-video="tutorial">Tutorial em vídeo</button> ·
       <a href="https://forms.gle/39MT6RAxNJnEZCSU7" target="_blank" rel="noopener">Dúvidas e dificuldades<span class="sr-only"> (abre em nova aba)</span></a>
     </p>
   </div>
