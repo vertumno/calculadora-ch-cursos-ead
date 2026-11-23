@@ -1,5 +1,6 @@
 <meta charset="utf-8">
 <title>Estimador de Carga Horária de Curso MOOC EaD</title>
+<link rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/deed.pt-br">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300..700&display=swap" rel="stylesheet">
@@ -133,6 +134,7 @@ ul{ margin:0; padding:0; list-style:none; }
 table{ border-collapse:collapse; }
 :focus-visible{ outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
 .hidden{ display:none !important; }
+.sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
 @media (prefers-reduced-motion: reduce){
   *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior:auto !important; }
 }
@@ -302,14 +304,24 @@ table{ border-collapse:collapse; }
 
 /* ============ BYLINE / CREDITS BLOCK ============ */
 .byline-block{ padding: 34px 0; border-top:3px solid var(--rule); border-bottom:1px solid var(--border); }
-.byline-row{ display:flex; flex-wrap:wrap; gap:6px 32px; margin-bottom:20px; }
-.byline-item{ font-size:0.92rem; }
-.byline-item .brole{ color: var(--muted); }
-.byline-item .bname{ font-weight:600; color: var(--ink); font-family: var(--font-display); }
 .byline-close{ margin-top:22px; display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
+
+/* ============ AUTORIA, LICENÇA E COMO CITAR ============ */
+/* Texto da equipe de pesquisa (revisão de 19/11/2026). O selo CC usa o verde
+   da página (#1F7027, 6.2:1 com o branco) e é só decorativo: o link da
+   licença fica no texto. */
+.credits{ display:flex; flex-direction:column; gap:56px; }
+.credits-list{ margin-top:20px; display:flex; flex-direction:column; gap:8px; max-width:72ch; }
+.credits-list li{ padding-left:16px; position:relative; color: var(--ink-soft); }
+.credits-list li::before{ content:"·"; position:absolute; left:2px; color: var(--accent); font-weight:700; }
+.credits-sub{ margin-top:32px; font-family: var(--font-display); font-weight:600; font-size:1.08rem; letter-spacing:-0.01em; color: var(--ink); }
+.credits-text{ margin-top:12px; max-width:72ch; color: var(--ink-soft); overflow-wrap:anywhere; }
+.cc-badge{ display:block; margin-top:14px; }
 
 .site-footer{ border-top:1px solid var(--border-strong); padding: 32px 0; color: var(--muted); font-size:0.84rem; }
 .site-footer .container{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; }
+.site-footer a{ color: var(--accent-deep); }
+.site-footer a:hover{ color: var(--accent); }
 
 /* ============ TOOL SHELL ============ */
 .tool-shell{ padding: 28px 0 100px; }
@@ -462,6 +474,8 @@ table{ border-collapse:collapse; }
    gráficos; o aviso dos materiais complementares fica sempre à vista. */
 .tool-grid > div > .support-wrap{ margin-bottom:16px; }
 .support-note{ padding:13px 20px; border-top:1px solid var(--border); font-size:0.84rem; color: var(--ink-soft); }
+.support-note a{ color: var(--accent-deep); font-weight:600; }
+.support-note a:hover{ color: var(--accent); }
 .target-note{ margin-top:7px; max-width:34ch; font-size:0.78rem; font-weight:600; color: var(--status-warning); }
 .readout-note{ margin-top:12px; font-size:0.78rem; color: var(--muted); }
 .link-btn{ appearance:none; padding:0; border:0; background:none; font-size:inherit; font-weight:600; color: var(--accent-deep); text-decoration:underline; text-underline-offset:3px; }
@@ -749,12 +763,6 @@ table{ border-collapse:collapse; }
   <section class="section">
     <div class="container-narrow">
       <div class="byline-block">
-        <div class="byline-row">
-          <span class="byline-item"><span class="brole">Pesquisa</span> · <span class="bname">Aline Pinto Amorim</span></span>
-          <span class="byline-item"><span class="brole">Orientação</span> · <span class="bname">Vanessa Battestin</span></span>
-          <span class="byline-item"><span class="brole">Coorientação</span> · <span class="bname">Marize Lyra Silva Passos</span></span>
-          <span class="byline-item"><span class="brole">Desenvolvimento técnico</span> · <span class="bname">Elton Vinicius Silva e Marcos Vinicius Forecchi Accioly</span></span>
-        </div>
         <p class="prose">Esta ferramenta é um protótipo de pesquisa (v1), um <strong>estimador</strong>, não um analisador automático. Ela apoia o planejamento antes da produção do curso; conferir a carga horária de uma sala já publicada continua exigindo revisão manual, por enquanto. É de uso livre para o planejamento de MOOCs e de disciplinas presenciais no Ifes.</p>
         <div class="byline-close">
           <button class="btn btn-primary" data-nav="tool">Abrir o estimador</button>
@@ -762,6 +770,35 @@ table{ border-collapse:collapse; }
       </div>
     </div>
   </section>
+
+  <div class="section section-quiet">
+    <div class="container-narrow credits">
+      <section id="autoria" aria-labelledby="autoria-titulo">
+        <h2 id="autoria-titulo" class="h-section">Autoria</h2>
+        <ul class="credits-list">
+          <li><strong>Pesquisa e concepção:</strong> Aline Pinto Amorim, Vanessa Battestin e Marize Lyra Silva Passos.</li>
+          <li><strong>Desenvolvimento:</strong> Elton Vinicius Silva e Marcos Vinicius Forecchi Accioly.</li>
+          <li><strong>Instituição:</strong> Instituto Federal do Espírito Santo (Ifes) · Centro de Referência em Formação e em Educação a Distância (Cefor).</li>
+        </ul>
+
+        <h3 class="credits-sub">Licença</h3>
+        <p class="credits-text">© 2026 Aline Pinto Amorim, Vanessa Battestin, Marize Lyra Silva Passos, Elton Vinicius Silva e Marcos Vinicius Forecchi Accioly.</p>
+        <svg class="cc-badge" xmlns="http://www.w3.org/2000/svg" width="120" height="32" viewBox="0 0 120 32" aria-hidden="true" focusable="false">
+          <rect width="120" height="32" rx="4" fill="#28362F"/>
+          <rect x="0" width="44" height="32" rx="4" fill="#1F7027"/>
+          <rect x="30" width="14" height="32" fill="#1F7027"/>
+          <text x="22" y="21" font-family="Inter Tight, Arial, Helvetica, sans-serif" font-size="13" font-weight="700" fill="#FFFFFF" text-anchor="middle">CC</text>
+          <text x="82" y="21" font-family="Inter Tight, Arial, Helvetica, sans-serif" font-size="12" font-weight="700" fill="#FFFFFF" text-anchor="middle">BY-NC 4.0</text>
+        </svg>
+        <p class="credits-text">Este trabalho está licenciado sob a <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/deed.pt-br">Creative Commons Atribuição-NãoComercial 4.0 Internacional (CC BY-NC 4.0)</a>. Você pode <strong>compartilhar</strong> (copiar e redistribuir em qualquer meio ou formato) e <strong>adaptar</strong> (remixar, transformar e criar a partir do material), desde que dê o crédito apropriado a todas as pessoas acima, forneça o link da licença, indique se foram feitas alterações e <strong>não utilize o material para fins comerciais</strong>. Texto legal completo: <a href="https://creativecommons.org/licenses/by-nc/4.0/legalcode.pt-br">legalcode</a>.</p>
+      </section>
+
+      <section id="como-citar" aria-labelledby="como-citar-titulo">
+        <h2 id="como-citar-titulo" class="h-section">Como citar</h2>
+        <p class="credits-text">AMORIM, Aline Pinto; BATTESTIN, Vanessa; PASSOS, Marize Lyra Silva; SILVA, Elton Vinicius; ACCIOLY, Marcos Vinicius Forecchi. <strong>Estimador de carga horária de curso MOOC EaD</strong>. Vitória: Ifes/Cefor, 2026. Licenciado sob CC BY-NC 4.0. Disponível em: https://links.ifes.edu.br/estimador-cefor. Acesso em: dia mês ano.</p>
+      </section>
+    </div>
+  </div>
 
 </main>
 
@@ -832,6 +869,7 @@ table{ border-collapse:collapse; }
             </ul>
           </details>
           <p class="support-note"><strong>Os materiais complementares não devem ser incluídos no cômputo da carga horária do curso.</strong> Eles são opcionais para o aluno, e seu conteúdo não pode ser cobrado nas avaliações.</p>
+          <p class="support-note">Dúvidas ou dificuldades com o estimador? <a href="https://forms.gle/39MT6RAxNJnEZCSU7" target="_blank" rel="noopener">Responda ao formulário de dúvidas e dificuldades</a> (abre em nova aba).</p>
         </div>
         <div id="activity-list" class="activity-table"></div>
       </div>
@@ -878,8 +916,13 @@ table{ border-collapse:collapse; }
 
 <footer class="site-footer">
   <div class="container">
-    <span>Estimador de Carga Horária · Ifes / Cefor</span>
-    <span>Protótipo de pesquisa · v1</span>
+    <p>Estimador de Carga Horária de Curso MOOC EaD · Ifes / Cefor · v1.0</p>
+    <p>
+      <a rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/deed.pt-br">CC BY-NC 4.0</a> ·
+      <a href="#autoria" data-nav="home" data-scroll="autoria">Autoria</a> ·
+      <a href="#como-citar" data-nav="home" data-scroll="como-citar">Como citar</a> ·
+      <a href="https://forms.gle/39MT6RAxNJnEZCSU7" target="_blank" rel="noopener">Dúvidas e dificuldades<span class="sr-only"> (abre em nova aba)</span></a>
+    </p>
   </div>
 </footer>
 
